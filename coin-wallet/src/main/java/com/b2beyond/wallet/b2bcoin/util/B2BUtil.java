@@ -75,11 +75,11 @@ public final class B2BUtil {
                 location = System.getProperty("user.dir") + "/Contents/Java/b2bcoin-" + operatingSystem;
             }
             if (operatingSystem.equalsIgnoreCase(WINDOWS)) {
-                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\binaries";
+                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\binaries\\";
             }
         }
 
-        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " / " + location + "/");
+        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " :: " + location);
         return location;
     }
 
