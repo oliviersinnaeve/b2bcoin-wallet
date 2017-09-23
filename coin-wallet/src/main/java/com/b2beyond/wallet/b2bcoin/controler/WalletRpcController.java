@@ -65,7 +65,7 @@ public class WalletRpcController {
 
     public void restart() {
         for (RpcPoller poller : pollers) {
-            poller.setRunning();
+            poller.start();
             new Thread(poller).start();
         }
     }

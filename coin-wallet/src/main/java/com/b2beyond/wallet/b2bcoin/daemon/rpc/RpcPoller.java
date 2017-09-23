@@ -53,7 +53,8 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
 
     public abstract void updateOnSucceed(T data);
 
-    public void setRunning() {
+    public void start() {
         this.running = true;
     }
+
 }

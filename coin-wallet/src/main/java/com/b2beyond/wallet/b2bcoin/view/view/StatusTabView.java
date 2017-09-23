@@ -158,7 +158,7 @@ public class StatusTabView extends JPanel implements Observer {
     private void updateBalances(TransactionItems transactionItems) {
         for (TransactionItem item: transactionItems.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
-                float amount = transaction.getAmount();
+                long amount = transaction.getAmount();
                 long unlockBlocks = transaction.getUnlockTime();
 
                 if (unlockBlocks != 0) {

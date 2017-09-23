@@ -2,6 +2,7 @@ package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 
 import java.util.Observable;
@@ -50,6 +51,14 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
     public void update(Observable o, Object data) {
         if (data instanceof Addresses) {
             this.addresses = (Addresses)data;
+        }
+        if (data instanceof Status) {
+            Status status = (Status)data;
+            if (status.getKnownBlockCount() > firstBlockCount + 1) {
+                start();
+            } else {
+                stop();
+            }
         }
     }
 

@@ -63,7 +63,7 @@ public class B2BWallet {
     private int loadingCounter = 1;
 
     public static BigDecimal DIVIDE_BY = new BigDecimal("1000000000000");
-    public static boolean DEV = false;
+    public static boolean DEV = true;
 
     public static void main(String[] args) {
         new B2BWallet();
@@ -221,6 +221,7 @@ public class B2BWallet {
         unconfirmedTransactionHashesPoller.addObserver(statusTabView);
         unconfirmedTransactionHashesPoller.addObserver(transactionsTabView);
 
+        statusPoller.addObserver(transactionsPoller);
         statusPoller.addObserver(guiFrame);
         statusPoller.addObserver(statusTabView);
 
