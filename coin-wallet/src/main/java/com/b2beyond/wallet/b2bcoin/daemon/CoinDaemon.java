@@ -19,6 +19,7 @@ public class CoinDaemon implements Daemon {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
+    private Process process;
     private int processPid;
     private String daemonExecutable;
     private String operatingSystem;
@@ -46,7 +47,7 @@ public class CoinDaemon implements Daemon {
                     pb.directory(new File(location));
                 }
 
-                Process process = pb.start();
+                process = pb.start();
                 processPid = B2BUtil.getPid(process, operatingSystem, false);
                 LOGGER.debug("Coin Process id retrieved : " + processPid);
             } catch (Exception ex) {
@@ -62,9 +63,14 @@ public class CoinDaemon implements Daemon {
             pb = new ProcessBuilder("kill", "-9", "" + processPid);
         }
 
-//        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-//            pb = new ProcessBuilder("cmd", "/c", "taskkill", "/IM", daemonExecutable);
-//        }
+        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+            process.destroy();
+            try {
+                process.waitFor();
+            } catch (InterruptedException e) {
+                // NOOP
+            }
+        }
 
         if (pb != null) {
             try {
