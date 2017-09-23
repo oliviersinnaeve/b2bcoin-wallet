@@ -54,11 +54,11 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-            if (status.getKnownBlockCount() > firstBlockCount + 1) {
-                start();
-            } else {
-                stop();
-            }
+//            if (status.getKnownBlockCount() > firstBlockCount + 1) {
+//                start();
+//            } else {
+//                stop();
+//            }
         }
     }
 
