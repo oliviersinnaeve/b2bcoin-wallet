@@ -60,9 +60,10 @@ public class WalletDaemon implements Daemon {
                     if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
                         pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf", "--generate-container",
                                 "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
+                    } else {
+                        pb.directory(new File(location));
                     }
 
-                    pb.directory(new File(location));
 //                    }
 
                     LOGGER.info("First startup, creating wallet");

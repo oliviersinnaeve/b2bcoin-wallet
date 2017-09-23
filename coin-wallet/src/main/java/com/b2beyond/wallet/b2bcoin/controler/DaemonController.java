@@ -53,6 +53,8 @@ public class DaemonController {
         File userHomeFiles = new File(userHome);
         userHomeFiles.mkdirs();
 
+        coinDaemon = new CoinDaemon(coinProperties, operatingSystem);
+
         if (new File(userHome + "b2bcoin-wallet.conf").exists()) {
             try {
                 walletProperties.getProperties().load(new FileInputStream(userHome + "b2bcoin-wallet.conf"));
@@ -83,7 +85,6 @@ public class DaemonController {
             }
         }
 
-        coinDaemon = new CoinDaemon(coinProperties, operatingSystem);
         walletDaemon =  new WalletDaemon(coinProperties, operatingSystem, walletProperties.getProperties(), container, password, firstStartup);
     }
 
