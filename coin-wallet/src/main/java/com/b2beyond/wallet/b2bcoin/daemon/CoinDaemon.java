@@ -62,9 +62,9 @@ public class CoinDaemon implements Daemon {
             pb = new ProcessBuilder("kill", "-9", "" + processPid);
         }
 
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-            pb = new ProcessBuilder("cmd", "/c", "taskkill", "/IM", daemonExecutable);
-        }
+//        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+//            pb = new ProcessBuilder("cmd", "/c", "taskkill", "/IM", daemonExecutable);
+//        }
 
         if (pb != null) {
             try {
