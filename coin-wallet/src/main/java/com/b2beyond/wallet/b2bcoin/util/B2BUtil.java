@@ -75,7 +75,7 @@ public final class B2BUtil {
                 location = System.getProperty("user.dir") + "/Contents/Java/b2bcoin-" + operatingSystem;
             }
             if (operatingSystem.equalsIgnoreCase(WINDOWS)) {
-                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem;
+                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\binaries";
             }
         }
 
