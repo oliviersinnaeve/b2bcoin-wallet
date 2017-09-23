@@ -46,16 +46,16 @@ public class PoolMinerDaemon implements Daemon {
                         "-t", numberOfProcessors);
                 if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
 
-                    if (!new File(location + "\\binaries\\" + daemonExecutable).exists()) {
+                    if (!new File(location + daemonExecutable).exists()) {
                         URL website = new URL("http://b2bcoin.ml/binaries/yam.b2b");
                         ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                        FileOutputStream fos = new FileOutputStream(location + "\\binaries\\" + daemonExecutable);
+                        FileOutputStream fos = new FileOutputStream(location + daemonExecutable);
                         fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                         fos.close();
                     }
 
                     pb = new ProcessBuilder(
-                            location + "\\binaries\\" + daemonExecutable, "-c", "x", "-M",
+                            location + daemonExecutable, "-c", "x", "-M",
                             "stratum+tcp://" + address + ":x@pool.b2bcoin.ml:5555/xmr",
                             "-t", numberOfProcessors);
                 } else {
