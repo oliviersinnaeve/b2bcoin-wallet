@@ -83,6 +83,20 @@ public final class B2BUtil {
         return location;
     }
 
+    public static String getConfigRoot(String operatingSystem, String location, boolean dev) {
+        if (!dev) {
+            if (operatingSystem.equalsIgnoreCase("mac")) {
+                location = System.getProperty("user.dir") + "/Contents/Java/b2bcoin-" + operatingSystem;
+            }
+            if (operatingSystem.equalsIgnoreCase(WINDOWS)) {
+                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\configs\\";
+            }
+        }
+
+        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " :: " + location);
+        return location;
+    }
+
     public static String getUserHome() {
         String userHome = System.getProperty("user.home") + "/b2bcoin/";
         if (getOperatingSystemType().equalsIgnoreCase(WINDOWS)) {

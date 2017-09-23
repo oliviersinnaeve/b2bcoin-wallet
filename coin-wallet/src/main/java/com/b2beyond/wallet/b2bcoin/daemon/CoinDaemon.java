@@ -33,13 +33,14 @@ public class CoinDaemon implements Daemon {
 
             String userHome = B2BUtil.getUserHome();
             String location = B2BUtil.getBinariesRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
+            String configLocation = B2BUtil.getConfigRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
 
             try {
                 daemonExecutable = daemonProperties.getProperty("coin-daemon-" + operatingSystem);
                 ProcessBuilder pb = new ProcessBuilder("binaries/" + daemonExecutable, "--config-file", "configs/b2bcoin.conf",
                         "--log-file", userHome + daemonProperties.getProperty("log-file-coin"));
                 if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                    pb = new ProcessBuilder(location + daemonExecutable, "--config-file", "\"" + location + "\\configs\\b2bcoin.conf\"",
+                    pb = new ProcessBuilder(location + daemonExecutable, "--config-file", "\"" + configLocation + "b2bcoin.conf\"",
                             "--log-file", "\"" + userHome + daemonProperties.getProperty("log-file-coin") + "\"");
                 } else {
                     pb.directory(new File(location));
