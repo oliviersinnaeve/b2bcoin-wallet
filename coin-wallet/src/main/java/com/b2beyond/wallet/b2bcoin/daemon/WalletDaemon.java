@@ -64,8 +64,6 @@ public class WalletDaemon implements Daemon {
                         pb.directory(new File(location));
                     }
 
-//                    }
-
                     LOGGER.info("First startup, creating wallet");
                     Process process = pb.start();
 
@@ -96,12 +94,12 @@ public class WalletDaemon implements Daemon {
                         "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet") + " -d");
                 ProcessBuilder pb = new ProcessBuilder("binaries/" + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
                         "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "-d");
-//                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-//                    pb = new ProcessBuilder("cmd", "/c", "start", "", location + "\\binaries\\" + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
-//                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
-//                } else {
+                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+                    pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
+                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
+                } else {
                     pb.directory(new File(location));
-//                }
+                }
 
                 Process process = pb.start();
                 processPid = B2BUtil.getPid(process, operatingSystem, true);
