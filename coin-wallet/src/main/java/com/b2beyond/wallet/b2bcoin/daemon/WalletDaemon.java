@@ -88,6 +88,10 @@ public class WalletDaemon implements Daemon {
                         "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet") + " -d");
                 ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
                         "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "--server-root", userHome, "-d");
+                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+                    pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
+                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "--server-root", userHome);
+                }
 
                 process = pb.start();
                 processPid = B2BUtil.getPid(process, operatingSystem, true);
