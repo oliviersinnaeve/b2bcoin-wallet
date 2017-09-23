@@ -53,8 +53,6 @@ public class DaemonController {
         File userHomeFiles = new File(userHome);
         userHomeFiles.mkdirs();
 
-        coinDaemon = new CoinDaemon(coinProperties, operatingSystem);
-
         if (new File(userHome + "b2bcoin-wallet.conf").exists()) {
             try {
                 walletProperties.getProperties().load(new FileInputStream(userHome + "b2bcoin-wallet.conf"));
@@ -63,10 +61,14 @@ public class DaemonController {
             } catch (IOException e) {
                 LOGGER.info("No wallet has been loaded ever");
             }
-        } else {
-            if (StringUtils.isBlank(container) || StringUtils.isBlank(password)) {
+        }
+            if (StringUtils.isBlank(container) || StringUtils.isBlank(password) || !new File(userHome + container).exists()) {
 
                 final NewWalletPanel newWalletPallet = new NewWalletPanel();
+
+                String daemonExecutable = coinProperties.getProperty("coin-daemon-" + operatingSystem);
+                String walletExecutable = coinProperties.getProperty("wallet-daemon-" + operatingSystem);
+                B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable);
 
                 boolean valid = false;
                 while (!valid) {
@@ -83,8 +85,9 @@ public class DaemonController {
 
                 firstStartup = true;
             }
-        }
 
+
+        coinDaemon = new CoinDaemon(coinProperties, operatingSystem);
         walletDaemon =  new WalletDaemon(coinProperties, operatingSystem, walletProperties.getProperties(), container, password, firstStartup);
     }
 

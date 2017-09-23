@@ -63,7 +63,7 @@ public class B2BWallet {
     private int loadingCounter = 1;
 
     public static BigDecimal DIVIDE_BY = new BigDecimal("1000000000000");
-    public static boolean DEV = false;
+//    public static boolean DEV = true;
 
     public static void main(String[] args) {
         new B2BWallet();
@@ -109,7 +109,7 @@ public class B2BWallet {
         DaemonController coinDaemon = new DaemonController(
                 coinProperties.getCoinProperties(),
                 walletDaemonProperties,
-                B2BUtil.getOperatingSystemType());
+                B2BUtil.getOperatingSystem());
         WalletRpcController walletRpcController = new WalletRpcController(coinProperties);
         CoinRpcController coinRpcController = new CoinRpcController(coinProperties);
         actionController = new ActionController(coinDaemon, walletRpcController, coinRpcController);
@@ -142,11 +142,11 @@ public class B2BWallet {
                 walletRpcController.getPaymentExecutor());
         PoolMiningController miningController = new PoolMiningController(
                 coinProperties.getCoinProperties(),
-                B2BUtil.getOperatingSystemType());
+                B2BUtil.getOperatingSystem());
         SoloMiningController soloMiningController = new SoloMiningController(
                 coinProperties.getCoinProperties(),
                 walletDaemonProperties,
-                B2BUtil.getOperatingSystemType());
+                B2BUtil.getOperatingSystem());
         LOGGER.info("Controllers started.");
 
         LOGGER.info("Creating tab view instances ...");

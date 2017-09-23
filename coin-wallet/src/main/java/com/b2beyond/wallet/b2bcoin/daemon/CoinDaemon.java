@@ -20,36 +20,29 @@ public class CoinDaemon implements Daemon {
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
     private Process process;
-    private int processPid;
-    private String daemonExecutable;
-    private String operatingSystem;
 
 
     public CoinDaemon(Properties daemonProperties, String operatingSystem) {
         LOGGER.info("Starting coin daemon for OS : " + operatingSystem);
-        this.operatingSystem = operatingSystem;
 
         URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + "/");
         if (baseLocation != null) {
 
             String userHome = B2BUtil.getUserHome();
-            String location = B2BUtil.getBinariesRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
-            String configLocation = B2BUtil.getConfigRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
+            String location = B2BUtil.getBinariesRoot();
+            String configLocation = B2BUtil.getConfigRoot();
 
             try {
-                daemonExecutable = daemonProperties.getProperty("coin-daemon-" + operatingSystem);
-                ProcessBuilder pb = new ProcessBuilder("binaries/" + daemonExecutable, "--config-file", "configs/b2bcoin.conf",
+                String daemonExecutable = daemonProperties.getProperty("coin-daemon-" + operatingSystem);
+
+                LOGGER.debug("Coin daemon userHome : " + userHome);
+                LOGGER.debug("Coin daemon binaries location : " + location);
+                LOGGER.debug("Coin daemon configLocation : " + configLocation);
+
+                ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config-file", userHome + "configs/b2bcoin.conf",
                         "--log-file", userHome + daemonProperties.getProperty("log-file-coin"));
-                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                    pb = new ProcessBuilder(location + daemonExecutable, "--config-file", "\"" + configLocation + "b2bcoin.conf\"",
-                            "--log-file", "\"" + userHome + daemonProperties.getProperty("log-file-coin") + "\"");
-                } else {
-                    pb.directory(new File(location));
-                }
 
                 process = pb.start();
-                processPid = B2BUtil.getPid(process, operatingSystem, false);
-                LOGGER.debug("Coin Process id retrieved : " + processPid);
             } catch (Exception ex) {
                 LOGGER.error("Coin daemon failed to load", ex);
             }
@@ -58,61 +51,13 @@ public class CoinDaemon implements Daemon {
 
     @Override
     public void stop() {
-        ProcessBuilder pb = null;
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX) || operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
-            pb = new ProcessBuilder("kill", "-9", "" + processPid);
+        process.destroy();
+        try {
+            LOGGER.info("Wait for value : " + process.waitFor());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-            process.destroy();
-            try {
-                process.waitFor();
-            } catch (InterruptedException e) {
-                // NOOP
-            }
-        }
-
-        if (pb != null) {
-            try {
-                Process process = pb.start();
-                try {
-                    LOGGER.info("Wait for value : " + process.waitFor());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                LOGGER.info("Killing WALLET daemon exit value : " + process.exitValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        LOGGER.info("Killing daemon exit value : " + process.exitValue());
     }
-
-//    @Override
-//    public void stop() {
-//        // STOP coinDaemons
-//        process.destroy();
-//
-//        try {
-//            LOGGER.info("Wait for value : " + process.waitFor());
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Integer processValue = null;
-//        while (processValue == null) {
-//            try {
-//                processValue = process.exitValue();
-//            } catch (IllegalThreadStateException e) {
-//                LOGGER.info(e.getMessage());
-//            }
-//
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        LOGGER.info("Killing COIN daemon exit value : " + process.exitValue());
-//    }
 
 }

@@ -10,12 +10,24 @@ package com.b2beyond.wallet.b2bcoin.util;
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.FileUtils;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import org.apache.log4j.Logger;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -53,7 +65,7 @@ public final class B2BUtil {
      *
      * @returns - the operating system detected
      */
-    public static String getOperatingSystemType() {
+    public static String getOperatingSystem() {
         if (detectedOS == null) {
             String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
             if (OS.contains("mac") || OS.contains("darwin")) {
@@ -69,40 +81,69 @@ public final class B2BUtil {
         return detectedOS;
     }
 
-    public static String getBinariesRoot(String operatingSystem, String location, boolean dev) {
-        if (!dev) {
-            if (operatingSystem.equalsIgnoreCase("mac")) {
-                location = System.getProperty("user.dir") + "/Contents/Java/b2bcoin-" + operatingSystem;
+    public static void copyDaemonsOnFirstRun(String daemonExecutable, String walletExecutable) {
+        try {
+            new File(getBinariesRoot()).mkdirs();
+            new File(getConfigRoot()).mkdirs();
+
+            if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
+                LOGGER.trace("Exporting the coin daemon");
+                JarFileResourceExtractor.extract(
+                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + daemonExecutable,
+                        getBinariesRoot() + daemonExecutable);
             }
-            if (operatingSystem.equalsIgnoreCase(WINDOWS)) {
-                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\binaries\\";
+            if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
+                LOGGER.trace("Exporting the wallet daemon");
+                JarFileResourceExtractor.extract(
+                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + walletExecutable,
+                        getBinariesRoot() + walletExecutable);
             }
+            if (!Paths.get(getConfigRoot() + "b2bcoin.conf").toFile().exists()) {
+                LOGGER.trace("Exporting the coin daemon config");
+                JarFileResourceExtractor.extract(
+                        "b2bcoin-" + getOperatingSystem() + "/configs/b2bcoin.conf",
+                        getConfigRoot() + "b2bcoin.conf");
+            }
+
+            if (getOperatingSystem().equalsIgnoreCase(LINUX) || getOperatingSystem().equalsIgnoreCase(MAC)) {
+                Process p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable);
+                p.waitFor();
+                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable);
+                p.waitFor();
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to copy file", e);
+        }
+    }
+
+    public static String getBinariesRoot() {
+        String location = getUserHome() + "binaries/";
+
+        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+            location = getUserHome() + "binaries\\";
         }
 
-        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " :: " + location);
+        LOGGER.info("Loading daemon from OS / Location : " + getOperatingSystem() + " :: " + location);
         return location;
     }
 
-    public static String getConfigRoot(String operatingSystem, String location, boolean dev) {
-        if (!dev) {
-            if (operatingSystem.equalsIgnoreCase("mac")) {
-                location = System.getProperty("user.dir") + "/Contents/Java/b2bcoin-" + operatingSystem;
-            }
-            if (operatingSystem.equalsIgnoreCase(WINDOWS)) {
-                location = System.getProperty("user.dir") + "\\b2bcoin-" + operatingSystem + "\\configs\\";
-            }
+    public static String getConfigRoot() {
+        String location = getUserHome() + "configs/";
+
+        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+            location = getUserHome() + "configs\\";
         }
 
-        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " :: " + location);
+        LOGGER.info("Loading daemon from OS / Location : " + getOperatingSystem() + " :: " + location);
         return location;
     }
 
     public static String getUserHome() {
         String userHome = System.getProperty("user.home") + "/b2bcoin/";
-        if (getOperatingSystemType().equalsIgnoreCase(WINDOWS)) {
+        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
             userHome = System.getProperty("user.home") + "\\b2bcoin\\";
         }
-        LOGGER.info("Starting daemon for OS with user home : " + userHome);
+        LOGGER.info("Starting daemon for OS : '" + getOperatingSystem() + "' with user home : " + userHome);
         return userHome;
     }
 

@@ -15,21 +15,21 @@ public class WalletDaemonProperties {
 
     public WalletDaemonProperties() {
         try {
-            LOGGER.info("Loading wallet daemon config for OS : " + B2BUtil.getOperatingSystemType());
+            LOGGER.info("Loading wallet daemon config for OS : " + B2BUtil.getOperatingSystem());
 
             LOGGER.info("Loading wallet daemon properties from root - class : " + getClass());
             LOGGER.info("Loading wallet daemon properties from root - class loader" + getClass().getClassLoader());
             if (getClass().getClassLoader() != null) {
-                if (getClass().getClassLoader().getResource("b2bcoin-" + B2BUtil.getOperatingSystemType()) != null) {
+                if (getClass().getClassLoader().getResource("b2bcoin-" + B2BUtil.getOperatingSystem()) != null) {
                     LOGGER.info("Loading wallet daemon properties from root " + getClass().getClassLoader()
-                            .getResource("b2bcoin-" + B2BUtil.getOperatingSystemType()));
+                            .getResource("b2bcoin-" + B2BUtil.getOperatingSystem()));
                 }
             }
 
 //            LOGGER.info("Loading wallet daemon properties from root " + Thread.currentThread().getContextClassLoader()
-//                    .getResource("b2bcoin-" + OsChecker.getOperatingSystemType() + "/configs/b2bcoin-wallet.conf").getFile());
+//                    .getResource("b2bcoin-" + OsChecker.getOperatingSystem() + "/configs/b2bcoin-wallet.conf").getFile());
             properties.load(getClass().getClassLoader().getResourceAsStream(
-                    "b2bcoin-" + B2BUtil.getOperatingSystemType() + "/configs/b2bcoin-wallet.conf"));
+                    "b2bcoin-" + B2BUtil.getOperatingSystem() + "/configs/b2bcoin-wallet.conf"));
         } catch (IOException e) {
             LOGGER.error("WalletDaemonProperties", e);
             System.exit(1);

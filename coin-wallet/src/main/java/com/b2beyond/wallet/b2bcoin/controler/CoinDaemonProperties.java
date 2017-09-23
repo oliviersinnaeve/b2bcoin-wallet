@@ -15,13 +15,13 @@ public class CoinDaemonProperties {
 
     public CoinDaemonProperties() {
         try {
-            LOGGER.info("Loading coin daemon config for OS : " + B2BUtil.getOperatingSystemType());
+            LOGGER.info("Loading coin daemon config for OS : " + B2BUtil.getOperatingSystem());
             LOGGER.info("Loading coin daemon properties from root " + Thread.currentThread().getContextClassLoader()
                     .getResource(""));
             LOGGER.info("Loading coin daemon properties from root " + Thread.currentThread().getContextClassLoader()
-                    .getResource("b2bcoin-" + B2BUtil.getOperatingSystemType() + "/configs/b2bcoin.conf").getFile());
+                    .getResource("b2bcoin-" + B2BUtil.getOperatingSystem() + "/configs/b2bcoin.conf").getFile());
             properties.load(getClass().getClassLoader().getResourceAsStream(
-                    "b2bcoin-" + B2BUtil.getOperatingSystemType() + "/configs/b2bcoin.conf"));
+                    "b2bcoin-" + B2BUtil.getOperatingSystem() + "/configs/b2bcoin.conf"));
         } catch (IOException e) {
             LOGGER.error("CoinDaemonProperties", e);
             System.exit(1);

@@ -34,7 +34,7 @@ public class PoolMinerDaemon implements Daemon {
 
         URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + "/");
         if (baseLocation != null) {
-            String location = B2BUtil.getBinariesRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
+            String location = B2BUtil.getBinariesRoot();
 
             String daemonExecutable = daemonProperties.getProperty("pool-miner-daemon-" + operatingSystem);
             // -c x -M stratum+tcp://67Ra1mNJcKQTsDgNZGp3L1Qx5RPjrz3VdHFYALjjSBUX3qt7MTWVQaWizvDiqZ2hAeSrXd6KBAR7ye3yaTPBevsb5LX6Znn:x@pool.b2bcoin.ml:5555/xmr -t 1

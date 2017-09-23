@@ -55,7 +55,6 @@
                         <version>3.0.2</version>
                         <configuration>
                             <excludes>
-                                <exclude>**/b2bcoin-mac/binaries/**</exclude>
                                 <exclude>**/b2bcoin-linux/binaries/**</exclude>
                                 <exclude>**/b2bcoin-windows/binaries/**</exclude>
                             </excludes>
@@ -163,7 +162,6 @@
                             <excludes>
                                 <exclude>**/b2bcoin-mac/binaries/**</exclude>
                                 <exclude>**/b2bcoin-linux/binaries/**</exclude>
-                                <exclude>**/b2bcoin-windows/binaries/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -232,31 +230,31 @@
                         </executions>
                     </plugin>
 
-                    <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>3.0.2</version>
-                        <executions>
-                            <execution>
-                                <id>copy-resources</id>
-                                <!-- here the phase you need -->
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${project.build.directory}</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>src/main/resources</directory>
-                                            <includes>
-                                                <include>b2bcoin-windows/**</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+                    <!--<plugin>-->
+                        <!--<artifactId>maven-resources-plugin</artifactId>-->
+                        <!--<version>3.0.2</version>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>copy-resources</id>-->
+                                <!--&lt;!&ndash; here the phase you need &ndash;&gt;-->
+                                <!--<phase>verify</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>copy-resources</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
+                                    <!--<resources>-->
+                                        <!--<resource>-->
+                                            <!--<directory>src/main/resources</directory>-->
+                                            <!--<includes>-->
+                                                <!--<include>b2bcoin-windows/**</include>-->
+                                            <!--</includes>-->
+                                        <!--</resource>-->
+                                    <!--</resources>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
 
                 </plugins>
             </build>

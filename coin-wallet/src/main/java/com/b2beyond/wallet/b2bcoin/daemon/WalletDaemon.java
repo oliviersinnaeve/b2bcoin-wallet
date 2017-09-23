@@ -26,7 +26,6 @@ public class WalletDaemon implements Daemon {
 
     private Process process;
     private int processPid;
-    private String daemonExecutable;
     private String operatingSystem;
 
 
@@ -38,32 +37,26 @@ public class WalletDaemon implements Daemon {
         if (baseLocation != null) {
 
             String userHome = B2BUtil.getUserHome();
-            String location = B2BUtil.getBinariesRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
+            String location = B2BUtil.getBinariesRoot();
+            String configLocation = B2BUtil.getConfigRoot();
 
             try {
-                daemonExecutable = daemonProperties.getProperty("wallet-daemon-" + operatingSystem);
+                String daemonExecutable = daemonProperties.getProperty("wallet-daemon-" + operatingSystem);
+
+                LOGGER.debug("Wallet daemon userHome : " + userHome);
+                LOGGER.debug("Wallet daemon binaries location : " + location);
+                LOGGER.debug("Wallet daemon configLocation : " + configLocation);
 
                 if (firstStartup) {
-                    walletProperties.setProperty("container-file", userHome + container);
-                    if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                        String prefix = userHome;
-                        prefix = prefix.replace("\\", "/");
-                        walletProperties.setProperty("container-file", prefix + container);
-                    }
+                    walletProperties.setProperty("container-file", container);
                     walletProperties.setProperty("container-password", password);
                     saveProperties(walletProperties, userHome);
 
-                    LOGGER.debug("Wallet daemon process argument: " + "binaries/" + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf" + " --generate-container " +
-                            "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet"));
+                    LOGGER.debug("Wallet daemon process argument: " + location + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf" + " --generate-container " +
+                            "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet") + "--server-root " + userHome);
 
-                    ProcessBuilder pb = new ProcessBuilder("binaries/" + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf", "--generate-container",
-                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
-                    if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                        pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf", "--generate-container",
-                                "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
-                    } else {
-                        pb.directory(new File(location));
-                    }
+                    ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf", "--generate-container",
+                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "--server-root", userHome);
 
                     LOGGER.info("First startup, creating wallet");
                     Process process = pb.start();
@@ -76,7 +69,7 @@ public class WalletDaemon implements Daemon {
                     }
 
                     try {
-                        Thread.sleep(5000);
+                        LOGGER.debug("Wait for first wallet run to finish with exit code : " + process.waitFor());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -91,16 +84,10 @@ public class WalletDaemon implements Daemon {
                 }
 
 
-                LOGGER.debug("Wallet daemon process argument: " + "binaries/" + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf " +
+                LOGGER.debug("Wallet daemon process argument: " + location + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf " +
                         "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet") + " -d");
-                ProcessBuilder pb = new ProcessBuilder("binaries/" + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
-                        "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "-d");
-                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                    pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
-                            "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"));
-                } else {
-                    pb.directory(new File(location));
-                }
+                ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf",
+                        "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "--server-root", userHome, "-d");
 
                 process = pb.start();
                 processPid = B2BUtil.getPid(process, operatingSystem, true);

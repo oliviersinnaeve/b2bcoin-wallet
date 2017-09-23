@@ -34,12 +34,11 @@ public class SoloMinerDaemon implements Daemon {
 
         if (baseLocation != null) {
             String userHome = B2BUtil.getUserHome();
-            String location = B2BUtil.getBinariesRoot(operatingSystem, baseLocation.getFile(), B2BWallet.DEV);
+            String location = B2BUtil.getBinariesRoot();
 
             String daemonExecutable = daemonProperties.getProperty("solo-miner-daemon-" + operatingSystem);
             String container = walletProperties.getProperties().getProperty("container-file");
             String password = walletProperties.getProperties().getProperty("container-password");
-            // ./simplewallet --config-file configs/b2bcoin-wallet.conf --wallet-file MinerWallet.wallet --password AlexiRenzo2 --command start_mining 1
 
             try {
                 ProcessBuilder pb = new ProcessBuilder(
