@@ -79,7 +79,7 @@ public final class B2BUtil {
             }
         }
 
-        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " / " + location);
+        LOGGER.info("Loading daemon from OS / Location : " + operatingSystem + " / " + location + "/");
         return location;
     }
 
