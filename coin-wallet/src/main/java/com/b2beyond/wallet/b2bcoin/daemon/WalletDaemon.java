@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 
@@ -44,12 +45,12 @@ public class WalletDaemon implements Daemon {
                 if (firstStartup) {
                     walletProperties.setProperty("container-file", userHome + container);
                     if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                        String prefix = userHome.replace("C:", "");
+                        String prefix = userHome;
                         prefix = prefix.replace("\\", "/");
-                        walletProperties.setProperty("container-file", "C:" + prefix + container);
+                        walletProperties.setProperty("container-file", prefix + container);
                     }
                     walletProperties.setProperty("container-password", password);
-                    walletProperties.store(new FileOutputStream(userHome + "b2bcoin-wallet.conf"), "Wallet Daemon config file");
+                    saveProperties(walletProperties, userHome);
 
                     LOGGER.debug("Wallet daemon process argument: " + "binaries/" + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf" + " --generate-container " +
                             "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet"));
@@ -105,6 +106,18 @@ public class WalletDaemon implements Daemon {
             } catch (Exception ex) {
                 LOGGER.error("Wallet daemon failed : ", ex);
             }
+        }
+    }
+
+    private void saveProperties(Properties walletProperties, String userHome) {
+        try{
+            PrintWriter writer = new PrintWriter(userHome + "b2bcoin-wallet.conf", "UTF-8");
+            for (String property: walletProperties.stringPropertyNames()) {
+                writer.println(property + "=" + walletProperties.getProperty(property));
+            }
+            writer.close();
+        } catch (IOException e) {
+            // do something
         }
     }
 
