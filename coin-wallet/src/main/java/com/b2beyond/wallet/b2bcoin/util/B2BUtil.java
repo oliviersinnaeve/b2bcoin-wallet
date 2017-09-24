@@ -10,24 +10,14 @@ package com.b2beyond.wallet.b2bcoin.util;
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.FileUtils;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import org.apache.log4j.Logger;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -88,19 +78,19 @@ public final class B2BUtil {
 
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
-                JarFileResourceExtractor.extract(
+                FileResourceExtractor.extractFromJar(
                         "b2bcoin-" + getOperatingSystem() + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
             }
             if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
-                JarFileResourceExtractor.extract(
+                FileResourceExtractor.extractFromJar(
                         "b2bcoin-" + getOperatingSystem() + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
             }
             if (!Paths.get(getConfigRoot() + "b2bcoin.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
-                JarFileResourceExtractor.extract(
+                FileResourceExtractor.extractFromJar(
                         "b2bcoin-" + getOperatingSystem() + "/configs/b2bcoin.conf",
                         getConfigRoot() + "b2bcoin.conf");
             }
