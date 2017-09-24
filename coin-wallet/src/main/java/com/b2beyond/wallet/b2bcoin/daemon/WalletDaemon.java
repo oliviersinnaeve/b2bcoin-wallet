@@ -48,39 +48,40 @@ public class WalletDaemon implements Daemon {
                 LOGGER.debug("Wallet daemon configLocation : " + configLocation);
 
                 if (firstStartup) {
+                    LOGGER.info("First wallet startup - create new wallet or import wallet");
                     walletProperties.setProperty("container-file", container);
                     walletProperties.setProperty("container-password", password);
                     saveProperties(walletProperties, userHome);
 
-                    LOGGER.debug("Wallet daemon process argument: " + location + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf" + " --generate-container " +
+                    LOGGER.debug("First wallet startup - Wallet daemon process argument: " + location + daemonExecutable + " --config " + userHome + "b2bcoin-wallet.conf" + " --generate-container " +
                             "--log-file " + userHome + daemonProperties.getProperty("log-file-wallet") + "--server-root " + userHome);
 
                     ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config", userHome + "b2bcoin-wallet.conf", "--generate-container",
                             "--log-file", userHome + daemonProperties.getProperty("log-file-wallet"), "--server-root", userHome);
 
-                    LOGGER.info("First startup, creating wallet");
+                    LOGGER.info("First wallet startup - start process");
                     Process process = pb.start();
 
                     InputStream processOut = process.getInputStream();
                     BufferedReader processOutBuffer = new BufferedReader(new InputStreamReader(processOut));
                     String line;
                     while ((line = processOutBuffer.readLine()) != null) {
-                        LOGGER.info("WALLET creation output : " + line);
+                        LOGGER.info("First wallet startup - WALLET creation output : " + line);
                     }
 
                     try {
-                        LOGGER.debug("Wait for first wallet run to finish with exit code : " + process.waitFor());
+                        LOGGER.debug("First wallet startup - Wait for first wallet run to finish with exit code : " + process.waitFor());
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     process.destroy();
-                    LOGGER.info("First startup Wait for value : " + process.waitFor());
+                    LOGGER.info("First wallet startup - Wait for value : " + process.waitFor());
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    LOGGER.info("First startup Exit value : " + process.exitValue());
+                    LOGGER.info("First wallet startup - Exit value : " + process.exitValue());
                 }
 
 

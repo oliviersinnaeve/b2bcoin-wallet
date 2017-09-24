@@ -124,7 +124,8 @@ public class NewWalletPanel extends JPanel {
                     } else {
                         LOGGER.info("Copy wallet file to b2bcoin home folder from " + file.getAbsolutePath());
                         try {
-                            Files.copy(Paths.get(file.toURI()), new FileOutputStream(userHome + file.getName()));
+                            long fileLength = Files.copy(Paths.get(file.toURI()), new FileOutputStream(userHome + file.getName()));
+                            LOGGER.debug("File copied - number of bytes : " + fileLength);
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
