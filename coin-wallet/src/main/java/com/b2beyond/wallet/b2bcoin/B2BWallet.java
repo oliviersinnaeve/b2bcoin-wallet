@@ -71,7 +71,7 @@ public class B2BWallet {
     }
 
     public B2BWallet() {
-        if (availableForConnection(9090) || availableForConnection(39155) || availableForConnection(39156)) {
+        if (!availableForConnection(9090) || !availableForConnection(39155) || !availableForConnection(39156)) {
             JOptionPane.showMessageDialog(null,
                     "Please quite your current b2bcoin dameon and wallet daemon, one or both of them are still running.",
                     "Fatal error",
