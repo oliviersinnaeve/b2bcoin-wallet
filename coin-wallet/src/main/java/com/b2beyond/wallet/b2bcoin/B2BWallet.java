@@ -140,9 +140,6 @@ public class B2BWallet {
             }
         }).start();
 
-        //viewSecretKey = walletRpcController.getViewSecretKeyExecutor().execute().getViewSecretKey();
-
-
         LOGGER.info("Starting controllers ...");
         AddressesController addressesController = new AddressesController(
                 walletRpcController.getCreateAddressExecutor(),
@@ -193,21 +190,6 @@ public class B2BWallet {
         // Start polling and updating the views
         LOGGER.info("Starting the rpc pollers ...");
         RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(walletRpcController.getStatusExecutor(), 5000);
-
-        // TODO take 1 and 2 into account !!!
-
-
-        // TODO 1 -  Status block count / available blocks need to do the trigger,
-        // TODO 1 -  not the polling,that is to memory and cpu intensive !!!!!!!
-
-        // TODO 1 -  MOVE TO ONE POLLER - STATUS, based on that one trigger other observers that know of the status type.
-        // TODO 1 -  On adding/create address call observers as well !!
-
-        // TODO 1 -  POINT MADE, change architecture !!
-
-
-        // TODO 2 - squeeze in un confirmed transactions into the transaction panel !!!
-
         RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(walletRpcController.getAddressesExecutor(), 5000);
         RpcPoller<BlockCount> syncPoller = new NoParamsRpcPoller<>(coinRpcController.getBlockCountExecutor(), 5000);
         TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(walletRpcController.getTransactionsExecutor(), 5000);

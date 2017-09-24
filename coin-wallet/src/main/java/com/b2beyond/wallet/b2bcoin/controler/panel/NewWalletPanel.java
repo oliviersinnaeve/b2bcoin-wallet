@@ -122,9 +122,9 @@ public class NewWalletPanel extends JPanel {
                     if (file.getAbsolutePath().equalsIgnoreCase(userHome + file.getName())) {
                         LOGGER.info("File already located in b2bcoin home folder");
                     } else {
-                        LOGGER.info("Copy wallet file to b2bcoin home folder");
+                        LOGGER.info("Copy wallet file to b2bcoin home folder from " + file.getAbsolutePath());
                         try {
-                            Files.copy(Paths.get(file.getAbsolutePath()), new FileOutputStream(userHome + file.getName()));
+                            Files.copy(Paths.get(file.toURI()), new FileOutputStream(userHome + file.getName()));
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
