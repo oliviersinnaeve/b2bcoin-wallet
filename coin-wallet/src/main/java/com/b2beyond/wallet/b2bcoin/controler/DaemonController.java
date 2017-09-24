@@ -53,6 +53,10 @@ public class DaemonController {
         File userHomeFiles = new File(userHome);
         userHomeFiles.mkdirs();
 
+        String daemonExecutable = coinProperties.getProperty("coin-daemon-" + operatingSystem);
+        String walletExecutable = coinProperties.getProperty("wallet-daemon-" + operatingSystem);
+        B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable);
+
         if (new File(userHome + "b2bcoin-wallet.conf").exists()) {
             try {
                 walletProperties.getProperties().load(new FileInputStream(userHome + "b2bcoin-wallet.conf"));
@@ -65,10 +69,6 @@ public class DaemonController {
             if (StringUtils.isBlank(container) || StringUtils.isBlank(password) || !new File(userHome + container).exists()) {
 
                 final NewWalletPanel newWalletPallet = new NewWalletPanel();
-
-                String daemonExecutable = coinProperties.getProperty("coin-daemon-" + operatingSystem);
-                String walletExecutable = coinProperties.getProperty("wallet-daemon-" + operatingSystem);
-                B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable);
 
                 boolean valid = false;
                 while (!valid) {
