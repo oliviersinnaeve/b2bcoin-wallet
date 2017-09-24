@@ -33,6 +33,7 @@ import com.b2beyond.wallet.b2bcoin.view.view.TransactionsTabView;
 import org.apache.log4j.Logger;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.Color;
@@ -70,6 +71,14 @@ public class B2BWallet {
     }
 
     public B2BWallet() {
+        if (availableForConnection(9090) || availableForConnection(39155) || availableForConnection(39156)) {
+            JOptionPane.showMessageDialog(null,
+                    "Please quite your current b2bcoin dameon and wallet daemon, one or both of them are still running.",
+                    "Fatal error",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+
         UIManager.put("Table.foreground",
                 new ColorUIResource(Color.black));
         UIManager.put("Table.background",
