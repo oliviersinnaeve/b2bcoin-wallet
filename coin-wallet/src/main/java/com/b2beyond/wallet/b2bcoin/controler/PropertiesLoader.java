@@ -6,6 +6,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -21,11 +22,11 @@ public class PropertiesLoader {
         try {
             String location = B2BUtil.getConfigRoot();
 
-            if (getClass().getClassLoader() != null) {
-                if (getClass().getClassLoader().getResource("b2bcoin-" + B2BUtil.getOperatingSystem()) != null) {
-                    LOGGER.info("Loading config file : " + location + filename);
-                    properties.load(new FileInputStream(location + filename));
-                }
+            if (new File(location + filename).exists()) {
+                LOGGER.info("Loading config file : " + location + filename);
+                properties.load(new FileInputStream(location + filename));
+            } else {
+                LOGGER.error("Couldn't load properties : " + location + filename);
             }
         } catch (ConfigurationException | IOException e) {
             LOGGER.error("WalletDaemonProperties", e);
