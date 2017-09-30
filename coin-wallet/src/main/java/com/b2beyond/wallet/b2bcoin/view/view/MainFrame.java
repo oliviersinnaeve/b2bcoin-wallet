@@ -66,7 +66,6 @@ public class MainFrame extends JFrame implements Observer {
         //This will center the JFrame in the middle of the screen
         this.setLocationRelativeTo(null);
 
-        //setBounds(100, 100, 1024, 541);
         JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
@@ -92,7 +91,6 @@ public class MainFrame extends JFrame implements Observer {
         desktopPane.add(splitPane, "2, 2, fill, fill");
 
         JPanel menu = new JPanel();
-//        menu.setBackground(SystemColor.textHighlight);
         menu.setBorder(null);
         splitPane.setLeftComponent(menu);
         GridBagLayout gbl_Menu = new GridBagLayout();

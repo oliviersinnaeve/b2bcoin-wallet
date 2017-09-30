@@ -109,16 +109,22 @@ public final class B2BUtil {
         try {
             new File(getBinariesRoot()).mkdirs();
 
+            String os = getOperatingSystem();
+
+            if ("32".equals(System.getProperty("sun.arch.data.model")) && getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+                os += "-32";
+            }
+
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + daemonExecutable,
+                        "b2bcoin-" + os + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
             }
             if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + walletExecutable,
+                        "b2bcoin-" + os + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
             }
 
@@ -126,7 +132,7 @@ public final class B2BUtil {
                 if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
                     LOGGER.trace("Exporting the wallet daemon");
                     FileResourceExtractor.extractFromJar(
-                            "b2bcoin-" + getOperatingSystem() + "/binaries/" + poolMinerExecutable,
+                            "b2bcoin-" + os + "/binaries/" + poolMinerExecutable,
                             getBinariesRoot() + poolMinerExecutable);
                 }
 
