@@ -17,7 +17,7 @@ public class DaemonPortChecker implements Runnable {
     public void run() {
         int tries = 10;
         while (availableForConnection(9090)) {
-            LOGGER.info("Still Loading the wallet daemon and coin daemon ...");
+            LOGGER.info("Still Loading the wallet daemon ...");
             if (tries == 0) {
                 JOptionPane.showMessageDialog(null,
                         "We tried to start the wallet rpc server on port 9090, it could not be started.\n" +
@@ -34,7 +34,7 @@ public class DaemonPortChecker implements Runnable {
             }
         }
         while (availableForConnection(39155)) {
-            LOGGER.info("Still Loading the wallet daemon and coin daemon ...");
+            LOGGER.info("Still Loading the coin daemon ...");
             if (tries == 0) {
                 JOptionPane.showMessageDialog(null,
                         "We tried to start the coin daemon on port 39155, it could not be started.\n" +
