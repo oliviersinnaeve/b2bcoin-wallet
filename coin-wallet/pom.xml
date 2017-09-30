@@ -22,6 +22,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+        </dependency>
 
         <!-- WINDOWS CRAP -->
         <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->

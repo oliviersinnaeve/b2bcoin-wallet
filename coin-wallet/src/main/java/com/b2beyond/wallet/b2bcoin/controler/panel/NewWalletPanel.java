@@ -49,8 +49,8 @@ public class NewWalletPanel extends JPanel {
         JRadioButton newWalletButton = new JRadioButton("New wallet");
         newWalletButton.setActionCommand("New wallet");
         newWalletButton.setSelected(true);
-        JRadioButton importWalletButton = new JRadioButton("Import simple wallet");
-        importWalletButton.setActionCommand("Import simple wallet");
+        JRadioButton importWalletButton = new JRadioButton("Import wallet");
+        importWalletButton.setActionCommand("Import wallet");
 
         ButtonGroup group = new ButtonGroup();
         group.add(newWalletButton);
@@ -68,7 +68,7 @@ public class NewWalletPanel extends JPanel {
         passwordField = new JPasswordField();
         final JButton button = new JButton("Select file ...");
         button.setEnabled(false);
-        final JFileChooser fileChooser = new JFileChooser();
+        final JFileChooser fileChooser = new JFileChooser(new File(userHome));
         String msgString2 = "1. Wallet Name :";
         String msgString3 = "2. Select simple wallet : ";
         String msgString4 = "Password :";

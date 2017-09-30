@@ -6,7 +6,7 @@ import java.io.BufferedReader;
  * Created by oliviersinnaeve on 12/09/17.
  */
 public interface MiningController {
-    void startMining(String address, String numberOfProcessors);
+    void startMining(String pool, String port, String address, String numberOfProcessors);
 
     void stopMining();
 

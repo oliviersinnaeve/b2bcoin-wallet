@@ -2,41 +2,44 @@ package com.b2beyond.wallet.b2bcoin.controler;
 
 
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Properties;
 
-public class WalletDaemonProperties {
 
-    private Logger LOGGER = Logger.getLogger(this.getClass());
+public class PropertiesLoader {
 
-    private Properties properties = new Properties();
+    private static Logger LOGGER = Logger.getLogger(PropertiesLoader.class);
 
-    public WalletDaemonProperties() {
+    private PropertiesConfiguration properties = new PropertiesConfiguration();
+
+
+    public PropertiesLoader(String filename) {
         try {
             LOGGER.info("Loading wallet daemon config for OS : " + B2BUtil.getOperatingSystem());
-
             LOGGER.info("Loading wallet daemon properties from root - class : " + getClass());
             LOGGER.info("Loading wallet daemon properties from root - class loader" + getClass().getClassLoader());
+
+            String location = B2BUtil.getConfigRoot();
+
             if (getClass().getClassLoader() != null) {
                 if (getClass().getClassLoader().getResource("b2bcoin-" + B2BUtil.getOperatingSystem()) != null) {
                     LOGGER.info("Loading wallet daemon properties from root " + getClass().getClassLoader()
                             .getResource("b2bcoin-" + B2BUtil.getOperatingSystem()));
+
+                    properties.load(new FileInputStream(location + B2BUtil.SEPARATOR + filename));
                 }
             }
-
-//            LOGGER.info("Loading wallet daemon properties from root " + Thread.currentThread().getContextClassLoader()
-//                    .getResource("b2bcoin-" + OsChecker.getOperatingSystem() + "/configs/b2bcoin-wallet.conf").getFile());
-            properties.load(getClass().getClassLoader().getResourceAsStream(
-                    "b2bcoin-" + B2BUtil.getOperatingSystem() + "/configs/b2bcoin-wallet.conf"));
-        } catch (IOException e) {
+        } catch (ConfigurationException | IOException e) {
             LOGGER.error("WalletDaemonProperties", e);
             System.exit(1);
         }
     }
 
-    public Properties getProperties() {
+    public PropertiesConfiguration getProperties() {
         return properties;
     }
 }

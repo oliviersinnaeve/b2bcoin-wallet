@@ -1,13 +1,8 @@
 package com.b2beyond.wallet.b2bcoin.daemon;
 
-import com.b2beyond.wallet.b2bcoin.B2BWallet;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
 
 
 /**
@@ -22,31 +17,33 @@ public class CoinDaemon implements Daemon {
     private Process process;
 
 
-    public CoinDaemon(Properties daemonProperties, String operatingSystem) {
+    public CoinDaemon(PropertiesConfiguration daemonProperties, String operatingSystem) {
         LOGGER.info("Starting coin daemon for OS : " + operatingSystem);
 
-        URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + "/");
-        if (baseLocation != null) {
+//        URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + B2BUtil.SEPARATOR);
+//        if (baseLocation != null) {
 
             String userHome = B2BUtil.getUserHome();
-            String location = B2BUtil.getBinariesRoot();
+            String binariesLocation = B2BUtil.getBinariesRoot();
             String configLocation = B2BUtil.getConfigRoot();
+            String logLocation = B2BUtil.getLogRoot();
 
             try {
-                String daemonExecutable = daemonProperties.getProperty("coin-daemon-" + operatingSystem);
+                String daemonExecutable = daemonProperties.getString("coin-daemon-" + operatingSystem);
 
                 LOGGER.debug("Coin daemon userHome : " + userHome);
-                LOGGER.debug("Coin daemon binaries location : " + location);
+                LOGGER.debug("Coin daemon binaries location : " + binariesLocation);
                 LOGGER.debug("Coin daemon configLocation : " + configLocation);
+                LOGGER.debug("Coin daemon logs : " + logLocation);
 
-                ProcessBuilder pb = new ProcessBuilder(location + daemonExecutable, "--config-file", userHome + "configs/b2bcoin.conf",
-                        "--log-file", userHome + daemonProperties.getProperty("log-file-coin"));
+                ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
+                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
 
                 process = pb.start();
             } catch (Exception ex) {
                 LOGGER.error("Coin daemon failed to load", ex);
             }
-        }
+//        }
     }
 
     @Override

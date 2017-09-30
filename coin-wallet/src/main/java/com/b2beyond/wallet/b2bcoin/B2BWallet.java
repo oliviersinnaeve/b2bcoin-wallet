@@ -1,12 +1,10 @@
 package com.b2beyond.wallet.b2bcoin;
 
-import com.b2beyond.wallet.b2bcoin.controler.CoinDaemonProperties;
-import com.b2beyond.wallet.b2bcoin.controler.CoinProperties;
 import com.b2beyond.wallet.b2bcoin.controler.CoinRpcController;
 import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
-import com.b2beyond.wallet.b2bcoin.controler.WalletDaemonProperties;
-import com.b2beyond.wallet.b2bcoin.controler.WalletProperties;
+import com.b2beyond.wallet.b2bcoin.controler.PropertiesLoader;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
+import com.b2beyond.wallet.b2bcoin.daemon.DaemonPortChecker;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.NoParamsRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.TransactionItemsRpcPoller;
@@ -30,6 +28,7 @@ import com.b2beyond.wallet.b2bcoin.view.view.PaymentTabView;
 import com.b2beyond.wallet.b2bcoin.view.view.SplashWindow;
 import com.b2beyond.wallet.b2bcoin.view.view.StatusTabView;
 import com.b2beyond.wallet.b2bcoin.view.view.TransactionsTabView;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import javax.swing.ImageIcon;
@@ -39,7 +38,6 @@ import javax.swing.plaf.ColorUIResource;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,15 +48,13 @@ import java.util.Properties;
 
 public class B2BWallet {
 
-    private Logger LOGGER = Logger.getLogger(this.getClass());
+    private static Logger LOGGER = Logger.getLogger(B2BWallet.class);
 
     private ActionController actionController;
 
-    public WalletProperties walletProperties;
-    public CoinProperties coinProperties;
-
-    public WalletDaemonProperties walletDaemonProperties;
-    public CoinDaemonProperties coinDaemonProperties;
+    public PropertiesConfiguration applicationProperties;
+    public PropertiesConfiguration walletDaemonProperties;
+    public PropertiesConfiguration coinDaemonProperties;
 
     private SplashWindow loadWindow;
     private int loadingCounter = 1;
@@ -80,7 +76,7 @@ public class B2BWallet {
         UIManager.put("Table.foreground",
                 new ColorUIResource(Color.black));
         UIManager.put("Table.background",
-                new ColorUIResource(SystemColor.controlShadow));
+                new ColorUIResource(157, 217, 210));
 
         if (LOGGER.isDebugEnabled()) {
             Properties p = System.getProperties();
@@ -100,43 +96,32 @@ public class B2BWallet {
             }
         });
 
-        walletProperties = new WalletProperties();
+        B2BUtil.copyConfigsOnFirstRun();
         loadWindow.setProgress(loadingCounter++);
 
-        coinProperties = new CoinProperties();
+        applicationProperties = new PropertiesLoader("application.config").getProperties();
+        loadWindow.setProgress(loadingCounter++);
+        walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
+        loadWindow.setProgress(loadingCounter++);
+        coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
 
-        walletDaemonProperties = new WalletDaemonProperties();
-        loadWindow.setProgress(loadingCounter++);
-
-        coinDaemonProperties = new CoinDaemonProperties();
-        loadWindow.setProgress(loadingCounter++);
         LOGGER.info("Properties loaded, wallet can get started");
+        String daemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
+        String walletExecutable = applicationProperties.getString("wallet-daemon-" + B2BUtil.getOperatingSystem());
+        String poolMinerExecutable = applicationProperties.getString("pool-miner-daemon-" + B2BUtil.getOperatingSystem());
+        B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable, poolMinerExecutable);
 
         DaemonController coinDaemon = new DaemonController(
-                coinProperties.getCoinProperties(),
+                applicationProperties,
                 walletDaemonProperties,
                 B2BUtil.getOperatingSystem());
-        WalletRpcController walletRpcController = new WalletRpcController(coinProperties);
-        CoinRpcController coinRpcController = new CoinRpcController(coinProperties);
+        WalletRpcController walletRpcController = new WalletRpcController(applicationProperties);
+        CoinRpcController coinRpcController = new CoinRpcController(applicationProperties);
         actionController = new ActionController(coinDaemon, walletRpcController, coinRpcController);
         loadWindow.setProgress(loadingCounter++);
 
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (availableForConnection(9090) && availableForConnection(39155) && availableForConnection(39156)) {
-                    LOGGER.info("Still Loading the wallet daemon ...");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                loadWindow.setProgress(loadingCounter++);
-            }
-        }).start();
+        new Thread(new DaemonPortChecker()).start();
 
         LOGGER.info("Starting controllers ...");
         AddressesController addressesController = new AddressesController(
@@ -145,12 +130,13 @@ public class B2BWallet {
         PaymentController paymentController = new PaymentController(
                 walletRpcController.getPaymentExecutor());
         PoolMiningController miningController = new PoolMiningController(
-                coinProperties.getCoinProperties(),
+                applicationProperties,
                 B2BUtil.getOperatingSystem());
         SoloMiningController soloMiningController = new SoloMiningController(
-                coinProperties.getCoinProperties(),
+                applicationProperties,
                 walletDaemonProperties,
                 B2BUtil.getOperatingSystem());
+        loadWindow.setProgress(loadingCounter++);
         LOGGER.info("Controllers started.");
 
         LOGGER.info("Creating tab view instances ...");
@@ -159,8 +145,8 @@ public class B2BWallet {
         AddressesTabView addressesTabView = new AddressesTabView(addressesController);
         PaymentTabView paymentTabView = new PaymentTabView();
         CreatePaymentTabView createPaymentTabView = new CreatePaymentTabView(paymentController);
-        MiningTabView miningTabView = new MiningTabView(miningController);
-        MiningTabView soloMiningTabView = new MiningTabView(soloMiningController);
+        MiningTabView miningTabView = new MiningTabView(miningController, applicationProperties);
+        MiningTabView soloMiningTabView = new MiningTabView(soloMiningController, applicationProperties);
 
         loadWindow.setProgress(loadingCounter++);
         actionController.setMiningController(miningController);
@@ -168,7 +154,8 @@ public class B2BWallet {
 
         MenuBar menuBar = new MenuBar(actionController);
         List<TabContainer> containers = new ArrayList<>();
-        containers.add(new TabContainer<>(0, "Overview", statusTabView, true, new ImageIcon("/Users/oliviersinnaeve/Pictures/stats-icon.png")));
+        URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("stats-icon.png");
+        containers.add(new TabContainer<>(0, "Overview", statusTabView, true, new ImageIcon(splashScreenLocation)));
         containers.add(new TabContainer<>(1, "Addresses", addressesTabView, true));
         containers.add(new TabContainer<>(2, "Transactions", transactionsTabView, true));
         containers.add(new TabContainer<>(3, "Payments", paymentTabView, true));
@@ -177,7 +164,7 @@ public class B2BWallet {
         containers.add(new TabContainer<>(6, "Solo Mining", soloMiningTabView, false));
 
         LOGGER.info("Generating frame ...");
-        MainFrame guiFrame = new MainFrame(menuBar, containers, walletProperties);
+        MainFrame guiFrame = new MainFrame(menuBar, containers, applicationProperties);
         loadWindow.setProgress(loadingCounter++);
 
         try {

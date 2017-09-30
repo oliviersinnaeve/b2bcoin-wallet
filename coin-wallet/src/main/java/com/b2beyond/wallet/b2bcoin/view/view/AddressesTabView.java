@@ -24,7 +24,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class AddressesTabView extends JPanel implements ActionListener, Observer {
+public class AddressesTabView extends JPanel implements Observer {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
@@ -59,15 +59,15 @@ public class AddressesTabView extends JPanel implements ActionListener, Observer
             }
         });
 
-        JButton createNewAddress = new JButton("Create Address");
-        createNewAddress.addActionListener(this);
+//        JButton createNewAddress = new JButton("Create Address");
+//        createNewAddress.addActionListener(this);
 
         totalAmountLabel = new JLabel("Loading ...");
         totalAmountLockedLabel = new JLabel("Loading ...");
-        JPanel amountPanel = new JPanel(new FlowLayout());
+        JPanel amountPanel = new JPanel();
         amountPanel.add(totalAmountLabel);
         amountPanel.add(totalAmountLockedLabel);
-        amountPanel.add(createNewAddress);
+//        amountPanel.add(createNewAddress);
 
         JTableHeader header = addressesTable.getTableHeader();
         this.add(header, BorderLayout.NORTH);
@@ -110,15 +110,15 @@ public class AddressesTabView extends JPanel implements ActionListener, Observer
         addressesTableModel.addRow(data);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-
-        if (command.equals("Create Address")) {
-            Address address = controller.createAddress();
-            addAddress(address);
-        }
-    }
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        String command = e.getActionCommand();
+//
+//        if (command.equals("Create Address")) {
+//            Address address = controller.createAddress();
+//            addAddress(address);
+//        }
+//    }
 
     public void setTotalBalance(long balance) {
         LOGGER.info("Updating total balance label");

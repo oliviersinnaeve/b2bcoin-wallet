@@ -5,6 +5,8 @@ import com.b2beyond.wallet.b2bcoin.daemon.CoinDaemon;
 import com.b2beyond.wallet.b2bcoin.daemon.Daemon;
 import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -19,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 
 public class DaemonController {
@@ -30,65 +31,65 @@ public class DaemonController {
     private Daemon coinDaemon;
     private Daemon walletDaemon;
 
-    private WalletDaemonProperties walletProperties;
+    private PropertiesConfiguration walletProperties;
+    private PropertiesConfiguration applicationProperties;
 
-    private Properties coinProperties;
     private String operatingSystem;
     private String userHome;
     private String password;
     private String container;
 
 
-    public DaemonController(Properties coinProperties, WalletDaemonProperties walletProperties, String operatingSystem) {
+    public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration walletProperties, String operatingSystem) {
         LOGGER.info("Loading Daemon controller");
-        this.coinProperties = coinProperties;
+        this.applicationProperties = applicationProperties;
         this.walletProperties = walletProperties;
         this.operatingSystem = operatingSystem;
         boolean firstStartup = false;
 
+        String configLocation = B2BUtil.getConfigRoot();
         userHome = B2BUtil.getUserHome();
-        container = walletProperties.getProperties().getProperty("container-file");
-        password = walletProperties.getProperties().getProperty("container-password");
+        container = walletProperties.getString("container-file");
+        password = walletProperties.getString("container-password");
 
         File userHomeFiles = new File(userHome);
         userHomeFiles.mkdirs();
 
-        String daemonExecutable = coinProperties.getProperty("coin-daemon-" + operatingSystem);
-        String walletExecutable = coinProperties.getProperty("wallet-daemon-" + operatingSystem);
-        B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable);
-
-        if (new File(userHome + "b2bcoin-wallet.conf").exists()) {
+        if (new File(configLocation + "coin-wallet.conf").exists()) {
             try {
-                walletProperties.getProperties().load(new FileInputStream(userHome + "b2bcoin-wallet.conf"));
-                container = walletProperties.getProperties().getProperty("container-file");
-                password = walletProperties.getProperties().getProperty("container-password");
-            } catch (IOException e) {
+                walletProperties.load(new FileInputStream(configLocation + "coin-wallet.conf"));
+                container = walletProperties.getString("container-file");
+                password = walletProperties.getString("container-password");
+            } catch (ConfigurationException | IOException e) {
                 LOGGER.info("No wallet has been loaded ever");
             }
         }
-            if (StringUtils.isBlank(container) || StringUtils.isBlank(password) || !new File(userHome + container).exists()) {
 
-                final NewWalletPanel newWalletPallet = new NewWalletPanel();
+        if (StringUtils.isBlank(container) || StringUtils.isBlank(password) || !new File(userHome + container).exists()) {
 
-                boolean valid = false;
-                while (!valid) {
-                    URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
-                    JOptionPane.showMessageDialog(null, newWalletPallet, "Create or Import",
-                            JOptionPane.INFORMATION_MESSAGE, new ImageIcon(splashScreenLocation));
+            // TODO: rethink this, This is not the correct place, else we would not need to include the wallet panel in the
+            // backend part ...
+            final NewWalletPanel newWalletPallet = new NewWalletPanel();
 
-                    newWalletPallet.getWalletNameField().setEnabled(true);
-                    valid = StringUtils.isNotBlank(newWalletPallet.getWalletNameField().getText()) && StringUtils.isNotBlank(newWalletPallet.getPasswordField().getText());
-                }
+            boolean valid = false;
+            while (!valid) {
+                URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
+                JOptionPane.showMessageDialog(null, newWalletPallet, "Create or Import",
+                        JOptionPane.INFORMATION_MESSAGE, new ImageIcon(splashScreenLocation));
 
-                container = newWalletPallet.getWalletNameField().getText();
-                password = newWalletPallet.getPasswordField().getText();
-
-                firstStartup = true;
+                newWalletPallet.getWalletNameField().setEnabled(true);
+                valid = StringUtils.isNotBlank(newWalletPallet.getWalletNameField().getText()) && StringUtils.isNotBlank(newWalletPallet.getPasswordField().getText());
             }
 
+            container = newWalletPallet.getWalletNameField().getText();
+            password = newWalletPallet.getPasswordField().getText();
 
-        coinDaemon = new CoinDaemon(coinProperties, operatingSystem);
-        walletDaemon =  new WalletDaemon(coinProperties, operatingSystem, walletProperties.getProperties(), container, password, firstStartup);
+            firstStartup = true;
+        }
+
+
+        coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
+        walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
     }
 
     public void stop() {
@@ -98,9 +99,9 @@ public class DaemonController {
         try {
             String timestamp = new SimpleDateFormat("dd-MM-yyyy-hh-mm").format(new Date());
             LOGGER.info("Backing up for container : " + container + " : " + timestamp);
-            File userHomeBackupFiles = new File(userHome + "/backup");
+            File userHomeBackupFiles = new File(userHome + "/backup/" + timestamp);
             userHomeBackupFiles.mkdirs();
-            walletProperties.getProperties().store(new FileOutputStream(userHome + B2BUtil.SEPARATOR + "backup" + B2BUtil.SEPARATOR + "b2bcoin-wallet-" + timestamp +".conf"), "");
+            walletProperties.save(new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + "b2bcoin-wallet-" + timestamp + ".conf"));
 
             try {
                 String[] splitContainer = container.split("/");
@@ -109,11 +110,11 @@ public class DaemonController {
                 if (splitContainer.length == 1) {
                     Files.copy(
                             Paths.get(userHome + container),
-                            new FileOutputStream(userHome + B2BUtil.SEPARATOR + "backup" + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
+                            new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
                 } else {
                     Files.copy(
                             Paths.get(container),
-                            new FileOutputStream(userHome + B2BUtil.SEPARATOR + "backup" + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
+                            new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -131,6 +132,7 @@ public class DaemonController {
 
     public void restartWallet() {
         walletDaemon.stop();
-        walletDaemon =  new WalletDaemon(coinProperties, operatingSystem, walletProperties.getProperties(), container, password, false);
+        walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, false);
     }
+
 }

@@ -3,10 +3,10 @@ package com.b2beyond.wallet.b2bcoin.controler;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 
 public class CoinRpcController {
@@ -15,9 +15,8 @@ public class CoinRpcController {
 
     private List<RpcPoller<?>> pollers = new ArrayList<>();
 
-    public CoinRpcController(CoinProperties coinProperties) {
-        Properties daemonProperties = coinProperties.getCoinProperties();
-        String baseUrl = daemonProperties.getProperty("coin-daemon-base-url");
+    public CoinRpcController(PropertiesConfiguration applicationProperties) {
+        String baseUrl = applicationProperties.getString("coin-daemon-base-url");
 
         blockCountExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getblockcount", BlockCount.class);
     }

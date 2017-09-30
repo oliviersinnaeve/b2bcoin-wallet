@@ -1,7 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.controller;
 
-import com.b2beyond.wallet.b2bcoin.controler.WalletDaemonProperties;
 import com.b2beyond.wallet.b2bcoin.daemon.SoloMinerDaemon;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -13,8 +13,8 @@ public class SoloMiningController implements MiningController {
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
 
-    private Properties daemonProperties;
-    private WalletDaemonProperties walletDaemonProperties;
+    private PropertiesConfiguration applicationProperties;
+    private PropertiesConfiguration walletDaemonProperties;
 
     private String operatingSystem;
 
@@ -24,17 +24,17 @@ public class SoloMiningController implements MiningController {
     private BufferedReader miningOutput;
 
 
-    public SoloMiningController(Properties daemonProperties, WalletDaemonProperties walletDaemonProperties, String operatingSystem) {
-        this.daemonProperties = daemonProperties;
+    public SoloMiningController(PropertiesConfiguration applicationProperties, PropertiesConfiguration walletDaemonProperties, String operatingSystem) {
+        this.applicationProperties = applicationProperties;
         this.walletDaemonProperties = walletDaemonProperties;
         this.operatingSystem = operatingSystem;
     }
 
     @Override
-    public void startMining(String address, String numberOfProcessors) {
+    public void startMining(String pool, String port, String address, String numberOfProcessors) {
         if (this.poolMinerDaemon == null) {
             LOGGER.info("Starting solo miner ...");
-            this.poolMinerDaemon = new SoloMinerDaemon(this.daemonProperties, this.walletDaemonProperties, this.operatingSystem, address, numberOfProcessors);
+            this.poolMinerDaemon = new SoloMinerDaemon(this.applicationProperties, this.walletDaemonProperties, this.operatingSystem, address, numberOfProcessors);
             setMining(true);
             miningOutput = this.poolMinerDaemon.getProcessOutBuffer();
             LOGGER.info("Solo miner started !!");

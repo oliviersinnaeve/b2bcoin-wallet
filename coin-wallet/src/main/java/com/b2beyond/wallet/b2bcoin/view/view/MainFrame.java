@@ -1,7 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 
-import com.b2beyond.wallet.b2bcoin.controler.WalletProperties;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
@@ -10,6 +9,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,7 +27,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -55,11 +54,12 @@ public class MainFrame extends JFrame implements Observer {
      * @param menuBar the menubar to show in the frame
      * @param containers the containers that we will create menu tabs for (left side, not menu on top !!)
      */
-    public MainFrame(MenuBar menuBar, List<TabContainer> containers, WalletProperties walletProperties) {
+    public MainFrame(MenuBar menuBar, List<TabContainer> containers, PropertiesConfiguration applicationProperties) {
         this.setTitle("B2BCoin GUI");
         this.setBackground(B2BUtil.mainColor);
-        this.setMinimumSize(new Dimension(walletProperties.getMinWidth(), walletProperties.getMinHeight()));
-        this.setPreferredSize(new Dimension(walletProperties.getMinWidth(), walletProperties.getMinHeight()));
+        Dimension minimumSize = new Dimension(applicationProperties.getInt("min-width"), applicationProperties.getInt("min-height"));
+        this.setMinimumSize(minimumSize);
+        this.setPreferredSize(minimumSize);
         this.setJMenuBar(menuBar);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

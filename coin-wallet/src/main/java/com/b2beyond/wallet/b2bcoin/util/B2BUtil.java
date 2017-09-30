@@ -34,8 +34,11 @@ public final class B2BUtil {
 
     public static final String SEPARATOR = System.getProperty("file.separator");
 
-    public static Color mainColor = new Color(164, 205, 255);
-    public static Color selectedColor = new Color(64, 64, 64);
+//    public static Color mainColor = new Color(0, 130, 0);
+//    public static Color selectedColor = new Color(0, 88, 0);
+
+    public static Color mainColor = new Color(56, 174, 204);
+    public static Color selectedColor = new Color(8, 103, 136);
 
     public static final DateFormat readFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aa");
     public static final DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
@@ -71,7 +74,38 @@ public final class B2BUtil {
         return detectedOS;
     }
 
-    public static void copyDaemonsOnFirstRun(String daemonExecutable, String walletExecutable) {
+    public static void copyConfigsOnFirstRun() {
+        try {
+            new File(getConfigRoot()).mkdirs();
+
+            if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
+                LOGGER.trace("Exporting the coin daemon config");
+                FileResourceExtractor.extractFromJar(
+                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "configs" + SEPARATOR + "coin.conf",
+                        getConfigRoot() + "coin.conf");
+            }
+            if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
+                LOGGER.trace("delete the previous coin wallet");
+                Paths.get(getUserHome() + "coin-wallet.conf").toFile().delete();
+            }
+            if (!Paths.get(getConfigRoot() + "coin-wallet.conf").toFile().exists()) {
+                LOGGER.trace("Exporting the coin wallet config");
+                FileResourceExtractor.extractFromJar(
+                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "configs" + SEPARATOR + "coin-wallet.conf",
+                        getConfigRoot() + "coin-wallet.conf");
+            }
+            if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
+                LOGGER.trace("Exporting the coin daemon config");
+                FileResourceExtractor.extractFromJar(
+                        "application.config",
+                        getConfigRoot() + "application.config");
+            }
+        } catch (Exception e) {
+            LOGGER.error("Failed to copy file", e);
+        }
+    }
+
+    public static void copyDaemonsOnFirstRun(String daemonExecutable, String walletExecutable, String poolMinerExecutable) {
         try {
             new File(getBinariesRoot()).mkdirs();
             new File(getConfigRoot()).mkdirs();
@@ -79,26 +113,29 @@ public final class B2BUtil {
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + daemonExecutable,
+                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
             }
             if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + walletExecutable,
+                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + walletExecutable,
                         getBinariesRoot() + walletExecutable);
-            }
-            if (!Paths.get(getConfigRoot() + "b2bcoin.conf").toFile().exists()) {
-                LOGGER.trace("Exporting the coin daemon config");
-                FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/configs/b2bcoin.conf",
-                        getConfigRoot() + "b2bcoin.conf");
             }
 
             if (getOperatingSystem().equalsIgnoreCase(LINUX) || getOperatingSystem().equalsIgnoreCase(MAC)) {
+                if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
+                    LOGGER.trace("Exporting the wallet daemon");
+                    FileResourceExtractor.extractFromJar(
+                            "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + poolMinerExecutable,
+                            getBinariesRoot() + poolMinerExecutable);
+                }
+
                 Process p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable);
                 p.waitFor();
                 p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable);
+                p.waitFor();
+                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + poolMinerExecutable);
                 p.waitFor();
             }
         } catch (Exception e) {
@@ -107,31 +144,27 @@ public final class B2BUtil {
     }
 
     public static String getBinariesRoot() {
-        String location = getUserHome() + "binaries/";
-
-        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-            location = getUserHome() + "binaries\\";
-        }
-
+        String location = getUserHome() + "binaries" + SEPARATOR;
         LOGGER.info("Loading daemon from OS / Location : " + getOperatingSystem() + " :: " + location);
         return location;
     }
 
     public static String getConfigRoot() {
-        String location = getUserHome() + "configs/";
+        String location = getUserHome() + "configs" + SEPARATOR;
+        LOGGER.info("Loading daemon from OS / Location : " + getOperatingSystem() + " :: " + location);
+        return location;
+    }
 
-        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-            location = getUserHome() + "configs\\";
-        }
-
+    public static String getLogRoot() {
+        String location = getUserHome() + "logs" + SEPARATOR;
         LOGGER.info("Loading daemon from OS / Location : " + getOperatingSystem() + " :: " + location);
         return location;
     }
 
     public static String getUserHome() {
-        String userHome = System.getProperty("user.home") + "/b2bcoin/";
+        String userHome = System.getProperty("user.home") + SEPARATOR + "b2bcoin" + SEPARATOR;
         if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-            userHome = System.getProperty("user.home") + "\\b2bcoin\\";
+            userHome = System.getProperty("user.home") + SEPARATOR + "b2bcoin" + SEPARATOR;
         }
         LOGGER.info("Starting daemon for OS : '" + getOperatingSystem() + "' with user home : " + userHome);
         return userHome;

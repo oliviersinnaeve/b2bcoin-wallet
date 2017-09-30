@@ -3,6 +3,7 @@ package com.b2beyond.wallet.b2bcoin.view.controller;
 import com.b2beyond.wallet.b2bcoin.controler.CoinRpcController;
 import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
 import org.apache.log4j.Logger;
 
 
@@ -39,6 +40,10 @@ public class ActionController {
     public void startBackgroundProcessesAfterReset() {
         coinRpcController.restart();
         walletRpcController.restart();
+    }
+
+    public Address createAddress() {
+        return walletRpcController.getCreateAddressExecutor().execute();
     }
 
     public void exit() {

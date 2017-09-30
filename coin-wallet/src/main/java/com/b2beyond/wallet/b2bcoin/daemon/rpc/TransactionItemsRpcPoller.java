@@ -13,7 +13,9 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 
     private String params;
     private long firstBlockCount = 1;
-    private static final long blockCount = 10000;
+    private long knowBlockCount = 0;
+    private static final long BLOCKS_TO_FETCH = 10000;
+
 
     private Addresses addresses = new Addresses();
 
@@ -27,7 +29,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         if (this.addresses.getAddresses().size() > 0) {
             params = "\"params\":{\n" +
                     "    \"firstBlockIndex\":" + firstBlockCount + ",\n" +
-                    "    \"blockCount\":" + blockCount + "," +
+                    "    \"blockCount\":" + BLOCKS_TO_FETCH + "," +
                     "    \"addresses\":[\n";
 
             int index = 0;
@@ -54,11 +56,13 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-//            if (status.getKnownBlockCount() > firstBlockCount + 1) {
-//                start();
-//            } else {
-//                stop();
-//            }
+            long newKnowBlockCount = status.getKnownBlockCount();
+
+            if (newKnowBlockCount > firstBlockCount) {
+                start();
+            } else {
+                stop();
+            }
         }
     }
 

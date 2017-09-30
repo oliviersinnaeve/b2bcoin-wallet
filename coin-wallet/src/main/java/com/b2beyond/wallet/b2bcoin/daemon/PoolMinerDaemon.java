@@ -2,6 +2,7 @@ package com.b2beyond.wallet.b2bcoin.daemon;
 
 import com.b2beyond.wallet.b2bcoin.B2BWallet;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -29,46 +30,40 @@ public class PoolMinerDaemon implements Daemon {
     private BufferedReader processOutBuffer;
 
 
-    public PoolMinerDaemon(Properties daemonProperties, String operatingSystem, String address, String numberOfProcessors) {
+    public PoolMinerDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, String pool, String port, String address, String numberOfProcessors) {
         LOGGER.info("Starting yam miner daemon for OS : " + operatingSystem);
 
-        URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + "/");
-        if (baseLocation != null) {
-            String location = B2BUtil.getBinariesRoot();
+        String location = B2BUtil.getBinariesRoot();
 
-            String daemonExecutable = daemonProperties.getProperty("pool-miner-daemon-" + operatingSystem);
-            // -c x -M stratum+tcp://67Ra1mNJcKQTsDgNZGp3L1Qx5RPjrz3VdHFYALjjSBUX3qt7MTWVQaWizvDiqZ2hAeSrXd6KBAR7ye3yaTPBevsb5LX6Znn:x@pool.b2bcoin.ml:5555/xmr -t 1
+        String daemonExecutable = daemonProperties.getString("pool-miner-daemon-" + operatingSystem);
 
-            try {
-                ProcessBuilder pb = new ProcessBuilder(
-                        "binaries/" + daemonExecutable, "-c", "x", "-M",
-                        "stratum+tcp://" + address + ":x@pool.b2bcoin.ml:5555/xmr",
-                        "-t", numberOfProcessors);
-                if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(
+                    location + daemonExecutable, "-c", "x", "-M",
+                    "stratum+tcp://" + address + ":x@" + pool + ":" + port + "/xmr",
+                    "-t", numberOfProcessors);
+            if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
 
-                    if (!new File(location + daemonExecutable).exists()) {
-                        URL website = new URL("http://b2bcoin.ml/binaries/yam.b2b");
-                        ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-                        FileOutputStream fos = new FileOutputStream(location + daemonExecutable);
-                        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-                        fos.close();
-                    }
-
-                    pb = new ProcessBuilder(
-                            location + daemonExecutable, "-c", "x", "-M",
-                            "stratum+tcp://" + address + ":x@pool.b2bcoin.ml:5555/xmr",
-                            "-t", numberOfProcessors);
-                } else {
-                    pb.directory(new File(location));
+                if (!new File(location + daemonExecutable).exists()) {
+                    URL website = new URL("http://b2bcoin.ml/binaries/yam.b2b");
+                    ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                    FileOutputStream fos = new FileOutputStream(location + daemonExecutable);
+                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    fos.close();
                 }
 
-                process = pb.start();
-
-                InputStream processOut = process.getInputStream();
-                processOutBuffer = new BufferedReader(new InputStreamReader(processOut));
-            } catch (Exception ex) {
-                LOGGER.error("PoolMiner Daemon failed", ex);
+                pb = new ProcessBuilder(
+                        location + daemonExecutable, "-c", "x", "-M",
+                        "stratum+tcp://" + address + ":x@" + pool + ":" + port + "/xmr",
+                        "-t", numberOfProcessors);
             }
+
+            process = pb.start();
+
+            InputStream processOut = process.getInputStream();
+            processOutBuffer = new BufferedReader(new InputStreamReader(processOut));
+        } catch (Exception ex) {
+            LOGGER.error("PoolMiner Daemon failed", ex);
         }
     }
 
