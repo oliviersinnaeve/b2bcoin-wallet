@@ -1,9 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.daemon;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
@@ -26,24 +24,55 @@ import java.util.Set;
  *
  * Created by oliviersinnaeve on 09/03/17.
  */
-public class WalletDaemon implements Daemon, Observer {
+public class WalletDaemon implements Daemon {
+
+    private static Logger LOGGER = Logger.getLogger(WalletDaemon.class);
+
+    private WalletDaemonRunnable process;
+
+    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+        LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
+
+        process = new WalletDaemonRunnable(daemonProperties, operatingSystem, walletProperties, container, password, firstStartup);
+        new Thread(process).start();
+    }
+
+    @Override
+    public void stop() {
+        process.stop();
+    }
+}
+
+class WalletDaemonRunnable implements Daemon, Runnable, Observer {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
+
+    private PropertiesConfiguration daemonProperties;
+    private String operatingSystem;
+    private PropertiesConfiguration walletProperties;
+    private String container;
+    private String password;
+    private boolean firstStartup;
 
     private boolean syncing;
     private long maxProgress;
     private Process process;
     private int processPid;
-    private String operatingSystem;
 
-
-    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
-        LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
+    public WalletDaemonRunnable(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+        this.daemonProperties = daemonProperties;
         this.operatingSystem = operatingSystem;
+        this.walletProperties = walletProperties;
+        this.container = container;
+        this.password = password;
+        this.firstStartup = firstStartup;
+    }
 
+    public void run() {
         while (syncing) {
             try {
                 Thread.sleep(5000);
+                Thread.yield();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -110,6 +139,7 @@ public class WalletDaemon implements Daemon, Observer {
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }
+
     }
 
     private void saveProperties(PropertiesConfiguration walletProperties, String configLocation) {
@@ -141,20 +171,6 @@ public class WalletDaemon implements Daemon, Observer {
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        if (data instanceof Status) {
-            Status viewData = (Status) data;
-            maxProgress = viewData.getKnownBlockCount();
-        }
-        if (data instanceof BlockCount) {
-            BlockCount blockCount = (BlockCount) data;
-            if (maxProgress > 1) {
-                syncing = maxProgress > blockCount.getCount();
-            }
-        }
-    }
-
-    @Override
     public void stop() {
         ProcessBuilder pb = null;
         if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX) || operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
@@ -181,6 +197,20 @@ public class WalletDaemon implements Daemon, Observer {
                 LOGGER.info("Killing WALLET daemon exit value : " + process.exitValue());
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if (data instanceof Status) {
+            Status viewData = (Status) data;
+            maxProgress = viewData.getKnownBlockCount();
+        }
+        if (data instanceof BlockCount) {
+            BlockCount blockCount = (BlockCount) data;
+            if (maxProgress > 1) {
+                syncing = maxProgress > blockCount.getCount();
             }
         }
     }

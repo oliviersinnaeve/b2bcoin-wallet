@@ -50,23 +50,23 @@ public class DaemonPortChecker implements Runnable {
                 e.printStackTrace();
             }
         }
-        while (availableForConnection(39156)) {
-            LOGGER.info("Still Loading the wallet daemon and coin daemon ...");
-            if (tries == 0) {
-                JOptionPane.showMessageDialog(null,
-                        "We tried to start the coin rpc server on port 39156, it could not be started.\n" +
-                                "We will shutdown the application, it is not usable anyway.",
-                        "Fatal error",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
-            try {
-                Thread.sleep(2000);
-                tries -= 1;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (availableForConnection(39156)) {
+//            LOGGER.info("Still Loading the wallet daemon and coin daemon ...");
+//            if (tries == 0) {
+//                JOptionPane.showMessageDialog(null,
+//                        "We tried to start the coin rpc server on port 39156, it could not be started.\n" +
+//                                "We will shutdown the application, it is not usable anyway.",
+//                        "Fatal error",
+//                        JOptionPane.ERROR_MESSAGE);
+//                System.exit(1);
+//            }
+//            try {
+//                Thread.sleep(2000);
+//                tries -= 1;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private boolean availableForConnection(int port) {
