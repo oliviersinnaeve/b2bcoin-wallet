@@ -81,7 +81,7 @@ public final class B2BUtil {
             if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "configs" + SEPARATOR + "coin.conf",
+                        "b2bcoin-" + getOperatingSystem() + "/configs/coin.conf",
                         getConfigRoot() + "coin.conf");
             }
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
@@ -91,7 +91,7 @@ public final class B2BUtil {
             if (!Paths.get(getConfigRoot() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin wallet config");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "configs" + SEPARATOR + "coin-wallet.conf",
+                        "b2bcoin-" + getOperatingSystem() + "/configs/coin-wallet.conf",
                         getConfigRoot() + "coin-wallet.conf");
             }
             if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
@@ -112,13 +112,13 @@ public final class B2BUtil {
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + daemonExecutable,
+                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
             }
             if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + walletExecutable,
+                        "b2bcoin-" + getOperatingSystem() + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
             }
 
@@ -126,7 +126,7 @@ public final class B2BUtil {
                 if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
                     LOGGER.trace("Exporting the wallet daemon");
                     FileResourceExtractor.extractFromJar(
-                            "b2bcoin-" + getOperatingSystem() + SEPARATOR + "binaries" + SEPARATOR + poolMinerExecutable,
+                            "b2bcoin-" + getOperatingSystem() + "/binaries/" + poolMinerExecutable,
                             getBinariesRoot() + poolMinerExecutable);
                 }
 
