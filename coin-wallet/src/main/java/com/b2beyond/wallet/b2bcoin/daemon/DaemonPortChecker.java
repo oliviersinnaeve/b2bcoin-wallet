@@ -15,27 +15,28 @@ public class DaemonPortChecker implements Runnable {
 
     @Override
     public void run() {
-        int tries = 10;
-        while (availableForConnection(9090)) {
-            LOGGER.info("Still Loading the wallet daemon ...");
-            if (tries == 0) {
-                JOptionPane.showMessageDialog(null,
-                        "We tried to start the wallet rpc server on port 9090, it could not be started.\n" +
-                                "We will shutdown the application, it is not usable anyway.",
-                        "Fatal error",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
-            try {
-                Thread.sleep(2000);
-                tries -= 1;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        int walletTries = 10;
+        int coinTries = 10;
+//        while (availableForConnection(9090)) {
+//            LOGGER.info("Still Loading the wallet daemon ...");
+//            if (walletTries == 0) {
+//                JOptionPane.showMessageDialog(null,
+//                        "We tried to start the wallet rpc server on port 9090, it could not be started.\n" +
+//                                "We will shutdown the application, it is not usable anyway.",
+//                        "Fatal error",
+//                        JOptionPane.ERROR_MESSAGE);
+//                System.exit(1);
+//            }
+//            try {
+//                Thread.sleep(2000);
+//                walletTries -= 1;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         while (availableForConnection(39155)) {
             LOGGER.info("Still Loading the coin daemon ...");
-            if (tries == 0) {
+            if (coinTries == 0) {
                 JOptionPane.showMessageDialog(null,
                         "We tried to start the coin daemon on port 39155, it could not be started.\n" +
                                 "We will shutdown the application, it is not usable anyway.",
@@ -45,11 +46,12 @@ public class DaemonPortChecker implements Runnable {
             }
             try {
                 Thread.sleep(2000);
-                tries -= 1;
+                coinTries -= 1;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
 //        while (availableForConnection(39156)) {
 //            LOGGER.info("Still Loading the wallet daemon and coin daemon ...");
 //            if (tries == 0) {
