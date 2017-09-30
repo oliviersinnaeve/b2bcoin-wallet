@@ -72,7 +72,6 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
         while (syncing) {
             try {
                 Thread.sleep(5000);
-                Thread.yield();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
