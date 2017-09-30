@@ -34,7 +34,16 @@ public class WalletDaemon implements Daemon {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
 
         process = new WalletDaemonRunnable(daemonProperties, operatingSystem, walletProperties, container, password, firstStartup);
-        new Thread(process).start();
+        Thread wallet = new Thread(process);
+        wallet.start();
+        while (true) {
+            if (wallet.isAlive()) {
+                Thread.yield();
+            } else {
+                wallet = new Thread(process);
+                wallet.start();
+            }
+        }
     }
 
     @Override
