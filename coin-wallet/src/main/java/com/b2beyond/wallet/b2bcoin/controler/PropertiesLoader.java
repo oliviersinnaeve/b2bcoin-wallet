@@ -30,7 +30,7 @@ public class PropertiesLoader {
                     LOGGER.info("Loading wallet daemon properties from root " + getClass().getClassLoader()
                             .getResource("b2bcoin-" + B2BUtil.getOperatingSystem()));
 
-                    properties.load(new FileInputStream(location + B2BUtil.SEPARATOR + filename));
+                    properties.load(new FileInputStream(location + filename));
                 }
             }
         } catch (ConfigurationException | IOException e) {
