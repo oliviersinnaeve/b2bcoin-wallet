@@ -84,6 +84,7 @@ public class StatusTabView extends JPanel implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Resetting wallet");
+                actionController.checkWalletDaemon();
                 actionController.stopBackgroundProcessesBeforeReset();
                 resetExecutor.execute();
                 try {

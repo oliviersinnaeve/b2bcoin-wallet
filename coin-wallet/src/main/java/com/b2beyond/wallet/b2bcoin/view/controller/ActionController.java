@@ -57,4 +57,7 @@ public class ActionController {
         controller.stop();
     }
 
+    public void checkWalletDaemon() {
+        controller.restartWallet();
+    }
 }
