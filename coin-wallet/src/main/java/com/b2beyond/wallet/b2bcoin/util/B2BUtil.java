@@ -81,7 +81,7 @@ public final class B2BUtil {
             if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/configs/coin.conf",
+                        "configs/coin.conf",
                         getConfigRoot() + "coin.conf");
             }
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
@@ -91,14 +91,14 @@ public final class B2BUtil {
             if (!Paths.get(getConfigRoot() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin wallet config");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + getOperatingSystem() + "/configs/coin-wallet.conf",
+                        "configs/coin-wallet.conf",
                         getConfigRoot() + "coin-wallet.conf");
             }
-            if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
+            if (!Paths.get(getConfigRoot() + "configs/application.config").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
-                        "application.config",
-                        getConfigRoot() + "application.config");
+                        "configs/application.config",
+                        getConfigRoot() + "configs/application.config");
             }
         } catch (Exception e) {
             LOGGER.error("Failed to copy file", e);

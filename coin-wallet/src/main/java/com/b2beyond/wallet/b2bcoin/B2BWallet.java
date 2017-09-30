@@ -36,7 +36,6 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.Color;
-import java.awt.SystemColor;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
@@ -99,7 +98,7 @@ public class B2BWallet {
         B2BUtil.copyConfigsOnFirstRun();
         loadWindow.setProgress(loadingCounter++);
 
-        applicationProperties = new PropertiesLoader("application.config").getProperties();
+        applicationProperties = new PropertiesLoader("configs/application.config").getProperties();
         loadWindow.setProgress(loadingCounter++);
         walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
