@@ -98,7 +98,7 @@ public class B2BWallet {
         B2BUtil.copyConfigsOnFirstRun();
         loadWindow.setProgress(loadingCounter++);
 
-        applicationProperties = new PropertiesLoader("configs/application.config").getProperties();
+        applicationProperties = new PropertiesLoader("application.config").getProperties();
         loadWindow.setProgress(loadingCounter++);
         walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);

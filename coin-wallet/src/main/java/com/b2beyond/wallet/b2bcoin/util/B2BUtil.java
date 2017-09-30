@@ -115,6 +115,8 @@ public final class B2BUtil {
                 os += "-32";
             }
 
+            LOGGER.debug("Exporting binaries for os : " + os);
+
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
