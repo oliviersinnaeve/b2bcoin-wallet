@@ -94,7 +94,7 @@ public final class B2BUtil {
                         "configs/coin-wallet.conf",
                         getConfigRoot() + "coin-wallet.conf");
             }
-            if (!Paths.get(getConfigRoot() + "configs/application.config").toFile().exists()) {
+            if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
