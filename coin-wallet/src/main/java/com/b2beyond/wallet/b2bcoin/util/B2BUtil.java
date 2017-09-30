@@ -98,7 +98,7 @@ public final class B2BUtil {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
-                        getConfigRoot() + "configs/application.config");
+                        getConfigRoot() + "application.config");
             }
         } catch (Exception e) {
             LOGGER.error("Failed to copy file", e);
