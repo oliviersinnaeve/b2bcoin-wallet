@@ -54,7 +54,7 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
     private String password;
     private boolean firstStartup;
 
-    private boolean syncing;
+    private boolean syncing = true;
     private long maxProgress;
     private Process process;
     private int processPid;
