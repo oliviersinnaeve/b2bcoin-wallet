@@ -165,8 +165,12 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
     @Override
     public void stop() {
         ProcessBuilder pb = null;
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX) || operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
+        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
             pb = new ProcessBuilder("kill", "-9", "" + processPid);
+        }
+
+        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX)) {
+            pb = new ProcessBuilder("fuser", "-k", "9090/tcp");
         }
 
         if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
