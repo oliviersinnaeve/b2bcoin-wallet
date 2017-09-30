@@ -108,7 +108,6 @@ public final class B2BUtil {
     public static void copyDaemonsOnFirstRun(String daemonExecutable, String walletExecutable, String poolMinerExecutable) {
         try {
             new File(getBinariesRoot()).mkdirs();
-            new File(getConfigRoot()).mkdirs();
 
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");

@@ -1,5 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +12,10 @@ import java.io.InputStream;
  */
 public class FileResourceExtractor {
 
+    private static Logger LOGGER = Logger.getLogger(FileResourceExtractor.class);
+
     public static void extractFromJar(String resource, String location) throws IOException {
+        LOGGER.debug("Extract resource from jar : " + resource);
         InputStream ddlStream = B2BUtil.class.getClassLoader().getResourceAsStream(resource);
 
         FileOutputStream fos = new FileOutputStream(location);
@@ -24,6 +29,7 @@ public class FileResourceExtractor {
     }
 
     public static void copyFromFileSystem(String resource, String location) throws IOException {
+        LOGGER.debug("Copy resource from filesystem : " + resource);
         InputStream ddlStream = new FileInputStream(resource);
 
         FileOutputStream fos = new FileOutputStream(location);
