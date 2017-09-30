@@ -20,30 +20,26 @@ public class CoinDaemon implements Daemon {
     public CoinDaemon(PropertiesConfiguration daemonProperties, String operatingSystem) {
         LOGGER.info("Starting coin daemon for OS : " + operatingSystem);
 
-//        URL baseLocation = Thread.currentThread().getContextClassLoader().getResource("b2bcoin-" + operatingSystem + B2BUtil.SEPARATOR);
-//        if (baseLocation != null) {
+        String userHome = B2BUtil.getUserHome();
+        String binariesLocation = B2BUtil.getBinariesRoot();
+        String configLocation = B2BUtil.getConfigRoot();
+        String logLocation = B2BUtil.getLogRoot();
 
-            String userHome = B2BUtil.getUserHome();
-            String binariesLocation = B2BUtil.getBinariesRoot();
-            String configLocation = B2BUtil.getConfigRoot();
-            String logLocation = B2BUtil.getLogRoot();
+        try {
+            String daemonExecutable = daemonProperties.getString("coin-daemon-" + operatingSystem);
 
-            try {
-                String daemonExecutable = daemonProperties.getString("coin-daemon-" + operatingSystem);
+            LOGGER.debug("Coin daemon userHome : " + userHome);
+            LOGGER.debug("Coin daemon binaries location : " + binariesLocation);
+            LOGGER.debug("Coin daemon configLocation : " + configLocation);
+            LOGGER.debug("Coin daemon logs : " + logLocation);
 
-                LOGGER.debug("Coin daemon userHome : " + userHome);
-                LOGGER.debug("Coin daemon binaries location : " + binariesLocation);
-                LOGGER.debug("Coin daemon configLocation : " + configLocation);
-                LOGGER.debug("Coin daemon logs : " + logLocation);
+            ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
+                    "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
 
-                ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
-                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
-
-                process = pb.start();
-            } catch (Exception ex) {
-                LOGGER.error("Coin daemon failed to load", ex);
-            }
-//        }
+            process = pb.start();
+        } catch (Exception ex) {
+            LOGGER.error("Coin daemon failed to load", ex);
+        }
     }
 
     @Override
