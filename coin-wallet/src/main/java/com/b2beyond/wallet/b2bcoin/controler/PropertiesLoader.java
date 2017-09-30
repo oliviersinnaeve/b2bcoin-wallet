@@ -19,17 +19,11 @@ public class PropertiesLoader {
 
     public PropertiesLoader(String filename) {
         try {
-            LOGGER.info("Loading wallet daemon config for OS : " + B2BUtil.getOperatingSystem());
-            LOGGER.info("Loading wallet daemon properties from root - class : " + getClass());
-            LOGGER.info("Loading wallet daemon properties from root - class loader" + getClass().getClassLoader());
-
             String location = B2BUtil.getConfigRoot();
 
             if (getClass().getClassLoader() != null) {
                 if (getClass().getClassLoader().getResource("b2bcoin-" + B2BUtil.getOperatingSystem()) != null) {
-                    LOGGER.info("Loading wallet daemon properties from root " + getClass().getClassLoader()
-                            .getResource("b2bcoin-" + B2BUtil.getOperatingSystem()));
-
+                    LOGGER.info("Loading config file : " + location + filename);
                     properties.load(new FileInputStream(location + filename));
                 }
             }
