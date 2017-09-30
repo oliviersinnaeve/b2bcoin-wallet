@@ -69,14 +69,6 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
     }
 
     public void run() {
-        while (syncing) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         String userHome = B2BUtil.getUserHome();
         String binariesLocation = B2BUtil.getBinariesRoot();
         String configLocation = B2BUtil.getConfigRoot();
