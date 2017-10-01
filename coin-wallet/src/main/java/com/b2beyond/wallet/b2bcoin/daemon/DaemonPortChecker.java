@@ -17,7 +17,8 @@ public class DaemonPortChecker implements Runnable {
     public void run() {
         int walletTries = 10;
         int coinTries = 10;
-        while (availableForConnection(9090)) {
+        while (availableForConnection("localhost", 9090) && availableForConnection("127.0.0.1", 9090)
+                && availableForConnection("0.0.0.0", 9090)) {
             LOGGER.info("Still Loading the wallet daemon ...");
             if (walletTries == 0) {
                 JOptionPane.showMessageDialog(null,
@@ -34,7 +35,8 @@ public class DaemonPortChecker implements Runnable {
                 e.printStackTrace();
             }
         }
-        while (availableForConnection(39155)) {
+        while (availableForConnection("localhost", 39155) && availableForConnection("127.0.0.1", 39155)
+                && availableForConnection("0.0.0.0", 39155)) {
             LOGGER.info("Still Loading the coin daemon ...");
             if (coinTries == 0) {
                 JOptionPane.showMessageDialog(null,
@@ -71,8 +73,8 @@ public class DaemonPortChecker implements Runnable {
 //        }
     }
 
-    private boolean availableForConnection(int port) {
-        try (Socket ignored = new Socket("localhost", port)) {
+    private boolean availableForConnection(String host, int port) {
+        try (Socket ignored = new Socket(host, port)) {
             return false;
         } catch (IOException ignored) {
             return true;

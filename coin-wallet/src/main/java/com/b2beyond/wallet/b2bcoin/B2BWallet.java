@@ -64,7 +64,9 @@ public class B2BWallet {
     }
 
     public B2BWallet() {
-        if (!availableForConnection(9090) || !availableForConnection(39155) || !availableForConnection(39156)) {
+        if (!availableForConnection("localhost", 9090) || !availableForConnection("localhost", 39155) || !availableForConnection("localhost", 39156)
+                || !availableForConnection("127.0.0.1", 9090) || !availableForConnection("127.0.0.1", 39155) || !availableForConnection("127.0.0.1", 39156)
+                || !availableForConnection("0.0.0.0", 9090) || !availableForConnection("0.0.0.0", 39155) || !availableForConnection("0.0.0.0", 39156)) {
             JOptionPane.showMessageDialog(null,
                     "Please quite your current b2bcoin dameon and wallet daemon, one or both of them are still running.",
                     "Fatal error",
@@ -229,8 +231,8 @@ public class B2BWallet {
         loadWindow.setScreenVisible(true);
     }
 
-    private boolean availableForConnection(int port) {
-        try (Socket ignored = new Socket("localhost", port)) {
+    private boolean availableForConnection(String host, int port) {
+        try (Socket ignored = new Socket(host, port)) {
             return false;
         } catch (IOException ignored) {
             return true;
