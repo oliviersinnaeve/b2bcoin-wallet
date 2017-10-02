@@ -318,7 +318,6 @@
                             <excludes>
                                 <exclude>**/b2bcoin-mac/binaries/**</exclude>
                                 <exclude>**/b2bcoin-linux/binaries/**</exclude>
-                                <exclude>**/b2bcoin-windows/binaries/**</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
