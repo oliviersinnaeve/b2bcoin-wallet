@@ -1,7 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.JPanelWithBackground;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.JpanelWithBackground;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -43,7 +43,7 @@ public class SplashWindow extends JWindow {
         JLabel logoDesignerLabel = new JLabel("Logo Designer : Pitchie");
         JLabel versionLabel = new JLabel("Wallet version 1.0-SNAPSHOT");
         JLabel copyrightLabel = new JLabel("Copyright @ B2B Coin");
-        JPanel centerPanel = new JPanelWithBackground(imageIcon.getImage());
+        JPanel centerPanel = new JpanelWithBackground(imageIcon.getImage());
         centerPanel.setLayout(null);
         centerPanel.add(authorLabel);
         centerPanel.add(logoDesignerLabel);
