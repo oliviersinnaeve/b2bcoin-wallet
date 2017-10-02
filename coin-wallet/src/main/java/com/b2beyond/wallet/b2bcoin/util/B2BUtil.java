@@ -36,6 +36,7 @@ public final class B2BUtil {
 
     public static final String SEPARATOR = System.getProperty("file.separator");
 
+    public static Color splashTextColor = new Color(157, 217, 210);
     public static Color mainColor = new Color(56, 174, 204);
     public static Color selectedColor = new Color(8, 103, 136);
 

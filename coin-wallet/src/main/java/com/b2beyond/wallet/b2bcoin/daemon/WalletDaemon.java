@@ -24,43 +24,6 @@ public class WalletDaemon implements Daemon {
 
     private static Logger LOGGER = Logger.getLogger(WalletDaemon.class);
 
-    private WalletDaemonRunnable process;
-
-    private PropertiesConfiguration daemonProperties;
-    private String operatingSystem;
-    private PropertiesConfiguration walletProperties;
-    private String container;
-    private String password;
-    private boolean firstStartup;
-
-    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
-        LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
-        this.daemonProperties = daemonProperties;
-        this.operatingSystem = operatingSystem;
-        this.walletProperties = walletProperties;
-        this.container = container;
-        this.password = password;
-        this.firstStartup = firstStartup;
-
-        start();
-    }
-
-    public void start() {
-        process = new WalletDaemonRunnable(daemonProperties, operatingSystem, walletProperties, container, password, firstStartup);
-        Thread wallet = new Thread(process);
-        wallet.start();
-    }
-
-    @Override
-    public void stop() {
-        process.stop();
-    }
-}
-
-class WalletDaemonRunnable implements Daemon, Runnable {
-
-    private Logger LOGGER = Logger.getLogger(this.getClass());
-
     private PropertiesConfiguration daemonProperties;
     private String operatingSystem;
     private PropertiesConfiguration walletProperties;
@@ -72,16 +35,15 @@ class WalletDaemonRunnable implements Daemon, Runnable {
     private Process process;
     private int processPid;
 
-    public WalletDaemonRunnable(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+        LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
         this.daemonProperties = daemonProperties;
         this.operatingSystem = operatingSystem;
         this.walletProperties = walletProperties;
         this.container = container;
         this.password = password;
         this.firstStartup = firstStartup;
-    }
 
-    public void run() {
         String userHome = B2BUtil.getUserHome();
         String binariesLocation = B2BUtil.getBinariesRoot();
         String configLocation = B2BUtil.getConfigRoot();

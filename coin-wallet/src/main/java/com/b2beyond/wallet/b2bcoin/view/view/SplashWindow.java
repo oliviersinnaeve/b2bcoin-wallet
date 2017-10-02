@@ -1,5 +1,8 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
+import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.JPanelWithBackground;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,7 +16,6 @@ import java.awt.FlowLayout;
 
 public class SplashWindow extends JWindow {
     BorderLayout borderLayout1 = new BorderLayout();
-    JLabel imageLabel = new JLabel();
     JPanel southPanel = new JPanel();
     FlowLayout southPanelFlowLayout = new FlowLayout();
     JProgressBar progressBar = new JProgressBar();
@@ -31,12 +33,35 @@ public class SplashWindow extends JWindow {
 
     // note - this class created with JBuilder
     void jbInit() throws Exception {
-        imageLabel.setIcon(imageIcon);
-        setPreferredSize(new Dimension(400, 300));
+        setPreferredSize(new Dimension(480, 350));
         this.getContentPane().setLayout(borderLayout1);
         southPanel.setLayout(southPanelFlowLayout);
         southPanel.setBackground(Color.BLACK);
-        this.getContentPane().add(imageLabel, BorderLayout.CENTER);
+
+        // Adding to JPanel
+        JLabel authorLabel = new JLabel("Author : Olivier Sinnaeve");
+        JLabel logoDesignerLabel = new JLabel("Logo Designer : Pitchie");
+        JLabel versionLabel = new JLabel("Wallet version 1.0-SNAPSHOT");
+        JLabel copyrightLabel = new JLabel("Copyright @ B2B Coin");
+        JPanel centerPanel = new JPanelWithBackground(imageIcon.getImage());
+        centerPanel.setLayout(null);
+        centerPanel.add(authorLabel);
+        centerPanel.add(logoDesignerLabel);
+        centerPanel.add(copyrightLabel);
+        centerPanel.add(versionLabel);
+
+        // Setting colors
+        authorLabel.setForeground(B2BUtil.splashTextColor);
+        logoDesignerLabel.setForeground(B2BUtil.splashTextColor);
+        versionLabel.setForeground(B2BUtil.splashTextColor);
+
+        // Setting bounds
+        authorLabel.setBounds(270, 20, 210, 25);
+        logoDesignerLabel.setBounds(270, 45, 210, 25);
+        copyrightLabel.setBounds(320, 290, 160, 25);
+        versionLabel.setBounds(270, 70, 210, 25);
+
+        this.getContentPane().add(centerPanel, BorderLayout.CENTER);
         this.getContentPane().add(southPanel, BorderLayout.SOUTH);
         southPanel.add(progressBar, null);
         this.pack();
