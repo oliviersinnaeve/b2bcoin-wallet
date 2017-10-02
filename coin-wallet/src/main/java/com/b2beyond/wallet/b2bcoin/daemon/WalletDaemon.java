@@ -1,23 +1,17 @@
 package com.b2beyond.wallet.b2bcoin.daemon;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 
 
@@ -63,7 +57,7 @@ public class WalletDaemon implements Daemon {
     }
 }
 
-class WalletDaemonRunnable implements Daemon, Runnable, Observer {
+class WalletDaemonRunnable implements Daemon, Runnable {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
@@ -74,7 +68,6 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
     private String password;
     private boolean firstStartup;
 
-    private boolean syncing = true;
     private long maxProgress;
     private Process process;
     private int processPid;
@@ -214,20 +207,6 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
                 LOGGER.info("Killing WALLET daemon exit value : " + process.exitValue());
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void update(Observable observable, Object data) {
-        if (data instanceof Status) {
-            Status viewData = (Status) data;
-            maxProgress = viewData.getKnownBlockCount();
-        }
-        if (data instanceof BlockCount) {
-            BlockCount blockCount = (BlockCount) data;
-            if (maxProgress > 1) {
-                syncing = maxProgress > blockCount.getCount();
             }
         }
     }
