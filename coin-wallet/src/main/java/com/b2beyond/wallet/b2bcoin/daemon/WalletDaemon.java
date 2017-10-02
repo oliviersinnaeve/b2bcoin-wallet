@@ -140,24 +140,13 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                process = Runtime.getRuntime().exec("cmd.exe");
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-                        process.getOutputStream()));
-                
-                String command = binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf" +
-                        " --log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root " + userHome;
-                LOGGER.debug("Sending command to prompt : " + command);
-                out.write(command);
-                out.newLine();
-
-//                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-//                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "--local");
-            } else {
-                process = pb.start();
-                processPid = B2BUtil.getPid(process, operatingSystem, true);
-                LOGGER.debug("Wallet Process id retrieved : " + processPid);
+                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
+                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
             }
 
+            process = pb.start();
+            processPid = B2BUtil.getPid(process, operatingSystem, true);
+            LOGGER.debug("Wallet Process id retrieved : " + processPid);
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }
