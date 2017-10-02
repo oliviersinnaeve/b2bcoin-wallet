@@ -71,6 +71,25 @@ public class B2BWallet extends MainFrame {
         coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
 
+        LOGGER.debug(walletDaemonProperties.getInt("p2p-bind-port"));
+        int daemonPort = walletDaemonProperties.getInt("p2p-bind-port");
+        int daemonRpcPort = walletDaemonProperties.getInt("rpc-bind-port");
+        int walletRpcPort = walletDaemonProperties.getInt("bind-port");
+
+        LOGGER.info("Checking ports : '" + walletRpcPort + "' : '" + daemonPort + "' : '" + daemonRpcPort + "'");
+
+        if (!B2BUtil.availableForConnection(walletRpcPort)
+                || !B2BUtil.availableForConnection(daemonPort)
+                || !B2BUtil.availableForConnection(daemonRpcPort)) {
+            int dialogResult = JOptionPane.showConfirmDialog (
+                    null,
+                    "A b2bcoin dameon and/or wallet daemon is running.\nWould you like to continue with them ?",
+                    "Press yas to start the wallet with current daemons", JOptionPane.YES_NO_OPTION);
+            if(dialogResult == JOptionPane.NO_OPTION){
+                System.exit(1);
+            }
+        }
+
         LOGGER.info("Properties loaded, wallet can get started");
         String daemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
         String walletExecutable = applicationProperties.getString("wallet-daemon-" + B2BUtil.getOperatingSystem());
@@ -91,25 +110,6 @@ public class B2BWallet extends MainFrame {
 
     public B2BWallet(PropertiesConfiguration applicationProperties, final ActionController actionController) {
         super(applicationProperties, actionController);
-
-        LOGGER.debug(walletDaemonProperties.getInt("p2p-bind-port"));
-        int daemonPort = walletDaemonProperties.getInt("p2p-bind-port");
-        int daemonRpcPort = walletDaemonProperties.getInt("rpc-bind-port");
-        int walletRpcPort = walletDaemonProperties.getInt("bind-port");
-
-        LOGGER.info("Checking ports : '" + walletRpcPort + "' : '" + daemonPort + "' : '" + daemonRpcPort + "'");
-
-        if (!B2BUtil.availableForConnection(walletRpcPort)
-                || !B2BUtil.availableForConnection(daemonPort)
-                || !B2BUtil.availableForConnection(daemonRpcPort)) {
-            int dialogResult = JOptionPane.showConfirmDialog (
-                    null,
-                    "A b2bcoin dameon and/or wallet daemon is running.\nWould you like to continue with them ?",
-                    "Press yas to start the wallet with current daemons", JOptionPane.YES_NO_OPTION);
-            if(dialogResult == JOptionPane.NO_OPTION){
-                System.exit(1);
-            }
-        }
 
         UIManager.put("Table.foreground",
                 new ColorUIResource(Color.black));
