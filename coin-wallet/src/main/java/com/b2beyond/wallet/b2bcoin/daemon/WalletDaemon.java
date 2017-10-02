@@ -121,6 +121,13 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+//                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
+//                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
+//                process = pb.start();
+                String command = binariesLocation + daemonExecutable + " --config-file " + configLocation + " --server-root " + userHome + " --register-service";
+                process = Runtime.getRuntime().exec("runas /noprofile /user:Administrator cmd /c start \"\" \"" + command + "\"");
+                LOGGER.debug("Waiting for windows service install" + process.waitFor());
+
                 pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                         "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
             }
