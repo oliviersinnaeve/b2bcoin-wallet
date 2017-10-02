@@ -19,10 +19,12 @@ public class PaymentsPanel extends JPanel {
     private JLabel totalPaymentsAmount;
     private JLabel totalPaymentsLockedAmount;
 
+
     /**
      * Create the panel.
      */
     public PaymentsPanel() {
+        setName("paymentsPanel");
         setForeground(SystemColor.textInactiveText);
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
@@ -47,6 +49,7 @@ public class PaymentsPanel extends JPanel {
         add(lblBalance, gbc);
 
         numberOfPayments = new JLabel("Loading ...");
+        numberOfPayments.setName("numberOfPayments");
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(numberOfPayments, gbc);
@@ -58,6 +61,7 @@ public class PaymentsPanel extends JPanel {
         add(lblLockedBalance, gbc);
 
         totalPaymentsAmount = new JLabel("Loading ...");
+        totalPaymentsAmount.setName("totalPaymentsAmount");
         gbc.gridx = 3;
         gbc.gridy = 3;
         add(totalPaymentsAmount, gbc);
@@ -69,6 +73,7 @@ public class PaymentsPanel extends JPanel {
         add(lblUnconfirmedLockedBalance, gbc);
 
         totalPaymentsLockedAmount = new JLabel("Loading ...");
+        totalPaymentsLockedAmount.setName("totalPaymentsLockedAmount");
         gbc.gridx = 3;
         gbc.gridy = 5;
         add(totalPaymentsLockedAmount, gbc);
