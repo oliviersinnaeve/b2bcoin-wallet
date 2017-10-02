@@ -65,8 +65,9 @@ public class B2BWallet {
 
     public B2BWallet() {
         B2BUtil.copyConfigsOnFirstRun();
-        loadWindow.setProgress(loadingCounter++);
 
+        loadingFrame();
+        loadWindow.setProgress(loadingCounter++);
         applicationProperties = new PropertiesLoader("application.config").getProperties();
         loadWindow.setProgress(loadingCounter++);
         walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
@@ -84,11 +85,13 @@ public class B2BWallet {
         if (!availableForConnection("localhost", walletRpcPort) || !availableForConnection("localhost", daemonPort) || !availableForConnection("localhost", daemonRpcPort)
                 || !availableForConnection("127.0.0.1", walletRpcPort) || !availableForConnection("127.0.0.1", daemonPort) || !availableForConnection("127.0.0.1", daemonRpcPort)
                 || !availableForConnection("0.0.0.0", walletRpcPort) || !availableForConnection("0.0.0.0", daemonPort) || !availableForConnection("0.0.0.0", daemonRpcPort)) {
-            JOptionPane.showMessageDialog(null,
-                    "Please quite your current b2bcoin dameon and wallet daemon, one or both of them are still running.",
-                    "Fatal error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            int dialogResult = JOptionPane.showConfirmDialog (
+                    null,
+                    "A b2bcoin dameon and/or wallet daemon is running.\nWould you like to continue with them ?",
+                    "Press yas to start the wallet with current daemons", JOptionPane.YES_NO_OPTION);
+            if(dialogResult == JOptionPane.NO_OPTION){
+                System.exit(1);
+            }
         }
 
         UIManager.put("Table.foreground",
@@ -105,7 +108,6 @@ public class B2BWallet {
                 LOGGER.info(key + ": " + value);
             }
         }
-        loadingFrame();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
