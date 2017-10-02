@@ -7,9 +7,11 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -138,13 +140,23 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "--local");
+                process = Runtime.getRuntime().exec("cmd.exe");
+                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+                        process.getOutputStream()));
+                
+                String command = binariesLocation + daemonExecutable + " --config" + configLocation + "coin-wallet.conf" +
+                        " --log-file" + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root" + userHome + "\n";
+                LOGGER.debug("Sending command to prompt : " + command);
+                out.write(command);
+
+//                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
+//                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "--local");
+            } else {
+                process = pb.start();
+                processPid = B2BUtil.getPid(process, operatingSystem, true);
+                LOGGER.debug("Wallet Process id retrieved : " + processPid);
             }
 
-            process = pb.start();
-            processPid = B2BUtil.getPid(process, operatingSystem, true);
-            LOGGER.debug("Wallet Process id retrieved : " + processPid);
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }
