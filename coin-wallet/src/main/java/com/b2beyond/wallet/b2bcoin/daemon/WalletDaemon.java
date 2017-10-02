@@ -30,9 +30,26 @@ public class WalletDaemon implements Daemon {
 
     private WalletDaemonRunnable process;
 
+    private PropertiesConfiguration daemonProperties;
+    private String operatingSystem;
+    private PropertiesConfiguration walletProperties;
+    private String container;
+    private String password;
+    private boolean firstStartup;
+
     public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
+        this.daemonProperties = daemonProperties;
+        this.operatingSystem = operatingSystem;
+        this.walletProperties = walletProperties;
+        this.container = container;
+        this.password = password;
+        this.firstStartup = firstStartup;
 
+        start();
+    }
+
+    public void start() {
         process = new WalletDaemonRunnable(daemonProperties, operatingSystem, walletProperties, container, password, firstStartup);
         Thread wallet = new Thread(process);
         wallet.start();
@@ -121,13 +138,6 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-//                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-//                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
-//                process = pb.start();
-                String command = binariesLocation + daemonExecutable + " --config-file " + configLocation + " --server-root " + userHome + " --register-service";
-                process = Runtime.getRuntime().exec("runas /noprofile /user:Administrator cmd /c start \"\" \"" + command + "\"");
-                LOGGER.debug("Waiting for windows service install" + process.waitFor());
-
                 pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                         "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
             }
@@ -181,12 +191,14 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
         }
 
         if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+            LOGGER.info("Windows destroy wallet process ...");
             process.destroy();
             try {
-                process.waitFor();
+                LOGGER.info("Windows destroy wallet process - wait for :" + process.waitFor());
             } catch (InterruptedException e) {
                 // NOOP
             }
+            LOGGER.info("Windows destroy wallet process - exit value :" + process.exitValue());
         }
 
         if (pb != null) {

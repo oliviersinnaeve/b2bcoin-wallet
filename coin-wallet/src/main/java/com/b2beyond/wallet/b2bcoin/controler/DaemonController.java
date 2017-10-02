@@ -132,7 +132,7 @@ public class DaemonController {
 
     public void restartWallet() {
         walletDaemon.stop();
-        walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, false);
+        ((WalletDaemon)walletDaemon).start();
     }
 
 }
