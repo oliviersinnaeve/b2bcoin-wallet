@@ -3,4 +3,3 @@
 .idea/
 *.iml
 coin-wallet/target/
-coin-wallet/src/test/
