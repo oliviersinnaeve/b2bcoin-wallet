@@ -5,6 +5,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
+import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -41,6 +42,9 @@ import java.util.Observer;
 public class MainFrame extends JFrame implements Observer {
 
     private JPanel content;
+    private JPanel menu;
+
+    private ActionController actionController;
 
     private JLabel dataSynchronizingBlocks;
     private JProgressBar progressBar = new JProgressBar();
@@ -49,18 +53,16 @@ public class MainFrame extends JFrame implements Observer {
 
 
     /**
-     * Create the frame.
-     *
-     * @param menuBar the menubar to show in the frame
-     * @param containers the containers that we will create menu tabs for (left side, not menu on top !!)
+     * Create the frame
      */
-    public MainFrame(MenuBar menuBar, List<TabContainer> containers, PropertiesConfiguration applicationProperties) {
+    public MainFrame(PropertiesConfiguration applicationProperties, ActionController actionController) {
+        this.actionController = actionController;
+
         this.setTitle("B2BCoin GUI");
         this.setBackground(B2BUtil.mainColor);
         Dimension minimumSize = new Dimension(applicationProperties.getInt("min-width"), applicationProperties.getInt("min-height"));
         this.setMinimumSize(minimumSize);
         this.setPreferredSize(minimumSize);
-        this.setJMenuBar(menuBar);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //This will center the JFrame in the middle of the screen
@@ -90,7 +92,7 @@ public class MainFrame extends JFrame implements Observer {
         splitPane.setBackground(SystemColor.window);
         desktopPane.add(splitPane, "2, 2, fill, fill");
 
-        JPanel menu = new JPanel();
+        menu = new JPanel();
         menu.setBorder(null);
         splitPane.setLeftComponent(menu);
         GridBagLayout gbl_Menu = new GridBagLayout();
@@ -107,6 +109,45 @@ public class MainFrame extends JFrame implements Observer {
         splitPane.setRightComponent(content);
         content.setLayout(new CardLayout(0, 0));
 
+        GridBagLayout gbl = new GridBagLayout();
+        gbl.columnWidths = new int[] { 1, 1, 1, 1, 1, 1 };
+        gbl.rowHeights = new int[]{ 1, 1, 1 };
+        gbl.columnWeights = new double[]{ 0.02, 0.1, 0.38, 0.1, 0.38, 0.02 };
+        gbl.rowWeights = new double[]{ 0.2, 0.6, 0.2 };
+
+        // Creat panel and add it to the parent panel !!
+        JPanel footerPanel = new JPanel(gbl);
+        contentPane.add(footerPanel, BorderLayout.SOUTH);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        JLabel labelSynchronizingBlocks = new JLabel("Synchronizing blocks :");
+        footerPanel.add(labelSynchronizingBlocks, gbc);
+
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        dataSynchronizingBlocks = new JLabel("Loading ...");
+        footerPanel.add(dataSynchronizingBlocks, gbc);
+
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        JLabel labelSynchronizingNetwork = new JLabel("Synchronizing network :");
+        footerPanel.add(labelSynchronizingNetwork, gbc);
+
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 4;
+        gbc.gridy = 1;
+        footerPanel.add(progressBar, gbc);
+
+        this.pack();
+    }
+
+    protected void setContainers(List<TabContainer> containers) {
         menus = new ArrayList<>();
         for (final TabContainer container : containers) {
             JComponent card = container.getView();
@@ -136,17 +177,6 @@ public class MainFrame extends JFrame implements Observer {
                 }
             });
         }
-
-        JPanel footerPanel = new JPanel();
-        contentPane.add(footerPanel, BorderLayout.SOUTH);
-
-        JLabel labelSynchronizingBlocks = new JLabel("Synchronizing blocks :");
-        footerPanel.add(labelSynchronizingBlocks);
-        dataSynchronizingBlocks = new JLabel("Loading ...");
-        footerPanel.add(dataSynchronizingBlocks);
-        footerPanel.add(progressBar);
-
-        this.pack();
     }
 
     public void update(Observable rpcPoller, Object data) {
@@ -159,6 +189,9 @@ public class MainFrame extends JFrame implements Observer {
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
+            if (progressBar.getValue() == progressBar.getMaximum()) {
+                this.actionController.restartWalletDaemonIfStopped();
+            }
         }
     }
 
@@ -168,7 +201,6 @@ public class MainFrame extends JFrame implements Observer {
             @Override
             public void run() {
                 progressBar.setMaximum((int) theProgress);
-                progressBar.updateUI();
             }
         });
         progressBar.setStringPainted(true);

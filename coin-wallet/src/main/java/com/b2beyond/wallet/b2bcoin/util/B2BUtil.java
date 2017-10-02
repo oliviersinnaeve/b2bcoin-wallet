@@ -16,7 +16,9 @@ import org.apache.log4j.Logger;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.Socket;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -33,9 +35,6 @@ public final class B2BUtil {
     public static final String LINUX = "linux";
 
     public static final String SEPARATOR = System.getProperty("file.separator");
-
-//    public static Color mainColor = new Color(0, 130, 0);
-//    public static Color selectedColor = new Color(0, 88, 0);
 
     public static Color mainColor = new Color(56, 174, 204);
     public static Color selectedColor = new Color(8, 103, 136);
@@ -175,6 +174,20 @@ public final class B2BUtil {
         }
         LOGGER.info("Starting daemon for OS : '" + getOperatingSystem() + "' with user home : " + userHome);
         return userHome;
+    }
+
+    public static boolean availableForConnection(int port) {
+        try (Socket ignored = new Socket("localhost", port)) {
+            return false;
+        } catch (IOException ignored) {}
+        try (Socket ignored = new Socket("127.0.0.1", port)) {
+            return false;
+        } catch (IOException ignored) {}
+        try (Socket ignored = new Socket("0.0.0.0", port)) {
+            return false;
+        } catch (IOException ignored) {}
+
+        return true;
     }
 
     public static int getPid(Process process, String operatingSystem, boolean spawned) {
