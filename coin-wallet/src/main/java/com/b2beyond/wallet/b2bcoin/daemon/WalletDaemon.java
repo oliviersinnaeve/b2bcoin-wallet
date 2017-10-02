@@ -145,9 +145,10 @@ class WalletDaemonRunnable implements Daemon, Runnable, Observer {
                         process.getOutputStream()));
                 
                 String command = binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf" +
-                        " --log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root " + userHome + "\n";
+                        " --log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root " + userHome;
                 LOGGER.debug("Sending command to prompt : " + command);
                 out.write(command);
+                out.newLine();
 
 //                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
 //                        "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "--local");
