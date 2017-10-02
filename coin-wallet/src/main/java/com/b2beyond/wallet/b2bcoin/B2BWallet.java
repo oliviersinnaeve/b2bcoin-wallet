@@ -78,6 +78,8 @@ public class B2BWallet {
         int daemonRpcPort = walletDaemonProperties.getInt("rpc-bind-port");
         int walletRpcPort = walletDaemonProperties.getInt("bind-port");
 
+        LOGGER.info("Checking ports : '" + walletRpcPort + "' : '" + daemonPort + "' : '" + daemonRpcPort + "'");
+
         if (!availableForConnection("localhost", walletRpcPort) || !availableForConnection("localhost", daemonPort) || !availableForConnection("localhost", daemonRpcPort)
                 || !availableForConnection("127.0.0.1", walletRpcPort) || !availableForConnection("127.0.0.1", daemonPort) || !availableForConnection("127.0.0.1", daemonRpcPort)
                 || !availableForConnection("0.0.0.0", walletRpcPort) || !availableForConnection("0.0.0.0", daemonPort) || !availableForConnection("0.0.0.0", daemonRpcPort)) {

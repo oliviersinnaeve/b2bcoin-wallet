@@ -1,6 +1,5 @@
 package com.b2beyond.wallet.b2bcoin.daemon;
 
-import com.b2beyond.wallet.b2bcoin.B2BWallet;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
