@@ -188,7 +188,7 @@ class WalletDaemonRunnable implements Daemon, Runnable {
         }
 
         if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX)) {
-            pb = new ProcessBuilder("fuser", "-k", "9090/tcp");
+            pb = new ProcessBuilder("fuser", "-k", walletProperties.getInt("bind-port") + "/tcp");
         }
 
         if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {

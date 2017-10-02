@@ -64,9 +64,23 @@ public class B2BWallet {
     }
 
     public B2BWallet() {
-        if (!availableForConnection("localhost", 9090) || !availableForConnection("localhost", 39155) || !availableForConnection("localhost", 39156)
-                || !availableForConnection("127.0.0.1", 9090) || !availableForConnection("127.0.0.1", 39155) || !availableForConnection("127.0.0.1", 39156)
-                || !availableForConnection("0.0.0.0", 9090) || !availableForConnection("0.0.0.0", 39155) || !availableForConnection("0.0.0.0", 39156)) {
+        B2BUtil.copyConfigsOnFirstRun();
+        loadWindow.setProgress(loadingCounter++);
+
+        applicationProperties = new PropertiesLoader("application.config").getProperties();
+        loadWindow.setProgress(loadingCounter++);
+        walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
+        loadWindow.setProgress(loadingCounter++);
+        coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
+        loadWindow.setProgress(loadingCounter++);
+
+        int daemonPort = walletDaemonProperties.getInt("p2p-bind-port");
+        int daemonRpcPort = walletDaemonProperties.getInt("rpc-bind-port");
+        int walletRpcPort = walletDaemonProperties.getInt("bind-port");
+
+        if (!availableForConnection("localhost", walletRpcPort) || !availableForConnection("localhost", daemonPort) || !availableForConnection("localhost", daemonRpcPort)
+                || !availableForConnection("127.0.0.1", walletRpcPort) || !availableForConnection("127.0.0.1", daemonPort) || !availableForConnection("127.0.0.1", daemonRpcPort)
+                || !availableForConnection("0.0.0.0", walletRpcPort) || !availableForConnection("0.0.0.0", daemonPort) || !availableForConnection("0.0.0.0", daemonRpcPort)) {
             JOptionPane.showMessageDialog(null,
                     "Please quite your current b2bcoin dameon and wallet daemon, one or both of them are still running.",
                     "Fatal error",
@@ -97,16 +111,6 @@ public class B2BWallet {
             }
         });
 
-        B2BUtil.copyConfigsOnFirstRun();
-        loadWindow.setProgress(loadingCounter++);
-
-        applicationProperties = new PropertiesLoader("application.config").getProperties();
-        loadWindow.setProgress(loadingCounter++);
-        walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
-        loadWindow.setProgress(loadingCounter++);
-        coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
-        loadWindow.setProgress(loadingCounter++);
-
         LOGGER.info("Properties loaded, wallet can get started");
         String daemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
         String walletExecutable = applicationProperties.getString("wallet-daemon-" + B2BUtil.getOperatingSystem());
@@ -122,7 +126,7 @@ public class B2BWallet {
         actionController = new ActionController(coinDaemon, walletRpcController, coinRpcController);
         loadWindow.setProgress(loadingCounter++);
 
-        new Thread(new DaemonPortChecker()).start();
+        new Thread(new DaemonPortChecker(walletDaemonProperties)).start();
 
         LOGGER.info("Starting controllers ...");
         AddressesController addressesController = new AddressesController(
