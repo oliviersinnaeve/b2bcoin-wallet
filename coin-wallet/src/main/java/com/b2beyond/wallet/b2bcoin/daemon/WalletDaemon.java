@@ -133,7 +133,7 @@ class WalletDaemonRunnable implements Daemon, Runnable {
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
+                pb = new ProcessBuilder("cmd", "/k", "start" , "/B", binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                         "--log-file", logLocation + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
             }
 
