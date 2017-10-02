@@ -111,22 +111,18 @@ public final class B2BUtil {
 
             String os = getOperatingSystem();
 
-//            if ("32".equals(System.getProperty("sun.arch.data.model")) && getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-//                os += "-32";
-//            }
-
             LOGGER.debug("Exporting binaries for os : " + os);
 
             if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + os + "/binaries/" + daemonExecutable,
+                        "coin-" + os + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
             }
             if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
-                        "b2bcoin-" + os + "/binaries/" + walletExecutable,
+                        "coin-" + os + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
             }
 
@@ -134,7 +130,7 @@ public final class B2BUtil {
                 if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
                     LOGGER.trace("Exporting the wallet daemon");
                     FileResourceExtractor.extractFromJar(
-                            "b2bcoin-" + os + "/binaries/" + poolMinerExecutable,
+                            "coin-" + os + "/binaries/" + poolMinerExecutable,
                             getBinariesRoot() + poolMinerExecutable);
                 }
 
@@ -169,9 +165,9 @@ public final class B2BUtil {
     }
 
     public static String getUserHome() {
-        String userHome = System.getProperty("user.home") + SEPARATOR + "b2bcoin" + SEPARATOR;
+        String userHome = System.getProperty("user.home") + SEPARATOR + System.getProperty("user.home.forknote") + SEPARATOR;
         if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-            userHome = System.getProperty("user.home") + SEPARATOR + "b2bcoin" + SEPARATOR;
+            userHome = System.getProperty("user.home") + SEPARATOR + System.getProperty("user.home.forknote") + SEPARATOR;
         }
         LOGGER.info("Starting daemon for OS : '" + getOperatingSystem() + "' with user home : " + userHome);
         return userHome;

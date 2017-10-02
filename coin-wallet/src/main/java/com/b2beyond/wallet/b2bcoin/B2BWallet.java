@@ -60,6 +60,8 @@ public class B2BWallet extends MainFrame {
     private static int loadingCounter = 1;
 
     public static void main(String[] args) {
+        System.setProperty("user.home.forknote", "b2bcoin");
+
         B2BUtil.copyConfigsOnFirstRun();
 
         loadingFrame();
@@ -83,7 +85,7 @@ public class B2BWallet extends MainFrame {
                 || !B2BUtil.availableForConnection(daemonRpcPort)) {
             int dialogResult = JOptionPane.showConfirmDialog (
                     null,
-                    "A b2bcoin dameon and/or wallet daemon is running.\nWould you like to continue with them ?",
+                    "A " + System.getProperty("user.home.forknote") + " dameon and/or wallet daemon is running.\nWould you like to continue with them ?",
                     "Press yas to start the wallet with current daemons", JOptionPane.YES_NO_OPTION);
             if(dialogResult == JOptionPane.NO_OPTION){
                 System.exit(1);

@@ -101,7 +101,7 @@ public class DaemonController {
             LOGGER.info("Backing up for container : " + container + " : " + timestamp);
             File userHomeBackupFiles = new File(userHome + "/backup/" + timestamp);
             userHomeBackupFiles.mkdirs();
-            walletProperties.save(new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + "b2bcoin-wallet-" + timestamp + ".conf"));
+            walletProperties.save(new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + "coin-wallet-" + timestamp + ".conf"));
 
             try {
                 String[] splitContainer = container.split("/");
