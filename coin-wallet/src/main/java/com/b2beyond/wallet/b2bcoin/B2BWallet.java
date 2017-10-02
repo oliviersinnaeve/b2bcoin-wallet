@@ -74,6 +74,7 @@ public class B2BWallet {
         coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
 
+        LOGGER.debug(walletDaemonProperties.getInt("p2p-bind-port"));
         int daemonPort = walletDaemonProperties.getInt("p2p-bind-port");
         int daemonRpcPort = walletDaemonProperties.getInt("rpc-bind-port");
         int walletRpcPort = walletDaemonProperties.getInt("bind-port");
