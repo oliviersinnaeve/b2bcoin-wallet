@@ -111,9 +111,9 @@ public final class B2BUtil {
 
             String os = getOperatingSystem();
 
-            if ("32".equals(System.getProperty("sun.arch.data.model")) && getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-                os += "-32";
-            }
+//            if ("32".equals(System.getProperty("sun.arch.data.model")) && getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+//                os += "-32";
+//            }
 
             LOGGER.debug("Exporting binaries for os : " + os);
 
