@@ -1,9 +1,13 @@
 package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
+import org.apache.log4j.Logger;
+
 import java.util.Observable;
 
 
 public abstract class RpcPoller<T> extends Observable implements Runnable {
+
+    private Logger LOGGER = Logger.getLogger(this.getClass());
 
     private JsonRpcExecutor<T> executor;
 
@@ -11,7 +15,7 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
 
     private boolean running;
 
-    private T currentValue;
+    private boolean executed = true;
 
     public RpcPoller(JsonRpcExecutor<T> executor, long delayInMilliseconds) {
         this.executor = executor;
@@ -23,18 +27,22 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
     @Override
     public void run() {
         while (running) {
-            if (getParams() != null) {
-                executor.setParams(getParams());
+            if (getParams() != null && isActive()) {
+                if (!isExecuted()) {
+                    executed = true;
+                    executor.setParams(getParams());
 
-                T value = executor.execute();
-                if (value != null) {
-                    currentValue = value;
-                    updateOnSucceed(value);
-                    setChanged();
-                    notifyObservers(value);
+                    T value = executor.execute();
+                    if (value != null) {
+                        updateOnSucceed(value);
+                        setChanged();
+                        notifyObservers(value);
+                    }
+                } else {
+                    LOGGER.debug("Does not need execution ...");
                 }
             } else {
-                System.out.println("Null parameters on RpcPoller");
+                LOGGER.error("Null parameters on RpcPoller");
             }
 
             try {
@@ -56,5 +64,21 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
     public void start() {
         this.running = true;
     }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
+    }
+
+    /**
+     * Defines wheter the rpc call should execute or not !!
+     *
+     * @return boolean true if the executor should execute
+     */
+    public abstract boolean isActive();
+
 
 }

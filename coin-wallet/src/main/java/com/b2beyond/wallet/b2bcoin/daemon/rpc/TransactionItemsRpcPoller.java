@@ -11,8 +11,7 @@ import java.util.Observer;
 
 public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> implements Observer {
 
-    private String params;
-    private long firstBlockCount = 1;
+    private long firstBlockCount = 0;
     private long knowBlockCount = 0;
     private static final long BLOCKS_TO_FETCH = 10000;
 
@@ -26,6 +25,8 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 
     @Override
     public String getParams() {
+        String params;
+
         if (this.addresses.getAddresses().size() > 0) {
             params = "\"params\":{\n" +
                     "    \"firstBlockIndex\":" + firstBlockCount + ",\n" +
@@ -56,14 +57,17 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-            long newKnowBlockCount = status.getKnownBlockCount();
-
-            if (newKnowBlockCount > firstBlockCount) {
-                start();
-            } else {
-                stop();
+            if (isExecuted()) {
+                knowBlockCount = status.getKnownBlockCount();
+                setExecuted(false);
             }
         }
+    }
+
+
+    @Override
+    public boolean isActive() {
+        return firstBlockCount < knowBlockCount - 1;
     }
 
     @Override

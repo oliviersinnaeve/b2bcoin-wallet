@@ -4,6 +4,7 @@ import com.b2beyond.wallet.b2bcoin.controler.CoinRpcController;
 import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockWrapper;
 import org.apache.log4j.Logger;
 
 
@@ -44,6 +45,11 @@ public class ActionController {
 
     public Address createAddress() {
         return walletRpcController.getCreateAddressExecutor().execute();
+    }
+
+    public BlockWrapper getBlockWrapper(String hash) {
+        coinRpcController.getBlockWrapperExecutor().setParams("\"params\": {\"hash\": \"" + hash + "\"}");
+        return coinRpcController.getBlockWrapperExecutor().execute();
     }
 
     public void exit() {

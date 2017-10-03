@@ -2,6 +2,8 @@ package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
 
 import java.util.Observable;
@@ -50,7 +52,16 @@ public class UnconfirmedTransactionHashesRpcPoller extends RpcPoller<Unconfirmed
     }
 
     @Override
+    public boolean isExecuted() {
+        return false;
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    @Override
     public void updateOnSucceed(UnconfirmedTransactionHashes data) {
-        // NOOP
     }
 }

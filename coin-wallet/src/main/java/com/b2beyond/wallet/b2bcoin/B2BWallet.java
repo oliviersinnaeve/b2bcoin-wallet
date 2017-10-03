@@ -182,7 +182,6 @@ public class B2BWallet extends MainFrame {
         setContainers(containers);
 
         LOGGER.info("Generating frame ...");
-//        MainFrame guiFrame = new MainFrame(menuBar, containers, applicationProperties, actionController);
         loadWindow.setProgress(loadingCounter++);
 
         try {
@@ -193,10 +192,10 @@ public class B2BWallet extends MainFrame {
         // Start polling and updating the views
         LOGGER.info("Starting the rpc pollers ...");
         RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getStatusExecutor(), 5000);
-        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 5000);
+        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
         RpcPoller<BlockCount> syncPoller = new NoParamsRpcPoller<>(actionController.getCoinRpcController().getBlockCountExecutor(), 5000);
         TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 5000);
-        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 5000);
+        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
         loadWindow.setProgress(loadingCounter++);
 
 

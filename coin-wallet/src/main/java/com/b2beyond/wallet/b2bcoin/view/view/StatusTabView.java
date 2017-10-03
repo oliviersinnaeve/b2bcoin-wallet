@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transaction;
@@ -8,6 +9,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
+import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
@@ -31,7 +33,10 @@ public class StatusTabView extends JPanel implements Observer {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
+    private ActionController actionController;
     private JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor;
+
+    private String lastBlockHash;
 
     private BalancePanel balancePanel;
     private PaymentsPanel paymentsPanel;
@@ -45,6 +50,7 @@ public class StatusTabView extends JPanel implements Observer {
     public StatusTabView(final ActionController actionController,
                          final JsonRpcExecutor<Void> resetExecutor,
                          final JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor) {
+        this.actionController = actionController;
         this.transactionItemsJsonRpcExecutor = transactionItemsJsonRpcExecutor;
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -105,8 +111,19 @@ public class StatusTabView extends JPanel implements Observer {
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
             Status viewData = (Status) data;
-            serverPanel.getPeers().setText("" + viewData.getPeerCount());
-            serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
+            if (!viewData.getLastBlockHash().equals(lastBlockHash)) {
+                lastBlockHash = viewData.getLastBlockHash();
+                BlockWrapper blockWrapper = actionController.getBlockWrapper(lastBlockHash);
+
+                serverPanel.getPeers().setText("" + viewData.getPeerCount());
+                serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
+                if (blockWrapper.getBlock() != null) {
+                    serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
+                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getAlreadyGeneratedCoins()));
+                    serverPanel.getBaseReward().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getBaseReward()));
+                    serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
+                }
+            }
         }
         if (data instanceof TransactionItems) {
             TransactionItems transactionItems = (TransactionItems) data;
