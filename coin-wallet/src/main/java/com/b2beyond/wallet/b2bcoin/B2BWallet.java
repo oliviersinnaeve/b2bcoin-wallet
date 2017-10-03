@@ -102,8 +102,8 @@ public class B2BWallet extends MainFrame {
                 applicationProperties,
                 walletDaemonProperties,
                 B2BUtil.getOperatingSystem());
-        WalletRpcController walletRpcController = new WalletRpcController(applicationProperties);
-        CoinRpcController coinRpcController = new CoinRpcController(applicationProperties);
+        WalletRpcController walletRpcController = new WalletRpcController(applicationProperties.getString("wallet-daemon-base-url"));
+        CoinRpcController coinRpcController = new CoinRpcController(applicationProperties.getString("coin-daemon-base-url"));
         actionController = new ActionController(coinDaemon, walletRpcController, coinRpcController);
         loadWindow.setProgress(loadingCounter++);
 

@@ -15,13 +15,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.owlike</groupId>
-            <artifactId>genson</artifactId>
+            <groupId>com.b2beyond</groupId>
+            <artifactId>coin-rpc</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
@@ -39,12 +37,6 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>4.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-forms</artifactId>
-            <version>1.8.0</version>
         </dependency>
     </dependencies>
 
@@ -82,7 +74,7 @@
 
                                 <configuration>
                                     <generateDiskImageFile>true</generateDiskImageFile>
-                                    <iconFile>my-logo.icns</iconFile>
+                                    <iconFile>src/main/resources/my-logo.icns</iconFile>
                                     <includeApplicationsSymlink>true</includeApplicationsSymlink>
                                     <version>1.0</version>
                                 </configuration>

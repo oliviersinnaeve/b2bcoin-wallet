@@ -25,6 +25,7 @@
     </developers>
 
     <modules>
+        <module>coin-rpc</module>
         <module>coin-wallet</module>
     </modules>
 

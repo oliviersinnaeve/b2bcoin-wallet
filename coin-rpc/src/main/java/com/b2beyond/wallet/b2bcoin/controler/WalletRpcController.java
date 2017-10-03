@@ -11,11 +11,9 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.ViewSecretKey;
-import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 
 public class WalletRpcController {
@@ -35,9 +33,7 @@ public class WalletRpcController {
 
     private List<RpcPoller<?>> pollers = new ArrayList<>();
 
-    public WalletRpcController(PropertiesConfiguration applicationProperties) {
-        String baseUrl = applicationProperties.getString("wallet-daemon-base-url");
-
+    public WalletRpcController(String baseUrl) {
         viewSecretKeyExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getViewKey", ViewSecretKey.class);
         statusExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getStatus", Status.class);
         createAddressExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "createAddress", Address.class);
@@ -65,7 +61,6 @@ public class WalletRpcController {
 
     public void restart() {
         for (RpcPoller poller : pollers) {
-            poller.start();
             new Thread(poller).start();
         }
     }
