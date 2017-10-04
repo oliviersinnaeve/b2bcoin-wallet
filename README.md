@@ -3,6 +3,12 @@ B2B Coin Java gui wallet
 
 Can be used for any coin that was created on forknote.
 
+# Wallet modules
+...
+
+# Setup the wallet
+B2B Coin Java gui wallet
+
 All we need to change are the following files in the resources bundle :
 
 1. configs/application.config
