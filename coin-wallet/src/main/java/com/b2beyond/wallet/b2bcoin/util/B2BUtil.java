@@ -12,6 +12,7 @@ package com.b2beyond.wallet.b2bcoin.util;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.awt.Color;
@@ -99,6 +100,17 @@ public final class B2BUtil {
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
                         getConfigRoot() + "application.config");
+            } else {
+                // Here we can set new properties on every restart !!!
+                LOGGER.debug("Updating the coin-wallet file with pools");
+                PropertiesConfiguration newFile = new PropertiesConfiguration(
+                        B2BUtil.class.getClassLoader().getResource("configs/application.config"));
+                PropertiesConfiguration currentFile= new PropertiesConfiguration(getConfigRoot() + "application.config");
+
+                currentFile.setProperty("pool-pools", null);
+                currentFile.addProperty("pool-pools", newFile.getStringArray("pool-pools"));
+                currentFile.save();
+                LOGGER.debug("File coin-wallet.conf should be updated with new pools");
             }
         } catch (Exception e) {
             LOGGER.error("Failed to copy file", e);

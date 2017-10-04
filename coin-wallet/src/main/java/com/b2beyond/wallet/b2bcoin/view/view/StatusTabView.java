@@ -117,7 +117,7 @@ public class StatusTabView extends JPanel implements Observer {
 
                 serverPanel.getPeers().setText("" + viewData.getPeerCount());
                 serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
-                if (blockWrapper.getBlock() != null) {
+                if (blockWrapper != null &&  blockWrapper.getBlock() != null) {
                     serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
                     serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getAlreadyGeneratedCoins()));
                     serverPanel.getBaseReward().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getBaseReward()));

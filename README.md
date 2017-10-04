@@ -23,8 +23,7 @@ Change the following properties:
 | log-file-wallet | The name of the wallet daemon log file | walletd.log |
 | min-width | Minimum width of the gui wallet | 1350 |
 | min-height | Minimum height of the gui wallet | 775 |
-| pool-pools | Comma separated list of pool url that can mine the coin | pool.b2bcoin.ml, pool2.b2bcoin.ml |
-| pool-ports | Comma separated list of pool ports for the pools | 3333,5555,7777,9999 |
+| pool-pools | Comma separated list of pool urls (format: host:url) that can mine the coin | pool.b2bcoin.ml:3333, pool.b2bcoin.ml:5555, b2bpool.b2bcoin.ml:9856 |
 
 ## configs/coin.conf
 
@@ -63,7 +62,7 @@ The coin-wallet.conf file is nothing more then a copy of the configs/%config_fil
 See them here
 
 | Property name | Description   | Example  |
-| ------------- |:-------------|:--------|
+| ------------- |:------------- |:-------- |
 | daemon-port  | The port of the coin daemon rpc | 39156 |
 | bind-port | The port on which we will bind the wllet rpc | 9090 |
 | bind-address | This needs to be set somehow for windows (don't change for now and leave the wallet-daemon-base-url in application.config also on 0.0.0.0) | 0.0.0.0 |

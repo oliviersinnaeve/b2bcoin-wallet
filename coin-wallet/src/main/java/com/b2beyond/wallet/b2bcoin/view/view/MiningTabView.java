@@ -1,7 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.MiningController;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -12,11 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -25,6 +19,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -32,6 +30,8 @@ import java.util.Observer;
 public class MiningTabView extends JPanel implements ActionListener, Observer {
 
     private MiningController miningController;
+
+    private Map<String, List<String>> portsPerPool = new HashMap<>();
 
     private JComboBox<JComboboxItem> addresses;
     private JComboBox<JComboboxItem> numberOfProcessors;
@@ -55,8 +55,13 @@ public class MiningTabView extends JPanel implements ActionListener, Observer {
         JLabel numberOfProcessorsLabel = new JLabel("Use # Cpu Cores : ");
         numberOfProcessors = new JComboBox<>();
 
-        fillPoolsCombobox(applicationProperties);
-        fillPortsCombobox(applicationProperties);
+        pools.addActionListener(this);
+
+        // Fills the portsPerPool map
+        fillPortsPerPool(applicationProperties);
+        // Fills the pools combobox and the first ports set based on the portsPerPool map
+        fillPoolsComboBoxAndFirstPoolPorts();
+        // Get the number of cpus and add them to a combobox
         fillNumberOfProcessorsCombobox();
 
         JPanel settingsPanel = new JPanel();
@@ -121,6 +126,29 @@ public class MiningTabView extends JPanel implements ActionListener, Observer {
         this.add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    private void setPoolComboBoxes(String pool) {
+        ports.removeAllItems();
+        for (String port : portsPerPool.get(pool)) {
+            JComboboxItem portItem = new JComboboxItem(port, port);
+            this.ports.addItem(portItem);
+        }
+    }
+
+    private void fillPortsPerPool(PropertiesConfiguration applicationProperties) {
+        String[] pools = applicationProperties.getStringArray("pool-pools");
+
+        for (String value: pools) {
+            String[] values = value.trim().split(":");
+
+            List<String> ports = portsPerPool.get(values[0]);
+            if (ports == null) {
+                ports = new ArrayList<>();
+            }
+            ports.add(values[1]);
+            portsPerPool.put(values[0], ports);
+        }
+    }
+
     private void fillNumberOfProcessorsCombobox() {
         int cores = Runtime.getRuntime().availableProcessors();
 
@@ -131,21 +159,19 @@ public class MiningTabView extends JPanel implements ActionListener, Observer {
         }
     }
 
-    private void fillPoolsCombobox(PropertiesConfiguration applicationProperties) {
-        String[] pools = applicationProperties.getStringArray("pool-pools");
-
-        for (String value: pools) {
+    private void fillPoolsComboBoxAndFirstPoolPorts() {
+        boolean first = true;
+        for (String value : portsPerPool.keySet()) {
             JComboboxItem item = new JComboboxItem(value, value);
             this.pools.addItem(item);
-        }
-    }
 
-    private void fillPortsCombobox(PropertiesConfiguration applicationProperties) {
-        String[] ports = applicationProperties.getStringArray("pool-ports");
-
-        for (String value : ports) {
-            JComboboxItem item = new JComboboxItem(value, value);
-            this.ports.addItem(item);
+            if (first) {
+                for (String port : portsPerPool.get(value)) {
+                    JComboboxItem portItem = new JComboboxItem(port, port);
+                    this.ports.addItem(portItem);
+                }
+                first = false;
+            }
         }
     }
 
@@ -170,6 +196,15 @@ public class MiningTabView extends JPanel implements ActionListener, Observer {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
+
+        if (e.getSource() instanceof JComboBox) {
+            if (pools == e.getSource()) {
+                JComboboxItem selectedItem = (JComboboxItem) pools.getSelectedItem();
+                if (selectedItem != null) {
+                    setPoolComboBoxes(selectedItem.getValue());
+                }
+            }
+        }
 
         if ("Start Mining".equalsIgnoreCase(command)) {
             JComboboxItem pool = (JComboboxItem) pools.getSelectedItem();
