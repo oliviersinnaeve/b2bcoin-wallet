@@ -15,7 +15,7 @@ All we need to change are the following files in the resources bundle :
 Change the following properties:
 
 | Property name | Description   | Example  |
-| ------------- |:-------------|:--------|
+| ------------- |:------------- |:-------- |
 | coin      | The name of the coin | b2bcoin    |
 | wallet-daemon-base-url | The url we start the daemon on (see bind-port in coin-wallet.conf) | http://0.0.0.0:9090 |
 | coin-daemon-base-url | The url the coin rpc starts on | http://127.0.0.1:39156 |
