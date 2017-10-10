@@ -1,0 +1,50 @@
+<div class="auth-main">
+    <div class="auth-block">
+        <h1>Sign in to B2B Coin Wallet</h1>
+        <a routerLink="/register" class="auth-link btn btn-default btn-auth">New to B2B Coin Wallet? Sign up!</a>
+
+        <div class="col-md-12">
+            <div class="error" *ngFor="let message of messages">{{message}}</div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+            <div class="form-group row"
+                 [ngClass]="{'has-error': (!userId.valid && userId.touched), 'has-success': (userId.valid && userId.touched)}">
+                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+
+                <div class="col-sm-10">
+                    <input [formControl]="userId" type="email" class="form-control" id="inputEmail3"
+                           placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group row"
+                 [ngClass]="{'has-error': (!password.valid && password.touched), 'has-success': (password.valid && password.touched)}">
+                <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+
+                <div class="col-sm-10">
+                    <input [formControl]="password" type="password" class="form-control" id="inputPassword3"
+                           placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth pull-right">Sign in
+                    </button>
+                    <a routerLink="/forgotPassword" class="btn btn-default btn-auth pull-right">Forgot password?</a>
+                </div>
+            </div>
+        </form>
+
+        <div class="auth-sep"><span><span>or Sign in with one click</span></span></div>
+
+        <div class="al-share-auth">
+            <!--<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>-->
+            <ul class="al-share clearfix">
+                <li><i class="socicon socicon-facebook" title="Share on Facebook" (click)="loginWithFacebook()"></i>
+                </li>
+                <li><i class="socicon socicon-twitter" title="Share on Twitter"></i></li>
+                <li><i class="socicon socicon-google" title="Share on Google Plus"></i></li>
+            </ul>
+        </div>
+    </div>
+</div>

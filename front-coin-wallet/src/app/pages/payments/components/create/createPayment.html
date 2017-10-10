@@ -1,0 +1,49 @@
+<button class="btn btn-success pull-right" (click)="addNewComponent()">Add new component</button>
+
+<div *ngFor="let component of components" class="col-md-3 col-xs-12">
+    <div class="card">
+        <div class="card-block box">
+            <div class="ribbon ribbon-custom"><span>Custom</span></div>
+            <h4 class="card-title">{{component.name}}</h4>
+
+            <p class="card-text">{{component.description}}</p>
+            <img src=""/>
+            <button class="btn btn-primary pull-right" (click)="addComponentToWebsite(component)">Add component to
+                website
+            </button>
+            <button class="btn btn-primary pull-right" (click)="changeComponentConfig(component)">Change config</button>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #addPrivateComponentToSiteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="addPrivateComponentToSiteModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add component to Website</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="componentName">Component : {{selectedComponent.name}}</label>
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelect1">Website</label>
+                    <select class="form-control" [(ngModel)]="selectedWebsite">
+                        <option value="">Select a website</option>
+                        <option *ngFor="let website of websites" [ngValue]="website">{{website.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger" (click)="saveComponentFragment()">Bind component to
+                    website
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

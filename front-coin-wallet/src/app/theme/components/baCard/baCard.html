@@ -1,0 +1,11 @@
+<div baCardBlur class="animated fadeIn card {{cardType}} {{baCardClass || ''}}" zoom-in>
+    <div *ngIf="title" class="card-header clearfix">
+        <h3 *ngIf="!collapsable" class="card-title">{{title}}</h3>
+
+        <h3 style="cursor: pointer" *ngIf="showContent && collapsable" class="card-title" (click)="hideBody()">{{title}}<i ng-reflect-class-name="ion-chevron-down" class="ion-chevron-up pull-right"></i></h3>
+        <h3 style="cursor: pointer" *ngIf="!showContent && collapsable" class="card-title" (click)="showBody()">{{title}}<i ng-reflect-class-name="ion-chevron-down" class="ion-chevron-down pull-right"></i></h3>
+    </div>
+    <div class="card-body" *ngIf="showContent">
+        <ng-content></ng-content>
+    </div>
+</div>

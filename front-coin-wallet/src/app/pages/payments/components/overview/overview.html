@@ -1,0 +1,19 @@
+<div class="horizontal-scroll">
+    <table class="table table-hover">
+        <thead>
+        <tr class="black-muted-bg">
+            <th class="align-left">Address</th>
+            <th class="align-right">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of payments" class="no-top-border">
+            <td ngClass="nowrap">{{item.address}}</td>
+            <td class="align-right">
+                <a class="btn btn-primary" (click)="selectWebsite(item)"><i ng-reflect-class-name="ion-edit"
+                                                                            class="ion-edit"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

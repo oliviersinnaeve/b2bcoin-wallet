@@ -1,0 +1,7 @@
+@import '../../../theme/sass/auth';
+
+#profile {
+  input[type="file"] {
+    display: none !important;
+  }
+}

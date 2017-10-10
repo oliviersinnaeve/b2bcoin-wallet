@@ -1,0 +1,38 @@
+<div class="col-md-6 col-xs-12">
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">Wallet info</h4>
+
+            <p class="card-text">You have {{numberOfAddresses}} addresses(s) in your account.</p>
+            <td class="pull-right">
+                <a class="btn btn-primary" [routerLink]="'/pages/addresses/overview'">
+                    <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
+                </a>
+                <a class="btn btn-primary" (click)="createNewAddress()">Add new address</a>
+            </td>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 col-xs-12">
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">Wallet balance</h4>
+
+            <div class="card-text">
+                <label>Total balance: </label>
+
+                <div style="float:right">{{getBalance()}}</div>
+                <br/>
+                <label>Total locked balance: </label>
+
+                <div style="float:right">{{getLockedBalance()}}</div>
+            </div>
+            <td class="pull-right">
+                <a class="btn btn-primary" [routerLink]="'/pages/addresses/overview'">
+                    <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
+                </a>
+            </td>
+        </div>
+    </div>
+</div>

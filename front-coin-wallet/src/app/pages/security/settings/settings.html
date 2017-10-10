@@ -1,0 +1,29 @@
+<div style="cursor: pointer;" class="btn btn-primary btn-circle"><i class="ion-help"
+                                                                    (click)="settingsHelpModal.show()"></i></div>
+
+<div class="row row-spacer-15">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        Settings
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #settingsHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="settingsHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Settings help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/settings.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="settingsHelpModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

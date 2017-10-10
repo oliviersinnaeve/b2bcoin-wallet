@@ -1,0 +1,2 @@
+export * from './serverInfo.component';
+
