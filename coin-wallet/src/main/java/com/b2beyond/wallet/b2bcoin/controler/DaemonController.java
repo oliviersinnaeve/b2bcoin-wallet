@@ -130,10 +130,4 @@ public class DaemonController {
         LOGGER.info("STOPPING DAEMON !!!!!!");
     }
 
-    public void restartWalletDaemonIfStopped() {
-        if (B2BUtil.availableForConnection(walletProperties.getInt("bind-port"))){
-            //((WalletDaemon)walletDaemon).start();
-        }
-    }
-
 }

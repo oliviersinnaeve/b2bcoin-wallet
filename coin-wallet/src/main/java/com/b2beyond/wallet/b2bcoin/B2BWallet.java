@@ -7,6 +7,7 @@ import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.DaemonPortChecker;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.NoParamsRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.SynchronizationRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.TransactionItemsRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.UnconfirmedTransactionHashesRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
@@ -34,11 +35,8 @@ import org.apache.log4j.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.Color;
-import java.io.IOException;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -154,13 +152,13 @@ public class B2BWallet extends MainFrame {
         LOGGER.info("Controllers started.");
 
         LOGGER.info("Creating tab view instances ...");
-        StatusTabView statusTabView = new StatusTabView(actionController, actionController.getWalletRpcController().getResetExecutor(), actionController.getWalletRpcController().getTransactionExecutor());
-        TransactionsTabView transactionsTabView = new TransactionsTabView(actionController.getWalletRpcController().getTransactionExecutor());
-        AddressesTabView addressesTabView = new AddressesTabView(addressesController);
-        PaymentTabView paymentTabView = new PaymentTabView();
-        CreatePaymentTabView createPaymentTabView = new CreatePaymentTabView(paymentController);
-        MiningTabView miningTabView = new MiningTabView(miningController, applicationProperties);
-        MiningTabView soloMiningTabView = new MiningTabView(soloMiningController, applicationProperties);
+        final StatusTabView statusTabView = new StatusTabView(actionController, actionController.getWalletRpcController().getResetExecutor(), actionController.getWalletRpcController().getTransactionExecutor());
+        final TransactionsTabView transactionsTabView = new TransactionsTabView(actionController.getWalletRpcController().getTransactionExecutor());
+        final AddressesTabView addressesTabView = new AddressesTabView(addressesController);
+        final PaymentTabView paymentTabView = new PaymentTabView();
+        final CreatePaymentTabView createPaymentTabView = new CreatePaymentTabView(paymentController);
+        final MiningTabView miningTabView = new MiningTabView(miningController, applicationProperties);
+        final MiningTabView soloMiningTabView = new MiningTabView(soloMiningController, applicationProperties);
 
         loadWindow.setProgress(loadingCounter++);
         actionController.setMiningController(miningController);
@@ -168,6 +166,7 @@ public class B2BWallet extends MainFrame {
 
         MenuBar menuBar = new MenuBar(actionController);
         setJMenuBar(menuBar);
+        loadWindow.setProgress(loadingCounter++);
 
         List<TabContainer> containers = new ArrayList<>();
         URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("stats-icon.png");
@@ -178,6 +177,7 @@ public class B2BWallet extends MainFrame {
         containers.add(new TabContainer<>(4, "Create payments", createPaymentTabView, true));
         containers.add(new TabContainer<>(5, "Pool Mining", miningTabView, true));
         containers.add(new TabContainer<>(6, "Solo Mining", soloMiningTabView, false));
+        loadWindow.setProgress(loadingCounter++);
 
         setContainers(containers);
 
@@ -185,53 +185,72 @@ public class B2BWallet extends MainFrame {
         loadWindow.setProgress(loadingCounter++);
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         // Start polling and updating the views
         LOGGER.info("Starting the rpc pollers ...");
-        RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getStatusExecutor(), 5000);
-        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
-        RpcPoller<BlockCount> syncPoller = new NoParamsRpcPoller<>(actionController.getCoinRpcController().getBlockCountExecutor(), 5000);
-        TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 5000);
-        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
-        loadWindow.setProgress(loadingCounter++);
+        final RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getStatusExecutor(), 10000);
+        final SynchronizationRpcPoller<BlockCount> syncPoller = new SynchronizationRpcPoller<>(actionController.getCoinRpcController().getBlockCountExecutor(), 10000);
 
-
-        actionController.getWalletRpcController().addPollers(statusPoller);
-        actionController.getWalletRpcController().addPollers(addressesPoller);
-        actionController.getWalletRpcController().addPollers(transactionsPoller);
-        actionController.getWalletRpcController().addPollers(unconfirmedTransactionHashesPoller);
         actionController.getCoinRpcController().addPollers(syncPoller);
-        loadWindow.setProgress(loadingCounter++);
+        actionController.getWalletRpcController().addPollers(statusPoller);
 
-        // Add observers
-        transactionsPoller.addObserver(transactionsTabView);
-        transactionsPoller.addObserver(statusTabView);
-        transactionsPoller.addObserver(paymentTabView);
-
-        unconfirmedTransactionHashesPoller.addObserver(statusTabView);
-        unconfirmedTransactionHashesPoller.addObserver(transactionsTabView);
-
-        statusPoller.addObserver(transactionsPoller);
+        statusPoller.addObserver(syncPoller);
         statusPoller.addObserver(this);
-        statusPoller.addObserver(statusTabView);
-
-        addressesPoller.addObserver(addressesTabView);
-        addressesPoller.addObserver(miningTabView);
-        addressesPoller.addObserver(soloMiningTabView);
-        addressesPoller.addObserver(paymentTabView);
-        addressesPoller.addObserver(createPaymentTabView);
-        addressesPoller.addObserver(transactionsTabView);
-        addressesPoller.addObserver(transactionsPoller);
-        addressesPoller.addObserver(unconfirmedTransactionHashesPoller);
-
         syncPoller.addObserver(this);
         loadWindow.setProgress(loadingCounter++);
 
-        LOGGER.info("Rpc pollers started.");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean synced = false;
+                while (!synced) {
+                    synced = syncPoller.isSynced();
+                    if (synced) {
+                        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
+                        TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 5000);
+                        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
 
+                        actionController.getWalletRpcController().addPollers(addressesPoller);
+                        actionController.getWalletRpcController().addPollers(transactionsPoller);
+                        actionController.getWalletRpcController().addPollers(unconfirmedTransactionHashesPoller);
+
+                        // Add observers
+                        transactionsPoller.addObserver(transactionsTabView);
+                        transactionsPoller.addObserver(statusTabView);
+                        transactionsPoller.addObserver(paymentTabView);
+
+                        unconfirmedTransactionHashesPoller.addObserver(statusTabView);
+                        unconfirmedTransactionHashesPoller.addObserver(transactionsTabView);
+
+                        statusPoller.addObserver(transactionsPoller);
+                        statusPoller.addObserver(statusTabView);
+
+                        addressesPoller.addObserver(addressesTabView);
+                        addressesPoller.addObserver(miningTabView);
+                        addressesPoller.addObserver(soloMiningTabView);
+                        addressesPoller.addObserver(paymentTabView);
+                        addressesPoller.addObserver(createPaymentTabView);
+                        addressesPoller.addObserver(transactionsTabView);
+                        addressesPoller.addObserver(transactionsPoller);
+                        addressesPoller.addObserver(unconfirmedTransactionHashesPoller);
+                    } else {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                LOGGER.info("Rpc pollers started.");
+
+            }
+        }).start();
+
+        loadWindow.setProgress(loadingCounter++);
         loadWindow.setScreenVisible(false);
         //make sure the JFrame is visible
         this.setVisible(true);

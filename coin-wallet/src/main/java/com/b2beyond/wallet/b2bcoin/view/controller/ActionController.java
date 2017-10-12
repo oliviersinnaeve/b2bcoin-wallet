@@ -63,10 +63,6 @@ public class ActionController {
         controller.stop();
     }
 
-    public void restartWalletDaemonIfStopped() {
-        controller.restartWalletDaemonIfStopped();
-    }
-
     public CoinRpcController getCoinRpcController() {
         return coinRpcController;
     }

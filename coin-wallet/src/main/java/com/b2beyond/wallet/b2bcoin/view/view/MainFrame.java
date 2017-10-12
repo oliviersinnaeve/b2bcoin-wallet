@@ -182,16 +182,15 @@ public class MainFrame extends JFrame implements Observer {
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
             Status viewData = (Status) data;
-            dataSynchronizingBlocks.setText("" + viewData.getBlockCount() + " / " + viewData.getKnownBlockCount());
+            //dataSynchronizingBlocks.setText("" + viewData.getBlockCount() + " / " + viewData.getKnownBlockCount());
 
             setProgressMax(viewData.getKnownBlockCount());
         }
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
-            if (progressBar.getValue() == progressBar.getMaximum()) {
-                this.actionController.restartWalletDaemonIfStopped();
-            }
+            System.out.println(progressBar.getValue());
+            dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
         }
     }
 
