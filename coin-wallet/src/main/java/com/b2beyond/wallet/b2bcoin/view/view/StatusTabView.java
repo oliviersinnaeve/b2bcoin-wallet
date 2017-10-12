@@ -9,7 +9,6 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
-import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
@@ -91,7 +90,7 @@ public class StatusTabView extends JPanel implements Observer {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Resetting wallet");
                 actionController.stopBackgroundProcessesBeforeReset();
-                resetExecutor.execute();
+                resetExecutor.execute(JsonRpcExecutor.EMPTY_PARAMS);
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException ex) {
@@ -139,10 +138,9 @@ public class StatusTabView extends JPanel implements Observer {
         TransactionItems transactions = new TransactionItems();
 
         for (String hash : transactionItems.getTransactionHashes()) {
-            transactionItemsJsonRpcExecutor.setParams("\"params\":{  " +
+            SingleTransactionItem transactionItem = transactionItemsJsonRpcExecutor.execute("\"params\":{  " +
                     "     \"transactionHash\":\"" + hash + "\"" +
                     "  }");
-            SingleTransactionItem transactionItem = transactionItemsJsonRpcExecutor.execute();
             TransactionItem item = new TransactionItem();
             item.getTransactions().add(transactionItem.getTransaction());
             transactions.getItems().add(item);

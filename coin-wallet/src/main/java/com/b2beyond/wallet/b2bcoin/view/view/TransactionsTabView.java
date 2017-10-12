@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -47,13 +48,16 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
     private JTable transactionsTable;
     private DefaultTableModel transactionsTableModel;
 
-    private String[] columnNames = { "Address", "Date", "Amount" };
-    private String[] columnNamesUnconfirmed = { "Address", "Amount", "" };
+    private String[] columnNames = {"Address", "Date", "Amount"};
+    private String[] columnNamesUnconfirmed = {"Address", "Amount", ""};
 
     private boolean firstTableInitialization = true;
 
 
     public TransactionsTabView(JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor) {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
         this.transactionItemsJsonRpcExecutor = transactionItemsJsonRpcExecutor;
 
         this.setLayout(new BorderLayout());
@@ -72,6 +76,9 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         unconfirmedTransactionsTable.getColumnModel().getColumn(0).setPreferredWidth(700);
         unconfirmedTransactionsTable.getColumnModel().getColumn(1).setPreferredWidth(150);
         unconfirmedTransactionsTable.getColumnModel().getColumn(2).setPreferredWidth(75);
+
+        unconfirmedTransactionsTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+
         unconfirmedTransactionsTable.setRowHeight(30);
 
         // Preparing Confirmed Table !
@@ -79,12 +86,14 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         transactionsTable = new JTable(transactionsTableModel);
         transactionsTable.getColumnModel().getColumn(0).setPreferredWidth(700);
         transactionsTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+        transactionsTable.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
         transactionsTable.setRowHeight(30);
 
         JScrollPane unconfirmedTransactionsTableScrollPane = new JScrollPane(unconfirmedTransactionsTable);
         unconfirmedTransactionsTableScrollPane.setVisible(true);
         unconfirmedTransactionsTableScrollPane.setColumnHeader(new JViewport() {
-            @Override public Dimension getPreferredSize() {
+            @Override
+            public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.height = 32;
                 return d;
@@ -94,7 +103,8 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         JScrollPane transactionsTableScrollPane = new JScrollPane(transactionsTable);
         transactionsTableScrollPane.setVisible(true);
         transactionsTableScrollPane.setColumnHeader(new JViewport() {
-            @Override public Dimension getPreferredSize() {
+            @Override
+            public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.height = 32;
                 return d;
@@ -137,19 +147,45 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
     }
 
     public void update(TransactionItems transactions) {
-        for (TransactionItem item: transactions.getItems()) {
+        for (TransactionItem item : transactions.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
-                for (Transfer transfer : transaction.getTransfers()) {
-                    if (StringUtils.isNotBlank(transfer.getAddress())) {
-                        String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
+                long amount = transaction.getAmount();
+                String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
+                Date date = null;
+                try {
+                    date = B2BUtil.readFormat.parse(dateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                        if (transaction.getUnlockTime() != 0) {
-                            LOGGER.trace("Unlock time : " + transaction.getUnlockTime());
+                if (amount < 0) {
+                    String address = "";
+                    for (Transfer transfer : transaction.getTransfers()) {
+                        if (StringUtils.isNotBlank(transfer.getAddress())) {
+                            System.out.println(transfer.getAddress());
+                            if (addressesList.getAddresses().contains(transfer.getAddress())) {
+                                address = transfer.getAddress();
+                            }
                         }
+                    }
 
-                        try {
-                            Date date = B2BUtil.readFormat.parse(dateStr);
-                            final Object[] data = { transfer.getAddress(), B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(transfer.getAmount()) };
+                    final Object[] data = {address, B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(amount)};
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (transactionsTable != null) {
+                                transactionsTableModel.addRow(data);
+                            }
+                        }
+                    });
+                } else {
+                    for (Transfer transfer : transaction.getTransfers()) {
+                        if (StringUtils.isNotBlank(transfer.getAddress())) {
+                            if (transaction.getUnlockTime() != 0) {
+                                LOGGER.trace("Unlock time : " + transaction.getUnlockTime());
+                            }
+
+                            final Object[] data = {transfer.getAddress(), B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(transfer.getAmount())};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -158,8 +194,6 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                                     }
                                 }
                             });
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
@@ -201,16 +235,15 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         TransactionItems transactions = new TransactionItems();
 
         for (String hash : unconfirmedHashes) {
-            transactionItemsJsonRpcExecutor.setParams("\"params\":{  " +
+            SingleTransactionItem transactionItem = transactionItemsJsonRpcExecutor.execute("\"params\":{  " +
                     "     \"transactionHash\":\"" + hash + "\"" +
                     "  }");
-            SingleTransactionItem transactionItem = transactionItemsJsonRpcExecutor.execute();
             TransactionItem item = new TransactionItem();
             item.getTransactions().add(transactionItem.getTransaction());
             transactions.getItems().add(item);
         }
 
-        for (TransactionItem item: transactions.getItems()) {
+        for (TransactionItem item : transactions.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 for (Transfer transfer : transaction.getTransfers()) {
                     if (StringUtils.isNotBlank(transfer.getAddress())) {

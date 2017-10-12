@@ -24,25 +24,16 @@ public class WalletDaemon implements Daemon {
 
     private static Logger LOGGER = Logger.getLogger(WalletDaemon.class);
 
-    private PropertiesConfiguration daemonProperties;
     private String operatingSystem;
     private PropertiesConfiguration walletProperties;
-    private String container;
-    private String password;
-    private boolean firstStartup;
 
-    private long maxProgress;
     private Process process;
     private int processPid;
 
     public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
-        this.daemonProperties = daemonProperties;
         this.operatingSystem = operatingSystem;
         this.walletProperties = walletProperties;
-        this.container = container;
-        this.password = password;
-        this.firstStartup = firstStartup;
 
         String userHome = B2BUtil.getUserHome();
         String binariesLocation = B2BUtil.getBinariesRoot();

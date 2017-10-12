@@ -7,6 +7,8 @@ let PROVIDERS: any[] = [
     // common env directives
 ];
 
+let calculatedHost = "http://localhost:8080";
+
 // Angular debug tools in the dev console
 // https://github.com/angular/angular/blob/86405345b781a9dc2438c0fbe3e9409245647019/TOOLS_JS.md
 let _decorateModuleRef = function identity<T>(value: T): T {
@@ -22,8 +24,9 @@ if ('production' === ENV || 'renderer' === ENV) {
         ...PROVIDERS,
         // custom providers in production
     ];
-} else {
 
+    calculatedHost = "https://api.b2bcoin.xyz";
+} else {
     _decorateModuleRef = (modRef: any) => {
         const appRef = modRef.injector.get(ApplicationRef);
         const cmpRef = appRef.components[0];
@@ -40,7 +43,6 @@ if ('production' === ENV || 'renderer' === ENV) {
         ...PROVIDERS,
         // custom providers in development
     ];
-
 }
 
 export const decorateModuleRef = _decorateModuleRef;
@@ -50,10 +52,8 @@ export const ENV_PROVIDERS = [
 ];
 
 export const websiteId = 1000001;
+export const baseUrl = calculatedHost;
 
-
-export const baseUrl = "https://api.b2bcoin.xyz";
-//export const baseUrl = "http://localhost:8080";
 
 export const languages = [
     {value: "af_NA", name: "Afrikaans (Namibia)"},

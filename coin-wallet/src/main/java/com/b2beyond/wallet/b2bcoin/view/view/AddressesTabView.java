@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.BorderLayout;
@@ -41,12 +42,17 @@ public class AddressesTabView extends JPanel implements Observer {
 
 
     public AddressesTabView(AddressesController controller) {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
         this.controller = controller;
         this.setLayout(new BorderLayout());
 
         addressesTableModel = new DefaultTableModel(columnNames, 0);
         addressesTable = new JTable(addressesTableModel);
         addressesTable.getColumnModel().getColumn(0).setPreferredWidth(700);
+        addressesTable.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+        addressesTable.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
         addressesTable.setRowHeight(30);
 
         JScrollPane addressesTableScrollPane = new JScrollPane(addressesTable);

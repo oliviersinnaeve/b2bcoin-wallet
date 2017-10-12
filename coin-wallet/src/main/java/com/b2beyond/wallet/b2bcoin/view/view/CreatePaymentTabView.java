@@ -14,11 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.MenuComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -76,7 +79,7 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         addPaymentButton.addActionListener(this);
         createPaymentButton.addActionListener(this);
 
-        TransferPanel panel = new TransferPanel(true);
+        TransferPanel panel = new TransferPanel(true, this);
         transfers.add(panel);
         GridLayout layout = new GridLayout(0 ,1);
         transferPanel = new JPanel(layout);
@@ -147,14 +150,42 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
             input.setTransfers(transferList);
 
             Payment payment = paymentController.makePayment(input);
+            if (payment != null) {
+                JOptionPane.showMessageDialog(null,
+                        "Payment was successfully executed.",
+                        "Payment success",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                for (TransferPanel tmpTransfer : transfers) {
+                    transferPanel.remove(tmpTransfer);
+                }
+
+                transfers = new ArrayList<>();
+
+                TransferPanel newPanel = new TransferPanel(false, this);
+                transfers.add(newPanel);
+                transferPanel.add(newPanel);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Failed to execute payment, retry later ...",
+                        "Fatal error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
         }
 
         if (command.equals("Add payment")) {
-            TransferPanel newPanel = new TransferPanel(false);
+            TransferPanel newPanel = new TransferPanel(false, this);
             transfers.add(newPanel);
             transferPanel.add(newPanel);
             newPanel.setActionListeners();
+
+            repaint();
+            updateUI();
         }
     }
 
+    public void removePanel(TransferPanel panel) {
+        transfers.remove(panel);
+    }
 }

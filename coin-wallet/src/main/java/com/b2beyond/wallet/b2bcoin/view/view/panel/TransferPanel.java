@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view.panel;
 
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import com.b2beyond.wallet.b2bcoin.view.view.CreatePaymentTabView;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -21,6 +22,8 @@ import java.text.NumberFormat;
 
 public class TransferPanel extends JPanel {
 
+    private CreatePaymentTabView parent;
+
     private JTextField address;
     private JTextField amount;
 
@@ -29,7 +32,9 @@ public class TransferPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public TransferPanel(boolean first) {
+    public TransferPanel(boolean first, CreatePaymentTabView parent) {
+        this.parent = parent;
+
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
         setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -84,7 +89,7 @@ public class TransferPanel extends JPanel {
     }
 
     public void setActionListeners() {
-        deletePanelButton.addActionListener(new DeletePanelListener(this.getParent(), this));
+        deletePanelButton.addActionListener(new DeletePanelListener(parent, this));
     }
 
     public JTextField getAddress() {
@@ -98,17 +103,20 @@ public class TransferPanel extends JPanel {
 
 class DeletePanelListener implements ActionListener {
 
-    private Container parent;
-    private JPanel panel;
+    private CreatePaymentTabView parent;
+    private TransferPanel panel;
 
-    public DeletePanelListener(Container parent, JPanel panel) {
+    public DeletePanelListener(CreatePaymentTabView parent, TransferPanel panel) {
         this.parent = parent;
         this.panel = panel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        parent.remove(panel);
+        panel.getParent().remove(panel);
+        parent.removePanel(panel);
+
+        parent.repaint();
     }
 
 }

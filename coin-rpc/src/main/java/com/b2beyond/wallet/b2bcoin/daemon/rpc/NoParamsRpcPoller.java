@@ -12,8 +12,8 @@ public class NoParamsRpcPoller<T> extends RpcPoller<T> {
 
     @Override
     public String getParams() {
-        LOGGER.debug("Getting params from NoParamsRpcPoller");
-        return "\"params\": {}";
+        LOGGER.debug("Getting EMPTY_PARAMS from NoParamsRpcPoller");
+        return JsonRpcExecutor.EMPTY_PARAMS;
     }
 
     @Override

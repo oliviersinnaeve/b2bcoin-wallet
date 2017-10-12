@@ -80,9 +80,7 @@ public class PaymentController {
                 "    \"changeAddress\":\"" + input.getAddress() +"\"\n" +
                 "}";
 
-        this.paymentExecutor.setParams(params);
-
-        return this.paymentExecutor.execute();
+        return this.paymentExecutor.execute(params);
     }
 
 }

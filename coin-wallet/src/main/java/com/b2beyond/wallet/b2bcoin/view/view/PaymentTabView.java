@@ -14,11 +14,13 @@ import org.apache.log4j.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,22 +43,28 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
 
 
     public PaymentTabView() {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
         this.setLayout(new BorderLayout());
 
         //construct components
         setAddresses(new JComboBox<JComboboxItem>());
 
-        String[] columnNames = { "Address", "Date", "Amount" };
+        String[] columnNames = {"Address", "Date", "Amount"};
         paymentsTableModel = new DefaultTableModel(columnNames, 0);
         paymentsTable = new JTable(paymentsTableModel);
         paymentsTable.getColumnModel().getColumn(0).setPreferredWidth(675);
         paymentsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        paymentsTable.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+
         paymentsTable.setRowHeight(30);
 
         JScrollPane transactionsTableScrollPane = new JScrollPane(paymentsTable);
         transactionsTableScrollPane.setVisible(true);
         transactionsTableScrollPane.setColumnHeader(new JViewport() {
-            @Override public Dimension getPreferredSize() {
+            @Override
+            public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
                 d.height = 32;
                 return d;
@@ -88,7 +96,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
     }
 
     private void updateBalances(TransactionItems transactionItems) {
-        for (TransactionItem item: transactionItems.getItems()) {
+        for (TransactionItem item : transactionItems.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
                 Date date = null;
@@ -107,6 +115,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                     String address = "";
                     for (Transfer transfer : transaction.getTransfers()) {
                         if (StringUtils.isNotBlank(transfer.getAddress())) {
+                            System.out.println(transfer.getAddress());
                             if (addressesList.getAddresses().contains(transfer.getAddress())) {
                                 address = transfer.getAddress();
                             }
@@ -117,9 +126,9 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                        if (paymentsTable != null) {
-                            paymentsTableModel.addRow(data);
-                        }
+                            if (paymentsTable != null) {
+                                paymentsTableModel.addRow(data);
+                            }
                         }
                     });
                 }

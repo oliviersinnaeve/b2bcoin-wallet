@@ -34,7 +34,7 @@ public class CoinDaemon implements Daemon {
             LOGGER.debug("Coin daemon logs : " + logLocation);
 
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
-                    "--log-file", logLocation + daemonProperties.getString("log-file-coin"), "--enable-blockchain-indexes");
+                    "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
 
             process = pb.start();
         } catch (Exception ex) {

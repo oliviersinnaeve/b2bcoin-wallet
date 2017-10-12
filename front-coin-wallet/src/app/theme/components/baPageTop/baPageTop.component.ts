@@ -40,6 +40,6 @@ export class BaPageTop {
 
     public logout () {
         this.userState.setUser({});
-        window.location.href = "/login";
+        window.location.href = "/#login";
     }
 }

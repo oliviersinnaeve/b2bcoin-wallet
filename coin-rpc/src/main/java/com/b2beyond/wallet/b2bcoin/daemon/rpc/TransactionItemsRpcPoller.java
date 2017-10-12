@@ -3,6 +3,8 @@ package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transaction;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 
 import java.util.Observable;
@@ -30,7 +32,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         if (this.addresses.getAddresses().size() > 0) {
             params = "\"params\":{\n" +
                     "    \"firstBlockIndex\":" + firstBlockCount + ",\n" +
-                    "    \"blockCount\":" + BLOCKS_TO_FETCH + "," +
+                    "    \"blockCount\":" + knowBlockCount + "," +
                     "    \"addresses\":[\n";
 
             int index = 0;
@@ -44,7 +46,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
             }
             params += "    ]}";
         } else {
-            params = "\"params\":{}";
+            params = JsonRpcExecutor.EMPTY_PARAMS;
         }
 
         return params;
@@ -57,7 +59,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-            if (isExecuted()) {
+            if (knowBlockCount != status.getKnownBlockCount()) {
                 knowBlockCount = status.getKnownBlockCount();
                 setExecuted(false);
             }
@@ -67,11 +69,25 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 
     @Override
     public boolean isActive() {
+//        return true;
         return firstBlockCount < knowBlockCount - 1;
+    }
+
+    public void reset() {
+        firstBlockCount = 1;
     }
 
     @Override
     public void updateOnSucceed(TransactionItems data) {
-        firstBlockCount += data.getItems().size();
+//        if (data.getItems().get(data.getItems().size() - 1).getTransactions().size() > 1) {
+//            for (Transaction item : data.getItems().get(data.getItems().size() - 1).getTransactions()) {
+//                if (item.getBlockIndex() > firstBlockCount) {
+//                    firstBlockCount = item.getBlockIndex();
+//                }
+//            }
+//        } else {
+//            firstBlockCount = data.getItems().get(data.getItems().size() - 1).getTransactions().get(0).getBlockIndex();
+//        }
+        firstBlockCount = knowBlockCount;
     }
 }

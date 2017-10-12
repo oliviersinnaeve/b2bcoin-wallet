@@ -21,17 +21,15 @@ public class AddressesController {
 
     public Address createAddress() {
         LOGGER.info("Create address");
-        this.createAddressExecutor.setParams("\"params\": {}");
-        return this.createAddressExecutor.execute();
+        return this.createAddressExecutor.execute(JsonRpcExecutor.EMPTY_PARAMS);
     }
 
     public AddressBalance getBalance(String address) {
         LOGGER.info("Get address balance : " + address);
-        this.balanceExecutor.setParams("\"params\": {" +
-                "\"address\": \"" + address + "\"" +
-                "}");
 
-        return this.balanceExecutor.execute();
+        return this.balanceExecutor.execute("\"params\": {" +
+            "\"address\": \"" + address + "\"" +
+        "}");
     }
 
 }

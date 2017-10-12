@@ -22,7 +22,7 @@ public class JsonRpcExecutor<T> {
     private String method;
     private Class<T> returnClass;
 
-    private String params = "\"params\": {}";
+    public static final String EMPTY_PARAMS = "\"params\": {}";
 
     public JsonRpcExecutor(String baseUrl, String method, Class<T> genericTypeClass) {
         this.baseUrl = baseUrl;
@@ -32,7 +32,7 @@ public class JsonRpcExecutor<T> {
         LOGGER.info("JsonRpcExecutor created for baseUrl : '" + baseUrl + "' and method : '" + method + "'");
     }
 
-    public synchronized T execute() {
+    public synchronized T execute(String params) {
         T result = null;
         HttpURLConnection httpConnection = null;
 
@@ -90,11 +90,6 @@ public class JsonRpcExecutor<T> {
         }
 
         return result;
-    }
-
-    public void setParams(String params) {
-        LOGGER.trace("Setting parameters : " + params);
-        this.params = params;
     }
 
 }

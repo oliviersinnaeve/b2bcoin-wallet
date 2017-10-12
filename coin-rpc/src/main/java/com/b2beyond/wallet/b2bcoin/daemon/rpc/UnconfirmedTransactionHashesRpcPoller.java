@@ -36,7 +36,7 @@ public class UnconfirmedTransactionHashesRpcPoller extends RpcPoller<Unconfirmed
             }
             params += "    ]}";
         } else {
-            params = "\"params\":{}";
+            params = JsonRpcExecutor.EMPTY_PARAMS;
         }
 
         return params;

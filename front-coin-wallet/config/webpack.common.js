@@ -25,8 +25,8 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-    title: 'B2B Coin Wallet',
-    description: 'B2B coin web wallet - start your own business ...',
+    title: 'B2B Wallet - Web wallet for B2B Coin',
+    description: 'We provide a web wallet for the B2B Coin.',
     baseUrl: '/',
     isDevServer: helpers.isWebpackDevServer()
 };
@@ -59,7 +59,7 @@ module.exports = function (options) {
 
             'polyfills': './src/polyfills.browser.ts',
             'vendor': './src/vendor.browser.ts',
-            'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
+            'main':      AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
         },
 
         /*
@@ -240,8 +240,7 @@ module.exports = function (options) {
                     name: 'vendor',
                     chunks: ['main'],
                     minChunks: module => /node_modules/.test(module.resource)
-    }
-    ),
+    }),
     // Specify the correct order the scripts will be injected in
     new CommonsChunkPlugin({
         name: ['polyfills', 'vendor'].reverse()
@@ -392,11 +391,11 @@ module.exports = function (options) {
      */
     node: {
         global: true,
-        crypto: 'empty',
-        process: true,
-        module: false,
-        clearImmediate: false,
-        setImmediate: false
+            crypto: 'empty',
+            process: true,
+            module: false,
+            clearImmediate: false,
+            setImmediate: false
     }
 
 };

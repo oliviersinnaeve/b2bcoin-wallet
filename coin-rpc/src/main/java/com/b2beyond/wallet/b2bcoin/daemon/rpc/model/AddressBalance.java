@@ -7,6 +7,11 @@ public class AddressBalance {
     private long availableBalance;
     private long lockedAmount;
 
+    public AddressBalance() { }
+
+    public AddressBalance(String address) {
+        this.address = address;
+    }
 
     public String getAddress() {
         return address;

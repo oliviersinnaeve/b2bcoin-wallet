@@ -30,9 +30,8 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
             if (getParams() != null && isActive()) {
                 if (!isExecuted()) {
                     executed = true;
-                    executor.setParams(getParams());
 
-                    T value = executor.execute();
+                    T value = executor.execute(getParams());
                     if (value != null) {
                         updateOnSucceed(value);
                         setChanged();
