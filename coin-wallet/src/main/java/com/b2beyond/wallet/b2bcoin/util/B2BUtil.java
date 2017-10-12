@@ -79,12 +79,12 @@ public final class B2BUtil {
         try {
             new File(getConfigRoot()).mkdirs();
 
-            if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
+//            if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
                         "configs/coin.conf",
                         getConfigRoot() + "coin.conf");
-            }
+//            }
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
                 Paths.get(getUserHome() + "coin-wallet.conf").toFile().delete();
