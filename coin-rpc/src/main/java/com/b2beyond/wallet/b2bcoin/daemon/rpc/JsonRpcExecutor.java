@@ -44,7 +44,7 @@ public class JsonRpcExecutor<T> {
                 httpConnection.setRequestProperty("Content-Type", "application/json");
                 httpConnection.setRequestProperty("Accept", "application/json");
                 httpConnection.setRequestMethod("POST");
-                httpConnection.setReadTimeout(10000);
+                httpConnection.setReadTimeout(60000);
                 httpConnection.connect();
 
                 String data = "{ \"jsonrpc\":\"2.0\", \"id\":\"test\", \"method\":\"" + method + "\"," + params + "}";
