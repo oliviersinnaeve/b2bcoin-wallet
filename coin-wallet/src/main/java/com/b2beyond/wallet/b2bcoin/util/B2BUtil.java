@@ -125,26 +125,26 @@ public final class B2BUtil {
 
             LOGGER.debug("Exporting binaries for os : " + os);
 
-            if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
+            //if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon");
                 FileResourceExtractor.extractFromJar(
                         "coin-" + os + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
-            }
-            if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
+            //}
+            //if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
                         "coin-" + os + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
-            }
+            //}
 
             if (getOperatingSystem().equalsIgnoreCase(LINUX) || getOperatingSystem().equalsIgnoreCase(MAC)) {
-                if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
+                //if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
                     LOGGER.trace("Exporting the wallet daemon");
                     FileResourceExtractor.extractFromJar(
                             "coin-" + os + "/binaries/" + poolMinerExecutable,
                             getBinariesRoot() + poolMinerExecutable);
-                }
+                //}
 
                 Process p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable);
                 p.waitFor();
