@@ -265,7 +265,7 @@
                                         <txtFileVersion>${project.version}</txtFileVersion>
                                         <fileDescription>${project.name}</fileDescription>
                                         <copyright>2017 B2B Coin</copyright>
-                                        <productVersion>1.0-SNAPSHOT</productVersion>
+                                        <productVersion>0.0.0.1</productVersion>
                                         <txtProductVersion>1.0-SNAPSHOT</txtProductVersion>
                                         <productName>${project.name}</productName>
                                         <companyName>b2bcoin.ml</companyName>
