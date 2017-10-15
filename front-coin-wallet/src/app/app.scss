@@ -1,6 +1,8 @@
 @import "~normalize.css";
 @import "theme/theme";
 
+html,body { height:100%; }
+
 ::-webkit-input-placeholder {
   color: #9dd9d2;
   font-weight: bolder;
@@ -12,6 +14,12 @@
 :-ms-input-placeholder {
   color: #9dd9d2;
   font-weight: bolder;
+}
+
+.modal-body {
+  a {
+    color: #38aecc !important;
+  }
 }
 
 // notification plugin

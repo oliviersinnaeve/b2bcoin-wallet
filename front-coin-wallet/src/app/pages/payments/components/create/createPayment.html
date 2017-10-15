@@ -30,8 +30,8 @@
 
             <div class="pull-right">
                 <a class="btn btn-primary" (click)="createTransferModal.show()">Add transaction</a>
-                <a *ngIf="!creatingWallet" style="width:150px" class="btn btn-primary" (click)="createPayment()">Create payment</a>
-                <a *ngIf="creatingWallet" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                <a *ngIf="!submitting" style="width:150px" class="btn btn-primary" (click)="createPayment()">Create payment</a>
+                <a *ngIf="submitting" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
             </div>
         </div>
     </div>
@@ -42,12 +42,14 @@
             <tr class="black-muted-bg">
                 <th class="align-left">Address</th>
                 <th class="align-right">Amount</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let transfer of transfers" class="no-top-border">
                 <td class="columnAddress">{{transfer.address}}</td>
                 <td ngClass="columnAmount align-right">{{getParsedAmount(transfer.amount)}}</td>
+                <td>Coming soon</td>
             </tr>
             </tbody>
         </table>
@@ -102,7 +104,13 @@
                 <h4 *ngIf="error" class="modal-title">Payment failed</h4>
             </div>
             <div class="modal-body">
-                {{message}}
+                <div *ngIf="!error">
+                    Payment executed: (There is a possibility that the hash is not found. Just be patient, it will get processed.
+                    <a (click)='gotoPayment(this.transactionHash)'>{{transactionHash}}</a>
+                </div>
+                <div *ngIf="error">
+                    Payment failed: {{message}}
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary confirm-btn" (click)="messageModal.hide()">Close</button>

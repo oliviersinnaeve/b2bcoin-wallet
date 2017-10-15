@@ -1,19 +1,26 @@
-<div class="horizontal-scroll">
-    <table class="table table-hover">
-        <thead>
-        <tr class="black-muted-bg">
-            <th class="align-left">Address</th>
-            <th class="align-right">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let item of payments" class="no-top-border">
-            <td ngClass="nowrap">{{item.address}}</td>
-            <td class="align-right">
-                <a class="btn btn-primary" (click)="selectWebsite(item)"><i ng-reflect-class-name="ion-edit"
-                                                                            class="ion-edit"></i></a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div *ngFor="let item of transactions">
+
+    <ba-card *ngIf="item.transactions.length > 0" title="{{item.address}}" baCardClass="with-scroll" collapsable="true">
+        <div class="horizontal-scroll">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="action-icons">Hash</th>
+                    <th class="align-right">Fee</th>
+                    <th class="align-right">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="3" routerLink="/pages/payments/create" style="cursor: pointer">Add new payment</td>
+                </tr>
+                <tr *ngFor="let transactionWrapper of item.transactions">
+                    <td class="table-text-wrapper"><span class="table-text-wrapper">{{ transactionWrapper.blockHash }}</span></td>
+                    <td>{{getFee(transactionWrapper)}}</td>
+                    <td>{{getAmount(transactionWrapper)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </ba-card>
 </div>

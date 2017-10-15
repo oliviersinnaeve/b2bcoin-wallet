@@ -164,6 +164,22 @@ export class WalletApi {
             });
     }
 
+    /**
+     * Find the block or transaction in the coin daemon by hash
+     * Returns the block or the transaction for the given hash.
+     * @param body 
+     */
+    public getTransactionsForAddress(body?: models.Address, extraHttpRequestParams?: any): Observable<models.TransactionItems> {
+        return this.getTransactionsForAddressWithHttpInfo(body, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
 
     /**
      * Find the component fragment by ID
@@ -432,6 +448,43 @@ export class WalletApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Find the block or transaction in the coin daemon by hash
+     * Returns the block or the transaction for the given hash.
+     * @param body 
+     */
+    public getTransactionsForAddressWithHttpInfo(body?: models.Address, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getTransactionsForAddress`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
 

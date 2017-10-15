@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
 
 import { WalletService } from '../../../walletService.service';
+import { TransactionsService } from '../../../transactions/transactions.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
 import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
@@ -29,9 +30,8 @@ export class CreatePayment {
 
     public transfers: Array<any> = [];
 
+    public message: string;
     public transactionHash: string;
-
-    public message: srting;
     public error: boolean;
 
     public transfer = {
@@ -47,6 +47,7 @@ export class CreatePayment {
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
                  private walletService: WalletService,
+                 private transactionsService: TransactionsService,
                  private router: Router) {
 
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
@@ -64,6 +65,12 @@ export class CreatePayment {
         this.createTransferModal.hide();
     }
 
+    public gotoPayment(paymentHash: string) {
+        this.transactionsService.searchString = paymentHash;
+        this.router.navigateByUrl("pages/transactions/result");
+        this.transactionsService.triggerSearch();
+    }
+
     public createPayment() {
         this.submitting = true;
         for (let i = 0; i < this.transfers.length; i++) {
@@ -72,13 +79,13 @@ export class CreatePayment {
 
         this.payment.fee = this.payment.fee * 1000000000000;
         this.payment.addresses = [];
-        let address = {};
+        let address: b2bcoinModels.Address = {};
         address.address = this.selectedAddress.address;
         this.payment.addresses.push(address);
         this.payment.address = this.selectedAddress.address;
 
         this.walletApi.createPayment(this.payment).subscribe(result => {
-                this.paymentHash = result.transactionHash;
+                this.transactionHash = result.transactionHash;
 
                 this.payment = {
                     fee: 0.000001,
@@ -86,7 +93,6 @@ export class CreatePayment {
                 };
 
                 this.error = false;
-                this.message = "Payment executed: " + "<a (click)=''>" + this.paymentHash + "</a>";
                 this.messageModal.show();
                 this.submitting = false;
             },
@@ -101,7 +107,7 @@ export class CreatePayment {
                     let jsonError = JSON.parse(error._body);
                     this.payment.fee = 0.000001;
                     this.error = true;
-                    this.message = "Payment failed: " + jsonError.message;
+                    this.message = jsonError.message;
                     this.messageModal.show();
                     this.submitting = false;
                 }

@@ -11,7 +11,7 @@ import { languages } from '../../environment';
 @Injectable()
 export class TransactionsService {
 
-    public searchUpdated:EventEmitter = new EventEmitter();
+    public searchUpdated:EventEmitter<any> = new EventEmitter<any>();
 
     public searchString: string;
 
