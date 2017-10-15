@@ -20,6 +20,7 @@ public class PaymentController {
 
     public Payment makePayment(PaymentInput input) {
         LOGGER.info("Create payment");
+        this.paymentExecutor.setReadTimeout(300000);
         return this.paymentExecutor.execute(input.getParams());
     }
 

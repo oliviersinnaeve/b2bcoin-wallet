@@ -22,6 +22,8 @@ public class JsonRpcExecutor<T> {
     private String method;
     private Class<T> returnClass;
 
+    private int readTimeout = 5000;
+
     public static final String EMPTY_PARAMS = "\"params\": {}";
 
     public JsonRpcExecutor(String baseUrl, String method, Class<T> genericTypeClass) {
@@ -44,7 +46,7 @@ public class JsonRpcExecutor<T> {
                 httpConnection.setRequestProperty("Content-Type", "application/json");
                 httpConnection.setRequestProperty("Accept", "application/json");
                 httpConnection.setRequestMethod("POST");
-                httpConnection.setReadTimeout(60000);
+                httpConnection.setReadTimeout(readTimeout);
                 httpConnection.connect();
 
                 String data = "{ \"jsonrpc\":\"2.0\", \"id\":\"test\", \"method\":\"" + method + "\"," + params + "}";
@@ -90,6 +92,10 @@ public class JsonRpcExecutor<T> {
         }
 
         return result;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
 }
