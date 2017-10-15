@@ -37,7 +37,9 @@ import { BaCardBlur } from './components/baCard/baCardBlur.directive';
 import {
     BaScrollPosition,
     BaSlimScroll,
-    BaThemeRun
+    BaThemeRun,
+    B2BCurrencyFormatterDirective,
+    B2BCurrencyPipe
 } from './directives';
 
 import {
@@ -82,13 +84,15 @@ const NGA_DIRECTIVES = [
     BaScrollPosition,
     BaSlimScroll,
     BaThemeRun,
-    BaCardBlur
+    BaCardBlur,
+    B2BCurrencyFormatterDirective
 ];
 
 const NGA_PIPES = [
     BaAppPicturePipe,
     BaKameleonPicturePipe,
-    BaProfilePicturePipe
+    BaProfilePicturePipe,
+    B2BCurrencyPipe
 ];
 
 const NGA_SERVICES = [
@@ -129,6 +133,7 @@ export class NgaModule {
             providers: [
                 BaThemeConfigProvider,
                 BaThemeConfig,
+                B2BCurrencyPipe,
                 ...NGA_VALIDATORS,
                 ...NGA_SERVICES
             ],

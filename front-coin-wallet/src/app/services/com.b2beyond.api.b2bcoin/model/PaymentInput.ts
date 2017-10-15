@@ -12,13 +12,21 @@
 
 import * as models from './models';
 
-export interface UserAddress {
-    userId?: string;
+export interface PaymentInput {
+    addresses?: Array<models.Address>;
+
+    transfers?: { [key: string]: number; };
+
+    fee?: number;
+
+    unlockTime?: number;
+
+    anonymity?: number;
+
+    paymentId?: string;
 
     address?: string;
 
-    name?: string;
-
-    groupName?: string;
+    params?: string;
 
 }

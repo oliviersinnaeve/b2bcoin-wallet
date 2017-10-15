@@ -1,48 +1,111 @@
-<button class="btn btn-success pull-right" (click)="addNewComponent()">Add new component</button>
-
-<div *ngFor="let component of components" class="col-md-3 col-xs-12">
+<div id="create_payment" class="col-md-12 col-xs-12">
     <div class="card">
-        <div class="card-block box">
-            <div class="ribbon ribbon-custom"><span>Custom</span></div>
-            <h4 class="card-title">{{component.name}}</h4>
+        <div class="card-block">
+            <h4 class="card-title">Payment data</h4>
 
-            <p class="card-text">{{component.description}}</p>
-            <img src=""/>
-            <button class="btn btn-primary pull-right" (click)="addComponentToWebsite(component)">Add component to
-                website
-            </button>
-            <button class="btn btn-primary pull-right" (click)="changeComponentConfig(component)">Change config</button>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="websiteName">PaymentId:</label>
+                        <input type="text" class="form-control" id="websiteName" [(ngModel)]="payment.paymentId"
+                               placeholder="PaymentId name - optional">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <select class="form-control" [(ngModel)]="selectedAddress">
+                            <option *ngFor="let address of addresses" [ngValue]="address">{{address.address}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Fee: </label>
+                        <label>{{getParsedAmount(payment.fee)}}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pull-right">
+                <a class="btn btn-primary" (click)="createTransferModal.show()">Add transaction</a>
+                <a *ngIf="!creatingWallet" style="width:150px" class="btn btn-primary" (click)="createPayment()">Create payment</a>
+                <a *ngIf="creatingWallet" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="horizontal-scroll">
+        <table class="table table-hover address_table">
+            <thead>
+            <tr class="black-muted-bg">
+                <th class="align-left">Address</th>
+                <th class="align-right">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let transfer of transfers" class="no-top-border">
+                <td class="columnAddress">{{transfer.address}}</td>
+                <td ngClass="columnAmount align-right">{{getParsedAmount(transfer.amount)}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #createTransferModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="createTransferModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Add new transfer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="websiteName" [(ngModel)]="transfer.address" placeholder="Receiver Address">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" [(ngModel)]="transfer.amount" placeholder="Amount to transfer" aria-describedby="basic-addon2"
+                                   (ngModelChange)="onAmountChange($event)" b2bCurrencyFormatter>
+                            <span class="input-group-addon" id="basic-addon2">B2B</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="createTransferModal.hide()">Cancel</button>
+                <button type="submit" class="btn btn-primary" (click)="addTransaction()">Ok</button>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Static modal -->
-<div class="modal fade" bsModal #addPrivateComponentToSiteModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+<div class="modal fade" bsModal #messageModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
      role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="close" aria-label="Close" (click)="addPrivateComponentToSiteModal.hide()">
+                <button class="close" aria-label="Close" (click)="messageModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Add component to Website</h4>
+                <h4 *ngIf="!error" class="modal-title">Payment success</h4>
+                <h4 *ngIf="error" class="modal-title">Payment failed</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="componentName">Component : {{selectedComponent.name}}</label>
-                </div>
-                <div class="form-group">
-                    <label for="exampleSelect1">Website</label>
-                    <select class="form-control" [(ngModel)]="selectedWebsite">
-                        <option value="">Select a website</option>
-                        <option *ngFor="let website of websites" [ngValue]="website">{{website.name}}</option>
-                    </select>
-                </div>
+                {{message}}
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-danger" (click)="saveComponentFragment()">Bind component to
-                    website
-                </button>
+                <button class="btn btn-primary confirm-btn" (click)="messageModal.hide()">Close</button>
             </div>
         </div>
     </div>

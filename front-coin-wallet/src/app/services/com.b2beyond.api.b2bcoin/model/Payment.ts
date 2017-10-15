@@ -12,13 +12,7 @@
 
 import * as models from './models';
 
-export interface UserAddress {
-    userId?: string;
-
-    address?: string;
-
-    name?: string;
-
-    groupName?: string;
+export interface Payment {
+    transactionHash?: string;
 
 }

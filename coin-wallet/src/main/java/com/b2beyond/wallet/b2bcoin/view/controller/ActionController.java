@@ -6,6 +6,7 @@ import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import org.apache.log4j.Logger;
 
 
@@ -45,11 +46,21 @@ public class ActionController {
     }
 
     public Address createAddress() {
-        return walletRpcController.getCreateAddressExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        try {
+            return walletRpcController.getCreateAddressExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public BlockWrapper getBlockWrapper(String hash) {
-        return coinRpcController.getBlockWrapperExecutor().execute("\"params\": {\"hash\": \"" + hash + "\"}");
+        try {
+            return coinRpcController.getBlockWrapperExecutor().execute("\"params\": {\"hash\": \"" + hash + "\"}");
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void exit() {
@@ -58,7 +69,11 @@ public class ActionController {
         soloMiningController.stopMining();
         coinRpcController.stop();
         // Save the wallet
-        walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        try {
+            walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
         walletRpcController.stop();
         controller.stop();
     }

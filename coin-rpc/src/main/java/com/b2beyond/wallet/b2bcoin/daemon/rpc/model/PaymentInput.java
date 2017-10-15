@@ -90,7 +90,7 @@ public class PaymentInput {
 
             for (Address key : getAddresses()) {
                 String address = key.getAddress();
-                params += "        \"" + address + "\",\n";
+                params += "        \"" + address + "\"\n";
 
                 if (index < getAddresses().size() - 1) {
                     params += ",";

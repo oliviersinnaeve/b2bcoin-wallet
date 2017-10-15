@@ -1,8 +1,12 @@
 package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.*;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Error;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -34,7 +38,7 @@ public class JsonRpcExecutor<T> {
         LOGGER.info("JsonRpcExecutor created for baseUrl : '" + baseUrl + "' and method : '" + method + "'");
     }
 
-    public synchronized T execute(String params) {
+    public synchronized T execute(String params) throws KnownJsonRpcException {
         T result = null;
         HttpURLConnection httpConnection = null;
 
@@ -71,12 +75,18 @@ public class JsonRpcExecutor<T> {
                 String response = builder.toString();
                 LOGGER.trace("Execute method : '" + method + "' : response : " + response);
 
-                if (StringUtils.isNotBlank(response)) {
-                    JsonElement element = new JsonParser().parse(builder.toString());
-
-                    result = gson.fromJson(element.getAsJsonObject().get("result").toString(), returnClass);
-                } else {
-                    result = gson.fromJson("{}", returnClass);
+                try {
+                    if (StringUtils.isNotBlank(response)) {
+                        JsonElement element = new JsonParser().parse(builder.toString());
+                        result = gson.fromJson(element.getAsJsonObject().get("result").toString(), returnClass);
+                    } else {
+                        result = gson.fromJson("{}", returnClass);
+                    }
+                } catch (Exception e) {
+                    if (StringUtils.isNotBlank(response)) {
+                        JsonElement element = new JsonParser().parse(builder.toString());
+                        throw new KnownJsonRpcException(gson.fromJson(element.getAsJsonObject().get("error").toString(), Error.class));
+                    }
                 }
 
                 os.close();

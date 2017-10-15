@@ -1,5 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Error;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import org.apache.log4j.Logger;
 
 import java.util.Observable;
@@ -31,7 +33,14 @@ public abstract class RpcPoller<T> extends Observable implements Runnable {
                 if (!isExecuted()) {
                     executed = true;
 
-                    T value = executor.execute(getParams());
+                    T value = null;
+                    try {
+                        value = executor.execute(getParams());
+                    } catch (KnownJsonRpcException e) {
+                        Error error = e.getError();
+                        setChanged();
+                        notifyObservers(error);
+                    }
                     if (value != null) {
                         updateOnSucceed(value);
                         setChanged();

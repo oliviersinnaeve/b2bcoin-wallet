@@ -5,6 +5,8 @@ export * from './BlockOrTransactionRequest';
 export * from './BlockOrTransactionResponse';
 export * from './BlockTransaction';
 export * from './BlockWrapper';
+export * from './Payment';
+export * from './PaymentInput';
 export * from './RestResourceInfo';
 export * from './Success';
 export * from './Target';

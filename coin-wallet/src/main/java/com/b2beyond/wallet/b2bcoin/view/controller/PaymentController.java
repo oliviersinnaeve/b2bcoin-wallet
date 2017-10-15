@@ -4,6 +4,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.PaymentInput;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import org.apache.log4j.Logger;
 
 
@@ -21,7 +22,13 @@ public class PaymentController {
     public Payment makePayment(PaymentInput input) {
         LOGGER.info("Create payment");
         this.paymentExecutor.setReadTimeout(300000);
-        return this.paymentExecutor.execute(input.getParams());
+        try {
+            return this.paymentExecutor.execute(input.getParams());
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }
