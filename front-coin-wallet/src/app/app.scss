@@ -1,6 +1,19 @@
 @import "~normalize.css";
 @import "theme/theme";
 
+::-webkit-input-placeholder {
+  color: #9dd9d2;
+  font-weight: bolder;
+}
+:-moz-placeholder {
+  color: #9dd9d2;
+  font-weight: bolder;
+}
+:-ms-input-placeholder {
+  color: #9dd9d2;
+  font-weight: bolder;
+}
+
 // notification plugin
 markdown {
   // TODO - Make it look like https://dimpu.github.io/angular2-markdown/
@@ -104,13 +117,13 @@ markdown {
 }
 
 .btn-primary {
-  background-color: #38aecc;
-  border-color: #9dd9d2;
+  background-color: #38aecc !important;
+  border-color: #9dd9d2 !important;
 }
 
 .btn-primary:hover {
-  background-color: #9dd9d2;
-  border-color: #38aecc;
+  background-color: #9dd9d2 !important;
+  border-color: #38aecc !important;
 }
 
 .modal {
@@ -119,7 +132,7 @@ markdown {
   .modal-content {
     // color: $dropdown-text;
 
-    background-color: #4990ce;
+    background-color: #086788;
 
     // .form-group label {
     //     color: black;
@@ -150,8 +163,8 @@ markdown {
 }
 
 .modal-md {
-  max-height: 30% !important;
-  max-width: 30% !important;
+  max-height: 50% !important;
+  max-width: 50% !important;
 }
 
 input, select {
@@ -166,13 +179,6 @@ input, select {
   .smart-table-container {
     width: 100%;
   }
-}
-
-.table-text-wrapper {
-  max-width: 250px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 :host /deep/ {

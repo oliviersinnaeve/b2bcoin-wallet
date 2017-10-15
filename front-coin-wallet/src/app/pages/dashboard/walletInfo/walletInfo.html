@@ -8,7 +8,8 @@
                 <a class="btn btn-primary" [routerLink]="'/pages/addresses/overview'">
                     <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
                 </a>
-                <a class="btn btn-primary" (click)="createNewAddress()">Add new address</a>
+                <a *ngIf="!creatingWallet" style="width:150px" class="btn btn-primary" (click)="createNewAddress()">Add new address</a>
+                <a *ngIf="creatingWallet" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
             </td>
         </div>
     </div>
@@ -33,6 +34,30 @@
                     <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
                 </a>
             </td>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #createAddressModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="createAddressModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Wallet address creation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        Address was created.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="createAddressModal.hide()">Ok</button>
+            </div>
         </div>
     </div>
 </div>

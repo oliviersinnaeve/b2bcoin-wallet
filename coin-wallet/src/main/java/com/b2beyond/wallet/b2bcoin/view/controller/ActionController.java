@@ -5,7 +5,7 @@ import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockWrapper;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import org.apache.log4j.Logger;
 
 

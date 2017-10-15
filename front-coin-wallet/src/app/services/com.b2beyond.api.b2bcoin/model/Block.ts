@@ -19,10 +19,38 @@ export interface Block {
 
     baseReward?: number;
 
+    blockSize?: number;
+
+    depth?: number;
+
     difficulty?: number;
 
     hash?: string;
 
     height?: number;
+
+    majorVersion?: number;
+
+    minorVersion?: number;
+
+    nonce?: number;
+
+    orphanStatus?: boolean;
+
+    penalty?: number;
+
+    prevHash?: string;
+
+    reward?: number;
+
+    sizeMedian?: number;
+
+    timestamp?: number;
+
+    totalFeeAmount?: number;
+
+    transactions?: Array<models.BlockTransaction>;
+
+    transactionsCumulativeSize?: number;
 
 }

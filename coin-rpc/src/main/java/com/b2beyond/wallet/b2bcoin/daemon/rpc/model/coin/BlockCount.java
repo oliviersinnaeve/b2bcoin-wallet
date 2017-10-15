@@ -1,4 +1,4 @@
-package com.b2beyond.wallet.b2bcoin.daemon.rpc.model;
+package com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin;
 
 
 public class BlockCount {

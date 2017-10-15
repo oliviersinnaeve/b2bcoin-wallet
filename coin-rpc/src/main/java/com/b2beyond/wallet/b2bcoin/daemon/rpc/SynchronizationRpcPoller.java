@@ -1,6 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.daemon.rpc;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import org.apache.log4j.Logger;
 

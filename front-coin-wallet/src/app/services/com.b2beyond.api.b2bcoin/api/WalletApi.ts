@@ -27,11 +27,11 @@ import { Configuration }                                     from '../configurat
 
 @Injectable()
 export class WalletApi {
-    protected basePath = 'http://localhost:8080/b2bcoin/api';
+    protected basePath = 'https://api.b2bcoin.xyz/b2bcoin/api';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
 
-    constructor(protected http: Http, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    constructor(protected http: Http, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
         if (basePath) {
             this.basePath = basePath;
         }
@@ -46,6 +46,22 @@ export class WalletApi {
      */
     public createAddress(extraHttpRequestParams?: any): Observable<Array<models.Address>> {
         return this.createAddressWithHttpInfo(extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Find the component fragment by ID
+     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param body 
+     */
+    public deleteAddress(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.Success> {
+        return this.deleteAddressWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -77,6 +93,22 @@ export class WalletApi {
      */
     public getBalance(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.AddressBalance> {
         return this.getBalanceWithHttpInfo(body, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Find the block or transaction in the coin daemon by hash
+     * Returns the block or the transaction for the given hash.
+     * @param body 
+     */
+    public getBlockOrTransaction(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<models.BlockOrTransactionResponse> {
+        return this.getBlockOrTransactionWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -139,6 +171,43 @@ export class WalletApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Find the component fragment by ID
+     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param body 
+     */
+    public deleteAddressWithHttpInfo(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/deleteAddress`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
 
@@ -221,11 +290,47 @@ export class WalletApi {
     }
 
     /**
+     * Find the block or transaction in the coin daemon by hash
+     * Returns the block or the transaction for the given hash.
+     * @param body 
+     */
+    public getBlockOrTransactionWithHttpInfo(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getBlockOrTransaction`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
      */
     public getLastBlockWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        console.log("fetching last block");
         const path = this.basePath + `/wallet/getLastBlock`;
 
         let queryParameters = new URLSearchParams();

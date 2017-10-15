@@ -22,6 +22,7 @@ import { routing } from './app.routing';
 import { App } from './app.component';
 import { UserState } from './user.state';
 import { WalletService } from './pages/walletService.service';
+import { TransactionsService } from './pages/transactions/transactions.service';
 import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
@@ -35,6 +36,7 @@ const APP_PROVIDERS = [
     AppState,
     UserState,
     WalletService,
+    TransactionsService,
     GlobalState,
     user.UserApi,
     b2bcoin.WalletApi

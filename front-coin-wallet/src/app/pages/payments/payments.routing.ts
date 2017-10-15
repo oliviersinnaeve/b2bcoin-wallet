@@ -11,7 +11,7 @@ const routes: Routes = [
         component: Payments,
         children: [
             {path: 'overview', component: Overview},
-            {path: 'create-payment', component: CreatePayment}
+            {path: 'create', component: CreatePayment}
         ]
     }
 ];

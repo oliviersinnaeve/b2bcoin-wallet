@@ -49,9 +49,11 @@ export class ForgotPassword {
             this.userApi.forgotPassword(values).subscribe(result => {
                     this.success = true;
                     this.messages.push("Reset password mail was send");
+                    this.submitted = false;
                 },
                     error => {
-                    this.errors.push("Something went wrong, try again later");
+                        this.errors.push("Something went wrong, try again later");
+                        this.submitted = false;
                 });
         }
     }

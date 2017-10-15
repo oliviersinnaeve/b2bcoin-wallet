@@ -1,7 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockWrapper;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transaction;

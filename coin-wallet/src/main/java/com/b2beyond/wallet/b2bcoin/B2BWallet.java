@@ -11,7 +11,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.SynchronizationRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.TransactionItemsRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.UnconfirmedTransactionHashesRpcPoller;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.BlockCount;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
@@ -60,7 +60,7 @@ public class B2BWallet extends MainFrame {
     public static void main(String[] args) {
         System.setProperty("user.home.forknote", "b2bcoin");
 
-        B2BUtil.copyConfigsOnFirstRun();
+        B2BUtil.copyConfigsOnRun();
 
         loadingFrame();
         loadWindow.setProgress(loadingCounter++);
@@ -94,7 +94,7 @@ public class B2BWallet extends MainFrame {
         String daemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
         String walletExecutable = applicationProperties.getString("wallet-daemon-" + B2BUtil.getOperatingSystem());
         String poolMinerExecutable = applicationProperties.getString("pool-miner-daemon-" + B2BUtil.getOperatingSystem());
-        B2BUtil.copyDaemonsOnFirstRun(daemonExecutable, walletExecutable, poolMinerExecutable);
+        B2BUtil.copyDaemonsOnRun(daemonExecutable, walletExecutable, poolMinerExecutable);
 
         DaemonController coinDaemon = new DaemonController(
                 applicationProperties,
@@ -202,13 +202,13 @@ public class B2BWallet extends MainFrame {
         syncPoller.addObserver(this);
         loadWindow.setProgress(loadingCounter++);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean synced = false;
-                while (!synced) {
-                    synced = syncPoller.isSynced();
-                    if (synced) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean synced = false;
+//                while (!synced) {
+//                    synced = syncPoller.isSynced();
+//                    if (synced) {
                         RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
                         TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 5000);
                         UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
@@ -236,19 +236,19 @@ public class B2BWallet extends MainFrame {
                         addressesPoller.addObserver(transactionsTabView);
                         addressesPoller.addObserver(transactionsPoller);
                         addressesPoller.addObserver(unconfirmedTransactionHashesPoller);
-                    } else {
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
+//                    } else {
+//                        try {
+//                            Thread.sleep(3000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//
                 LOGGER.info("Rpc pollers started.");
-
-            }
-        }).start();
+//
+//            }
+//        }).start();
 
         loadWindow.setProgress(loadingCounter++);
         loadWindow.setScreenVisible(false);

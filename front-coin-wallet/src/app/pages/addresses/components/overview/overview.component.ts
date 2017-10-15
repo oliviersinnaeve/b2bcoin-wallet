@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
+import { ModalDirective } from 'ngx-bootstrap';
 
 import { WalletService } from '../../../walletService.service';
 
@@ -11,12 +12,19 @@ import 'rxjs/Rx';
 
 @Component({
     selector: 'overview',
+    styleUrls: ['./overview.scss'],
     templateUrl: './overview.html'
 })
 
 export class Overview {
 
+    @ViewChild('confirmDeleteAddressModal') confirmDeleteAddressModal: ModalDirective;
+    @ViewChild('deleteAddressModal') deleteAddressModal: ModalDirective;
+
+
     public addresses: Array<b2bcoinModels.AddressBalance> = [];
+
+    private addressToDelete : b2bcoinModels.AddressBalance;
 
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
@@ -42,6 +50,30 @@ export class Overview {
         } else {
             return "0.000000000000";
         }
+    }
+
+    public deleteAddress () {
+        this.confirmDeleteAddressModal.hide();
+
+        this.walletApi.deleteAddress({ address: this.addressToDelete.address }).subscribe(
+                result => {
+                this.deleteAddressModal.show();
+                for (let i = 0; i < this.addresses.length; i++) {
+                    this.initialize();
+                    this.addressToDelete = undefined;
+                }
+            },
+                error => {
+                if (error.status === 401) {
+                    this.userState.handleError(error, this.deleteAddress, this);
+                }
+            }
+        );
+    }
+
+    public setDeleteAddress(item) {
+        this.addressToDelete = item;
+        this.confirmDeleteAddressModal.show();
     }
 
     private initialize () {

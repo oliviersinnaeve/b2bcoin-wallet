@@ -19,9 +19,12 @@ import { WalletApi } from '../../../services/com.b2beyond.api.b2bcoin/api/Wallet
 })
 export class WalletInfo {
 
+    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+
     public numberOfAddresses: number;
     public balance: number = 0;
     public lockedBalance: number = 0;
+    public creatingWallet = false;
 
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
@@ -33,24 +36,30 @@ export class WalletInfo {
     }
 
     public getBalance (): string {
-        return (this.balance / 1000000000000).toFixed(12);
+        return (this.balance / 1000000000000).toFixed(12) + " B2B";
     }
 
     public getLockedBalance (): string {
-        return (this.lockedBalance / 1000000000000).toFixed(12);
+        return (this.lockedBalance / 1000000000000).toFixed(12) + " B2B";
     }
 
     public createNewAddress () {
-        this.walletApi.createAddress().subscribe(
-                result => {
-                this.initialize();
-            },
-                error => {
-                if (error.status === 401) {
-                    this.userState.handleError(error, this.createNewAddress, this);
+        if (!this.creatingWallet) {
+            this.creatingWallet = true;
+            this.walletApi.createAddress().subscribe(
+                    result => {
+                        this.initialize();
+                        this.creatingWallet = false;
+                        this.createAddressModal.show();
+                },
+                    error => {
+                    if (error.status === 401) {
+                        this.creatingWallet = false;
+                        this.userState.handleError(error, this.createNewAddress, this);
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
     private initialize () {

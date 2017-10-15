@@ -71,7 +71,8 @@ export class Login implements OnInit {
                     this.router.navigateByUrl("dashboard");
                 },
                     error => {
-                    this.messages.push("Login failed, wrong credentials");
+                        this.messages.push("Login failed, wrong credentials");
+                        this.submitted = false;
                 });
         }
     }

@@ -51,7 +51,7 @@
 }
 
 @mixin bg-translucent-dark($opacity) {
-  background: rgba(0, 0, 0, $opacity);
+  background: rgba(56, 174, 204, $opacity);
 }
 
 @mixin placeholderStyle($color, $opacity) {

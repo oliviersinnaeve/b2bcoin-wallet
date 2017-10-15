@@ -8,6 +8,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.ViewSecretKey;
@@ -21,6 +22,7 @@ public class WalletRpcController {
     private JsonRpcExecutor<ViewSecretKey> viewSecretKeyExecutor;
     private JsonRpcExecutor<Status> statusExecutor;
     private JsonRpcExecutor<Address> createAddressExecutor;
+    private JsonRpcExecutor<Success> deleteAddressExecutor;
     private JsonRpcExecutor<AddressBalance> balanceExecutor;
     private JsonRpcExecutor<Addresses> addressesExecutor;
     private JsonRpcExecutor<Payment> paymentExecutor;
@@ -37,6 +39,7 @@ public class WalletRpcController {
         viewSecretKeyExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getViewKey", ViewSecretKey.class);
         statusExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getStatus", Status.class);
         createAddressExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "createAddress", Address.class);
+        deleteAddressExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "deleteAddress", Success.class);
         balanceExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getBalance", AddressBalance.class);
         addressesExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getAddresses", Addresses.class);
         paymentExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "sendTransaction", Payment.class);
@@ -75,6 +78,10 @@ public class WalletRpcController {
 
     public JsonRpcExecutor<Address> getCreateAddressExecutor() {
         return createAddressExecutor;
+    }
+
+    public JsonRpcExecutor<Success> getDeleteAddressExecutor() {
+        return deleteAddressExecutor;
     }
 
     public JsonRpcExecutor<AddressBalance> getBalanceExecutor() {

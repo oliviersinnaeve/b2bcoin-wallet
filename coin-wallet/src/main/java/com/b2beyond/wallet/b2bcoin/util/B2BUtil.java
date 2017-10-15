@@ -75,7 +75,7 @@ public final class B2BUtil {
         return detectedOS;
     }
 
-    public static void copyConfigsOnFirstRun() {
+    public static void copyConfigsOnRun() {
         try {
             new File(getConfigRoot()).mkdirs();
 
@@ -117,7 +117,7 @@ public final class B2BUtil {
         }
     }
 
-    public static void copyDaemonsOnFirstRun(String daemonExecutable, String walletExecutable, String poolMinerExecutable) {
+    public static void copyDaemonsOnRun(String daemonExecutable, String walletExecutable, String poolMinerExecutable) {
         try {
             new File(getBinariesRoot()).mkdirs();
 
