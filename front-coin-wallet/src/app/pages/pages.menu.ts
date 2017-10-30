@@ -41,7 +41,7 @@ export const PAGES_MENU = [
                 data: {
                     menu: {
                         title: 'Blockchain',
-                        icon: 'ion-ios-book-outline',
+                        icon: 'ion-link',
                         selected: false,
                         expanded: false,
                         order: 250,
@@ -64,7 +64,7 @@ export const PAGES_MENU = [
                 data: {
                     menu: {
                         title: 'Payments',
-                        icon: 'ion-network',
+                        icon: 'ion-cash',
                         selected: false,
                         expanded: false,
                         order: 250,
@@ -84,6 +84,29 @@ export const PAGES_MENU = [
                         data: {
                             menu: {
                                 title: 'Create payment',
+                            }
+                        }
+                    }
+                ]
+            }
+            ,
+            {
+                path: 'transactions',
+                data: {
+                    menu: {
+                        title: 'Transactions',
+                        icon: 'ion-network',
+                        selected: false,
+                        expanded: false,
+                        order: 250,
+                    }
+                },
+                children: [
+                    {
+                        path: 'overview',
+                        data: {
+                            menu: {
+                                title: 'Overview',
                             }
                         }
                     }

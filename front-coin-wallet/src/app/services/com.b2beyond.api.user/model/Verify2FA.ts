@@ -12,11 +12,13 @@
 
 import * as models from './models';
 
-export interface RestResourceInfo {
-    name?: string;
+export interface Verify2FA {
+    websiteId?: number;
 
-    running?: boolean;
+    userId?: string;
 
-    location?: string;
+    secretKey?: string;
+
+    number?: number;
 
 }

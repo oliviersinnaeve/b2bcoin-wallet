@@ -148,13 +148,29 @@ a.collapse-menu-link {
   }
   input {
     color: $sidebar-text;
-    background: none;
-    border: none;
+    //background: none;
+    //border: none;
     outline: none;
     width: 100%;
-    padding: 0;
+    padding: 0 10px;
     margin: 0 0 0 -3px;
     height: 27px;
+  }
+
+  input::-webkit-input-placeholder {
+    color: $sidebar-text !important;
+  }
+
+  input:-moz-placeholder { /* Firefox 18- */
+    color: $sidebar-text !important;
+  }
+
+  input::-moz-placeholder {  /* Firefox 19+ */
+    color: $sidebar-text !important;
+  }
+
+  input:-ms-input-placeholder {
+    color: $sidebar-text !important;
   }
 }
 

@@ -29,7 +29,10 @@ export class Login implements OnInit {
     public form: FormGroup;
     public userId: AbstractControl;
     public password: AbstractControl;
+    public code2FA: AbstractControl;
     public submitted: boolean = false;
+    public show2FA: boolean = false;
+
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
@@ -38,11 +41,13 @@ export class Login implements OnInit {
                  private facebookService: FacebookService) {
         this.form = fb.group({
             'userId': ['', Validators.compose([Validators.required, EmailValidator.validate])],
-            'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])]
+            'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
+            'code2FA': ['', Validators.compose([Validators.minLength(6), Validators.maxLength(6)])]
         });
 
         this.userId = this.form.controls['userId'];
         this.password = this.form.controls['password'];
+        this.code2FA = this.form.controls['code2FA'];
 
         // FACEBOOK init is done in the index.html !!! Only way it worked ...
     }
@@ -68,7 +73,11 @@ export class Login implements OnInit {
             this.userApi.login(values).subscribe(result => {
                     console.log("Logged in redirecting to dashboard");
                     this.userState.setUser(result);
-                    this.router.navigateByUrl("dashboard");
+                    if (this.userState.getUser().enabled2FA && !this.userState.getUser().valid) {
+                        this.show2FA = true;
+                    } else {
+                        this.router.navigateByUrl("dashboard");
+                    }
                 },
                     error => {
                         this.messages.push("Login failed, wrong credentials");

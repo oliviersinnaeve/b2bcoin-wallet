@@ -12,11 +12,9 @@
 
 import * as models from './models';
 
-export interface RestResourceInfo {
-    name?: string;
+export interface QRImageUrlResponse {
+    qrImageUrl?: string;
 
-    running?: boolean;
-
-    location?: string;
+    secretKey?: string;
 
 }

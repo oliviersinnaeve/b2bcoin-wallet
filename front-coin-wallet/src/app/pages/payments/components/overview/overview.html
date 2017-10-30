@@ -1,6 +1,6 @@
 <div *ngFor="let item of transactions">
 
-    <ba-card *ngIf="item.transactions.length > 0" title="{{item.address}}" baCardClass="with-scroll" collapsable="true">
+    <ba-card title="{{item.address}}" baCardClass="with-scroll" collapsable="true">
         <div class="horizontal-scroll">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -16,8 +16,8 @@
                 </tr>
                 <tr *ngFor="let transactionWrapper of item.transactions">
                     <td class="table-text-wrapper"><span class="table-text-wrapper">{{ transactionWrapper.blockHash }}</span></td>
-                    <td>{{getFee(transactionWrapper)}}</td>
-                    <td>{{getAmount(transactionWrapper)}}</td>
+                    <td class="align-right">{{getFee(transactionWrapper)}}</td>
+                    <td class="align-right">{{getAmount(transactionWrapper)}}</td>
                 </tr>
                 </tbody>
             </table>

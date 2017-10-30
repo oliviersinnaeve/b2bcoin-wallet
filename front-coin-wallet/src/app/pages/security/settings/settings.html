@@ -3,14 +3,154 @@
 
 <div class="row row-spacer-15">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        Settings
+        <div class="card">
+            <div class="card-block">
+                <h4 class="card-title">Security settings</h4>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="b2b-checkbox nowrap">
+                                <input type="checkbox" class="form-control" [(ngModel)]="is2faEnabled" (change)="checkbox2faClicked($event)">
+                                <span>Enable 2FA : Google Authenticator</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <!--<a class="btn btn-primary" (click)="createTransferModal.show()">Add transaction</a>-->
+                    <!--<a *ngIf="!submitting" style="width:150px" class="btn btn-primary" (click)="createPayment()">Create payment</a>-->
+                    <!--<a *ngIf="submitting" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #enable2FAModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="enable2FAModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Enable Google Authenticator or Authy</h4>
+            </div>
+
+            <div class="col-md-6">
+                <div class="center" style="text-align: center !important">
+                    <img src="{{secretKeyUrl}}" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    Install and open Google Authenticator, two-dimensional code scanning or manual input keys on the
+                    phone, the APP produced dynamic verification code to fill in the following input box!
+                </div>
+
+                <div class="col-md-12 row-spacer-15">
+                    <label>User id</label>
+                    <br/>
+                    <label>{{user.userId}}</label>
+                </div>
+
+                <div class="col-md-12 row-spacer-15">
+                    <label>Google or Authy code</label>
+                    <br/>
+                    <input type="text" [(ngModel)]="codeToSubmit" width="100%" />
+                </div>
+
+                <br/>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <div class="modal-footer row-spacer-15">
+                <button type="submit" class="btn btn-primary" (click)="enable2FAModal.hide()">Cancel</button>
+                <button type="submit" class="btn btn-primary" (click)="enable2FA()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #disable2FAModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="disable2FAModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Disable 2FA</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        Are you sure you want to continue this will make your account more vulnerable to attacks.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="disable2FAModal.hide()">Cancel</button>
+                <button type="submit" class="btn btn-primary" (click)="disable2FA()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #twoFASuccessModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="twoFASuccessModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">2FA Enabled</h4>
+            </div>
+            <div class="modal-body">
+                You have successfully enabled 2FA on your account.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="twoFASuccessModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #disableTwoFASuccessModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="disableTwoFASuccessModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">2FA Enabled</h4>
+            </div>
+            <div class="modal-body">
+                You have disabled 2FA on your account. Your account is now under more risk.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="disableTwoFASuccessModal.hide()">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Static modal -->
 <div class="modal fade" bsModal #settingsHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
      role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" aria-label="Close" (click)="settingsHelpModal.hide()">
