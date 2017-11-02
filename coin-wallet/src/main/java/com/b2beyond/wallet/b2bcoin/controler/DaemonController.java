@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.controler;
 
 import com.b2beyond.wallet.b2bcoin.controler.panel.NewWalletPanel;
+import com.b2beyond.wallet.b2bcoin.controler.panel.PasswordPanel;
 import com.b2beyond.wallet.b2bcoin.daemon.CoinDaemon;
 import com.b2beyond.wallet.b2bcoin.daemon.Daemon;
 import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
@@ -46,11 +47,11 @@ public class DaemonController {
         this.walletProperties = walletProperties;
         this.operatingSystem = operatingSystem;
         boolean firstStartup = false;
+        URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
 
         String configLocation = B2BUtil.getConfigRoot();
         userHome = B2BUtil.getUserHome();
         container = walletProperties.getString("container-file");
-        password = walletProperties.getString("container-password");
 
         File userHomeFiles = new File(userHome);
         userHomeFiles.mkdirs();
@@ -59,13 +60,19 @@ public class DaemonController {
             try {
                 walletProperties.load(new FileInputStream(configLocation + "coin-wallet.conf"));
                 container = walletProperties.getString("container-file");
-                password = walletProperties.getString("container-password");
+
+                PasswordPanel passwordPanel = new PasswordPanel(container);
+
+                JOptionPane.showMessageDialog(null, passwordPanel, "Enter wallet password",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                password = passwordPanel.getPasswordField().getText();
             } catch (ConfigurationException | IOException e) {
                 LOGGER.info("No wallet has been loaded ever");
             }
         }
 
-        if (StringUtils.isBlank(container) || StringUtils.isBlank(password) || !new File(userHome + container).exists()) {
+        if (StringUtils.isBlank(container) || !new File(userHome + container).exists()) {
 
             // TODO: rethink this, This is not the correct place, else we would not need to include the wallet panel in the
             // backend part ...
@@ -73,7 +80,6 @@ public class DaemonController {
 
             boolean valid = false;
             while (!valid) {
-                URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
                 JOptionPane.showMessageDialog(null, newWalletPallet, "Create or Import",
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(splashScreenLocation));
 

@@ -47,12 +47,13 @@ public class WalletDaemon implements Daemon {
             LOGGER.debug("Wallet daemon binaries location : " + binariesLocation);
             LOGGER.debug("Wallet daemon configLocation : " + configLocation);
 
+            // Password needs to be set every time so it does not get remembered
+            walletProperties.setProperty("container-password", password);
+            walletProperties.setProperty("container-file", container);
+            saveProperties(walletProperties, configLocation);
+
             if (firstStartup) {
                 LOGGER.info("First wallet startup - create new wallet or import wallet");
-                walletProperties.setProperty("container-file", container);
-                walletProperties.setProperty("container-password", password);
-                saveProperties(walletProperties, configLocation);
-
                 LOGGER.debug("First wallet startup - Wallet daemon process argument: " + binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf" + " --generate-container " +
                         "--log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root " + userHome);
 
@@ -99,6 +100,17 @@ public class WalletDaemon implements Daemon {
             process = pb.start();
             processPid = B2BUtil.getPid(process, operatingSystem, true);
             LOGGER.debug("Wallet Process id retrieved : " + processPid);
+
+
+            try {
+                Thread.sleep(15000);
+                LOGGER.info("Reset password");
+                walletProperties.setProperty("container-password", "");
+                saveProperties(walletProperties, configLocation);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }

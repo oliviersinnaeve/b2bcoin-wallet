@@ -1,6 +1,8 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
@@ -12,6 +14,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
+import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.DonationPanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.PaymentsPanel;
@@ -34,6 +37,7 @@ public class StatusTabView extends JPanel implements Observer {
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
     private ActionController actionController;
+    private AddressesController addressController;
     private JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor;
 
     private String lastBlockHash;
@@ -48,9 +52,11 @@ public class StatusTabView extends JPanel implements Observer {
 
 
     public StatusTabView(final ActionController actionController,
+                         final AddressesController addressController,
                          final JsonRpcExecutor<Void> resetExecutor,
                          final JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor) {
         this.actionController = actionController;
+        this.addressController= addressController;
         this.transactionItemsJsonRpcExecutor = transactionItemsJsonRpcExecutor;
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -129,6 +135,28 @@ public class StatusTabView extends JPanel implements Observer {
                 }
             }
         }
+        if (data instanceof Addresses) {
+            Addresses addresses = (Addresses) data;
+
+            long fullAmount = 0;
+            long fullLockedAmount = 0;
+
+            for (String address: addresses.getAddresses()) {
+                AddressBalance addressBalance = addressController.getBalance(address);
+
+                if (addressBalance != null) {
+                    fullAmount += addressBalance.getAvailableBalance();
+                    fullLockedAmount += addressBalance.getLockedAmount();
+//                    Object[] rowData = {address, CoinUtil.getTextForLong(addressBalance.getAvailableBalance()), CoinUtil.getTextForLong(addressBalance.getLockedAmount())};
+//                    addressesTableModel.addRow(rowData);
+                }
+            }
+
+            balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount));
+            balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullLockedAmount));
+//            totalAmountLabel.setText(CoinUtil.getTextForLong(fullAmount));
+//            totalAmountLockedLabel.setText(CoinUtil.getTextForLong(fullLockedAmount));
+        }
         if (data instanceof TransactionItems) {
             TransactionItems transactionItems = (TransactionItems) data;
             updateBalances(transactionItems);
@@ -175,9 +203,9 @@ public class StatusTabView extends JPanel implements Observer {
             }
         }
 
-        balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullBlockedAmount));
+        //balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullBlockedAmount));
         paymentsPanel.getTotalPaymentsLockedAmount().setText(CoinUtil.getTextForLong(fullPayedUnconfirmedAmount));
-        balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount + fullPayedUnconfirmedAmount));
+        //balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount + fullPayedUnconfirmedAmount));
     }
 
     private void updateBalances(TransactionItems transactionItems) {
@@ -210,7 +238,7 @@ public class StatusTabView extends JPanel implements Observer {
             }
         }
 
-        balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount));
+        //balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount));
         paymentsPanel.getNumberOfPayments().setText("" + fullNumberOfPayments);
         paymentsPanel.getTotalPaymentsAmount().setText(CoinUtil.getTextForLong(fullPayedAmount));
     }
