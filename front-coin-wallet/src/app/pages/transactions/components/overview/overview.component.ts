@@ -68,7 +68,7 @@ export class Overview implements OnInit {
     public gotoTransaction(hash) {
         this.transactionsService.searchString = hash;
         console.log("Starting blockchain search", this.transactionsService.searchString);
-        if (this.blockHash != "") {
+        if (this.transactionsService.searchString != "") {
             this.router.navigateByUrl("pages/transactions/result");
             this.transactionsService.triggerSearch();
         }

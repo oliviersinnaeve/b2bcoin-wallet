@@ -71,10 +71,11 @@ export class Login implements OnInit {
         this.submitted = true;
         if (this.form.valid) {
             this.userApi.login(values).subscribe(result => {
-                    console.log("Logged in redirecting to dashboard");
+                    //console.log("Logged in redirecting to dashboard");
                     this.userState.setUser(result);
                     if (this.userState.getUser().enabled2FA && !this.userState.getUser().valid) {
                         this.show2FA = true;
+                        this.submitted = false;
                     } else {
                         this.router.navigateByUrl("dashboard");
                     }

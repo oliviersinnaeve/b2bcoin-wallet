@@ -1,5 +1,4 @@
-<div style="cursor: pointer;" class="btn btn-primary btn-circle"><i class="ion-help"
-                                                                    (click)="settingsHelpModal.show()"></i></div>
+<div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="settingsHelpModal.show()"><i class="ion-help"></i></div>
 
 <div class="row row-spacer-15">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -40,13 +39,23 @@
                 <h4 class="modal-title">Enable Google Authenticator or Authy</h4>
             </div>
 
-            <div class="col-md-6">
-                <div class="center" style="text-align: center !important">
-                    <img src="{{secretKeyUrl}}" />
+            <div class="col-md-12" *ngIf="error">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{error}}
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 row-spacer-15">
+                <div class="center" style="text-align: center !important">
+                    <img src="{{secretKeyUrl}}" />
+                </div>
+                <br>
+                <div class="center" style="text-align: center !important">
+                    {{secretKey}}
+                </div>
+            </div>
+
+            <div class="col-md-6 row-spacer-15">
                 <div class="col-md-12">
                     Install and open Google Authenticator, two-dimensional code scanning or manual input keys on the
                     phone, the APP produced dynamic verification code to fill in the following input box!

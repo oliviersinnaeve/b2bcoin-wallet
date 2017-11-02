@@ -1,3 +1,6 @@
+<div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
+        class="ion-help"></i></div>
+
 <div id="create_payment" class="col-md-12 col-xs-12">
     <div class="card">
         <div class="card-block">
@@ -114,6 +117,27 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary confirm-btn" (click)="messageModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #dashboardHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="dashboardHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Payment help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/payments.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="dashboardHelpModal.hide()">Close</button>
             </div>
         </div>
     </div>

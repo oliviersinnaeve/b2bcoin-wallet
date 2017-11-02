@@ -28,8 +28,11 @@ export class Settings implements OnInit {
 
     public user: userModels.User = {};
     public is2faEnabled: boolean = false;
+    public failed: boolean = false;
+    public error: string;
 
     public secretKeyUrl: string = "";
+    public secretKey: string = "";
     public codeToSubmit: number;
 
     public submitted: boolean = false;
@@ -55,6 +58,7 @@ export class Settings implements OnInit {
                 result => {
                     console.log("The qr response", result);
                     this.secretKeyUrl = result.qrImageUrl;
+                    this.secretKey = result.secretKey;
                     this.userState.getUser().secretKey = result.secretKey;
                 },
                 error => {
@@ -71,12 +75,19 @@ export class Settings implements OnInit {
     public enable2FA() {
         this.userApi.enable2FA({code2FA: this.codeToSubmit, websiteId: websiteId, userId: this.userState.getUser().userId, secretKey: this.userState.getUser().secretKey}).subscribe(
                 result => {
+                    this.failed = false;
+                    this.error = undefined;
                     console.log("The qr response", result);
 
                     this.enable2FAModal.hide();
                     this.twoFASuccessModal.show();
             },
                 error => {
+                    console.log(error);
+                    if (error.status == 412) {
+                        this.failed = true;
+                        this.error = JSON.parse(error._body).error;
+                    }
                     console.log("The qr error", error);
             }
         );
