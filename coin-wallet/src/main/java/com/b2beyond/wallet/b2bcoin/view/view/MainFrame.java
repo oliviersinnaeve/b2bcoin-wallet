@@ -189,18 +189,13 @@ public class MainFrame extends JFrame implements Observer {
         }
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
-            if (firstUpdate) {
-                blockChucksFetched = blockCount.getCount() / 25000;
-                firstUpdate = false;
-            }
             setProgress((int)blockCount.getCount());
             System.out.println(progressBar.getValue());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
 
-            System.out.println(blockCount.getCount() / 25000);
             if (blockCount.getCount() / 25000 > blockChucksFetched) {
                 actionController.restartCoinDaemon();
-                blockChucksFetched += 1;
+                blockChucksFetched = blockCount.getCount() / 25000;
             }
         }
     }
