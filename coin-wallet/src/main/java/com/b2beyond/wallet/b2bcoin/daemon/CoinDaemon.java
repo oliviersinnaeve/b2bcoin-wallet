@@ -16,7 +16,7 @@ public class CoinDaemon implements Daemon {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
-    //private Process process;
+    private Process process;
     private int processPid;
     private String operatingSystem;
     private String daemonExecutable;
@@ -47,7 +47,7 @@ public class CoinDaemon implements Daemon {
 //                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
 //            }
 
-            Process process = pb.start();
+            process = pb.start();
             processPid = B2BUtil.getPid(process, operatingSystem, false);
             LOGGER.debug("Coin Process id retrieved : " + processPid);
         } catch (Exception ex) {
@@ -58,12 +58,23 @@ public class CoinDaemon implements Daemon {
     @Override
     public void stop() {
         ProcessBuilder pb = null;
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX) || operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
+        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
             pb = new ProcessBuilder("kill", "-9", "" + processPid);
         }
 
+//        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX)) {
+//            pb = new ProcessBuilder("fuser", "-k", walletProperties.getInt("bind-port") + "/tcp");
+//        }
+
         if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-            pb = new ProcessBuilder("cmd", "/c", "taskkill", "/IM", daemonExecutable);
+            LOGGER.info("Windows destroy wallet process ...");
+            process.destroy();
+            try {
+                LOGGER.info("Windows destroy wallet process - wait for :" + process.waitFor());
+            } catch (InterruptedException e) {
+                // NOOP
+            }
+            LOGGER.info("Windows destroy wallet process - exit value :" + process.exitValue());
         }
 
         if (pb != null) {
