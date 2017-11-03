@@ -1,25 +1,15 @@
 package com.b2beyond.wallet.b2bcoin.controler.panel;
 
-import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
-import com.b2beyond.wallet.b2bcoin.util.FileResourceExtractor;
 import org.apache.log4j.Logger;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class PasswordPanel extends JPanel {
 

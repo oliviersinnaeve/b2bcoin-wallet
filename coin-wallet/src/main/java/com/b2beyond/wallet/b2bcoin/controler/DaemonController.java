@@ -32,10 +32,11 @@ public class DaemonController {
     private Daemon coinDaemon;
     private Daemon walletDaemon;
 
-    private PropertiesConfiguration walletProperties;
     private PropertiesConfiguration applicationProperties;
+    private PropertiesConfiguration walletProperties;
 
     private String operatingSystem;
+
     private String userHome;
     private String password;
     private String container;
@@ -96,6 +97,16 @@ public class DaemonController {
 
         coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
         walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
+    }
+
+    public void restartDaemon() {
+        coinDaemon.stop();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
     }
 
     public void stop() {

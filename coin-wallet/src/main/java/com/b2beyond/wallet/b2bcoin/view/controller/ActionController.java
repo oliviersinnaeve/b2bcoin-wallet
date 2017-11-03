@@ -78,6 +78,10 @@ public class ActionController {
         controller.stop();
     }
 
+    public void restartCoinDaemon() {
+        controller.restartDaemon();
+    }
+
     public CoinRpcController getCoinRpcController() {
         return coinRpcController;
     }

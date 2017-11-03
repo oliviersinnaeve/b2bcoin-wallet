@@ -51,6 +51,8 @@ public class MainFrame extends JFrame implements Observer {
 
     private List<JButton> menus;
 
+    private int blockChucksFetched = 0;
+
 
     /**
      * Create the frame
@@ -182,8 +184,6 @@ public class MainFrame extends JFrame implements Observer {
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
             Status viewData = (Status) data;
-            //dataSynchronizingBlocks.setText("" + viewData.getBlockCount() + " / " + viewData.getKnownBlockCount());
-
             setProgressMax(viewData.getKnownBlockCount());
         }
         if (data instanceof BlockCount) {
@@ -191,6 +191,12 @@ public class MainFrame extends JFrame implements Observer {
             setProgress((int)blockCount.getCount());
             System.out.println(progressBar.getValue());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
+
+            System.out.println(blockCount.getCount() / 25000);
+            if (blockCount.getCount() / 25000 > blockChucksFetched) {
+                actionController.restartCoinDaemon();
+                blockChucksFetched += 1;
+            }
         }
     }
 

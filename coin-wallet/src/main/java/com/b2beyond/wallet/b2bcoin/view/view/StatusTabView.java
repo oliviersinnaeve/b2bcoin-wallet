@@ -46,7 +46,6 @@ public class StatusTabView extends JPanel implements Observer {
     private PaymentsPanel paymentsPanel;
     private ServerPanel serverPanel;
 
-    private long fullAmount = 0;
     private int fullNumberOfPayments = 0;
     private long fullPayedAmount = 0;
 
@@ -147,15 +146,11 @@ public class StatusTabView extends JPanel implements Observer {
                 if (addressBalance != null) {
                     fullAmount += addressBalance.getAvailableBalance();
                     fullLockedAmount += addressBalance.getLockedAmount();
-//                    Object[] rowData = {address, CoinUtil.getTextForLong(addressBalance.getAvailableBalance()), CoinUtil.getTextForLong(addressBalance.getLockedAmount())};
-//                    addressesTableModel.addRow(rowData);
                 }
             }
 
             balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount));
             balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullLockedAmount));
-//            totalAmountLabel.setText(CoinUtil.getTextForLong(fullAmount));
-//            totalAmountLockedLabel.setText(CoinUtil.getTextForLong(fullLockedAmount));
         }
         if (data instanceof TransactionItems) {
             TransactionItems transactionItems = (TransactionItems) data;
@@ -171,7 +166,7 @@ public class StatusTabView extends JPanel implements Observer {
         TransactionItems transactions = new TransactionItems();
 
         for (String hash : transactionItems.getTransactionHashes()) {
-            SingleTransactionItem transactionItem = null;
+            SingleTransactionItem transactionItem;
             try {
                 transactionItem = transactionItemsJsonRpcExecutor.execute("\"params\":{  " +
                         "     \"transactionHash\":\"" + hash + "\"" +
@@ -185,7 +180,6 @@ public class StatusTabView extends JPanel implements Observer {
         }
 
         long fullPayedUnconfirmedAmount = 0;
-        long fullBlockedAmount = 0;
         for (TransactionItem item: transactions.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 for (Transfer transfer : transaction.getTransfers()) {
@@ -195,17 +189,13 @@ public class StatusTabView extends JPanel implements Observer {
                         if (amount < 0) {
                             fullPayedUnconfirmedAmount += amount;
                             break;
-                        } else {
-                            fullBlockedAmount += transfer.getAmount();
                         }
                     }
                 }
             }
         }
 
-        //balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullBlockedAmount));
         paymentsPanel.getTotalPaymentsLockedAmount().setText(CoinUtil.getTextForLong(fullPayedUnconfirmedAmount));
-        //balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount + fullPayedUnconfirmedAmount));
     }
 
     private void updateBalances(TransactionItems transactionItems) {
@@ -220,25 +210,12 @@ public class StatusTabView extends JPanel implements Observer {
 
 
                 if (amount < 0) {
-                    //if (unlockBlocks == 0) {
-                        fullPayedAmount += amount;
-                        fullNumberOfPayments += 1;
-                    //}
-                } else {
-                    for (Transfer transfer : transaction.getTransfers()) {
-                        if (StringUtils.isNotBlank(transfer.getAddress())) {
-                            amount = transaction.getAmount();
-
-                            if (amount > 0) {
-                                fullAmount += amount;
-                            }
-                        }
-                    }
+                    fullPayedAmount += amount;
+                    fullNumberOfPayments += 1;
                 }
             }
         }
 
-        //balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount + fullPayedAmount));
         paymentsPanel.getNumberOfPayments().setText("" + fullNumberOfPayments);
         paymentsPanel.getTotalPaymentsAmount().setText(CoinUtil.getTextForLong(fullPayedAmount));
     }
