@@ -51,7 +51,8 @@ public class MainFrame extends JFrame implements Observer {
 
     private List<JButton> menus;
 
-    private int blockChucksFetched = 0;
+    private boolean firstUpdate = true;
+    private long blockChucksFetched = 0;
 
 
     /**
@@ -188,6 +189,10 @@ public class MainFrame extends JFrame implements Observer {
         }
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
+            if (firstUpdate) {
+                blockChucksFetched = blockCount.getCount() / 25000;
+                firstUpdate = false;
+            }
             setProgress((int)blockCount.getCount());
             System.out.println(progressBar.getValue());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
