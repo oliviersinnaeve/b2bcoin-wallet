@@ -94,7 +94,7 @@ public class WalletDaemon implements Daemon {
                     "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
                 pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-                        "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
+                        "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "--local");
             }
 
             process = pb.start();
