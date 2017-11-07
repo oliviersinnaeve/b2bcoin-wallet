@@ -42,10 +42,10 @@ public class CoinDaemon implements Daemon {
 
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
                     "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
-//            if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-//                pb = new ProcessBuilder("cmd", "/c", "start", "/MIN", binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
-//                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
-//            }
+            if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+                pb = new ProcessBuilder("cmd", "/c", "start", "/MIN", binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
+                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"), "--local");
+            }
 
             process = pb.start();
             processPid = B2BUtil.getPid(process, operatingSystem, false);
