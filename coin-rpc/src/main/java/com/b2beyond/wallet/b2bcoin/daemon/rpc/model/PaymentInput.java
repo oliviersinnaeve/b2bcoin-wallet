@@ -85,24 +85,24 @@ public class PaymentInput {
 
 
         int index = 0;
-        if(getAddresses() != null && !getAddresses().isEmpty()) {
-            params += "    \"addresses\":[\n";
+//        if(getAddresses() != null && !getAddresses().isEmpty()) {
+            params += "    \"addresses\":[\"" + address + "\"";
 
-            for (Address key : getAddresses()) {
-                String address = key.getAddress();
-                params += "        \"" + address + "\"\n";
-
-                if (index < getAddresses().size() - 1) {
-                    params += ",";
-                }
-                index += 1;
-            }
+//            for (Address key : getAddresses()) {
+//                String address = key.getAddress();
+//                params += "        \"" + address + "\"\n";
+//
+//                if (index < getAddresses().size() - 1) {
+//                    params += ",";
+//                }
+//                index += 1;
+//            }
 
 //                "        \"27eJo2S9eVo5N2G9zyjkqNBZPR6d2qvVD122vQMGAhcrjZjLu8nsMqk3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFX4qWNh\",\n" +
 //                "        \"24JtjYsLdSJKNNDCPGdMco5NbMBLqVWZ5ZiW5vzjXQUrLpMs1MRnfTQ3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFXHARwn\",\n" +
 //                "        \"21fYPCpaM3ochSSyLnhDAhgw1yV5WPb5c1BfyX5eidbMGyEPgnbSgJW3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFX8VQMv\"\n" +
             params += "    ],\n";
-        }
+//        }
 
         params += "    \"transfers\":[\n";
 
