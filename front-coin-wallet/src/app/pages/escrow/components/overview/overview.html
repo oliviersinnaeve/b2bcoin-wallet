@@ -1,0 +1,141 @@
+<div class="form-group" *ngIf="loading">
+    <div style="text-align: center">
+        <img src="/assets/img/loader.gif"/>
+    </div>
+</div>
+
+<ba-card title="Escrow transactions" baCardClass="with-scroll" collapsable="true"
+         *ngIf="!loading && escrows.length == 0">
+    No Data found.
+</ba-card>
+
+
+<div class="card" *ngIf="!loading && escrows.length > 0">
+    <div class="card-block">
+        <h4 class="card-title">Escrow Transactions</h4>
+
+        <div class="col-lg-12 col-md-12 col-sx-12 stats">
+            <div class="horizontal-scroll">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="">Key</th>
+                        <th class="align-right">Trade</th>
+                        <th>Paid</th>
+                        <th class="align-right">For</th>
+                        <th>Paid</th>
+                        <th class="action-icons">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let item of escrows">
+                        <tr *ngIf="item.sellConfirmed && item.sellReceived">
+                            <td class="table-text-wrapper">
+                                <span class="table-text-wrapper">
+                                    {{item.transactionKey}}
+                                </span>
+                            </td>
+                            <td class="align-right">{{walletService.getAmount(item.sellAmount, item.sellCoinType)}}</td>
+                            <td *ngIf="item.sellReceived" class="center"><i class="ion-checkmark-round" style="color: #00c000"></i></td>
+                            <td *ngIf="!item.sellReceived" class="center"><i class="ion-close-round" style="color: red"></i></td>
+
+                            <td class="align-right">{{walletService.getAmount(item.buyAmount, item.buyCoinType)}}</td>
+                            <td *ngIf="item.buyReceived" class="center"><i class="ion-checkmark-round" style="color: #00c000"></i></td>
+                            <td *ngIf="!item.buyReceived" class="center"><i class="ion-close-round" style="color: red"></i></td>
+
+                            <td class="center">
+                                <a *ngIf="!item.locked" (click)="acceptTrade(item)"><i class="ion-shuffle" style="color: #00c000"></i></a>
+                                <a *ngIf="item.locked && !item.sellPaid && !item.buyPaid"><i class="ion-locked"></i></a>
+                                <a *ngIf="item.sellPaid && item.buyPaid"><i class="ion-cash"></i></a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #acceptTransactionModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title center">Trade acceptance</h4>
+            </div>
+            <div class="modal-body center">
+                <div>
+                    You are about to accept the trade, what address you want us to send the coins to ?
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sx-12 row-spacer-15">Receive funds address :</div>
+
+                <div class="col-lg-12 col-md-12 col-sx-12 row-spacer-15">
+                    <input type="text" class="form-control" [(ngModel)]="escrowTransaction.buyAddress" placeholder="Address to receive coins to ..." aria-describedby="basic-addon2">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary center" (click)="updateTrade()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #waitForPaymentModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content center">
+            <div class="modal-header">
+                <h4 class="modal-title center">Time left</h4>
+            </div>
+            <div class="modal-body center">
+                <div id="clockdiv" *ngIf="!escrowTransaction.buyReceived">
+                    <div>
+                        <span class="minutes"></span>
+                        <div class="smalltext">Minutes</div>
+                    </div>
+                    <div>
+                        <span class="seconds"></span>
+                        <div class="smalltext">Seconds</div>
+                    </div>
+                </div>
+
+                <div *ngIf="escrowTransaction.buyReceived">
+                    Funds received ! Be sure to verify the transaction through the verification email.
+                </div>
+
+                <div class="row row-spacer-15">
+                    <div class="col-md-12" *ngIf="!escrowTransaction.buyReceived">
+                        <div class="form-group">
+                            <h4 class="modal-title">To pay</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="escrowTransaction.buyReceived">
+                        <div class="form-group">
+                            <h4 class="modal-title">On</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="!escrowTransaction.buyReceived">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon2">{{walletService.getAmount(escrowTransaction.totalBuyAmount, escrowTransaction.buyCoinType)}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="!escrowTransaction.buyReceived">
+                        <div class="form-group">
+                            <h4 class="modal-title center">To {{escrowTransaction.buyCoinType}} address</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="alert">
+                            <span class="wordwrap">{{escrowTransaction.intermediateBuyAddress}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" *ngIf="escrowTransaction.buyReceived">
+                <button type="submit" class="btn btn-primary center" (click)="waitForPaymentModal.hide()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

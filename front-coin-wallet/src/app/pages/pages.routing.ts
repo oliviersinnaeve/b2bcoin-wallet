@@ -29,6 +29,7 @@ export const routes: Routes = [
             {path: 'addresses', loadChildren: 'app/pages/addresses/addresses.module#AddressesModule'},
             {path: 'payments', loadChildren: 'app/pages/payments/payments.module#PaymentsModule'},
             {path: 'transactions', loadChildren: 'app/pages/transactions/transactions.module#TransactionsModule'},
+            {path: 'escrow', loadChildren: 'app/pages/escrow/escrow.module#EscrowModule'},
             {path: 'profile', loadChildren: 'app/pages/security/profile/profile.module#ProfileModule'},
             {path: 'settings', loadChildren: 'app/pages/security/settings/settings.module#SettingsModule'}
         ]

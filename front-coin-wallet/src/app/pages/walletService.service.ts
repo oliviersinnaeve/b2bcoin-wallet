@@ -32,12 +32,22 @@ export class WalletService {
         return this.walletApi.getAddresses();
     }
 
-    public getBalanceObservable (address: string): Observable<b2bcoinModels.AddressBalance> {
-        return this.walletApi.getBalance({address: address});
+    public getBalanceObservable (userAddress: b2bcoinModels.UserAddress): Observable<b2bcoinModels.AddressBalance> {
+        return this.walletApi.getBalance(userAddress);
     }
 
     public getLastBlockObservable (): Observable<b2bcoinModels.BlockWrapper> {
         return this.walletApi.getLastBlock();
+    }
+
+    public getAmount (amount: number, coinType): string {
+        if (amount !== undefined) {
+            if (coinType && coinType.toUpperCase() == "BTC") {
+                return (amount).toFixed(8) + " " + coinType.toUpperCase();
+            } else if (coinType) {
+                return (amount).toFixed(12) + " " + coinType.toUpperCase();
+            }
+        }
     }
 
 }

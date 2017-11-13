@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 
 
 @Injectable()
-export class WalletApi {
+export class EscrowApi {
     protected basePath = 'https://api.b2bcoin.xyz/b2bcoin/api';
     public defaultHeaders: Headers = new Headers();
     public configuration: Configuration = new Configuration();
@@ -41,27 +41,12 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     */
-    public createAddress(extraHttpRequestParams?: any): Observable<models.Address> {
-        return this.createAddressWithHttpInfo(extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * Create a payment
-     * Create a payment and return the hash of it.
+     * Accept an escrow transaction
+     * Accept an escrow transaction and returns the needed info back to website
      * @param body 
      */
-    public createPayment(body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<models.Payment> {
-        return this.createPaymentWithHttpInfo(body, extraHttpRequestParams)
+    public acceptTrade(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<models.EscrowTransaction> {
+        return this.acceptTradeWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -72,12 +57,59 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * Polling escrow transaction
+     * Pools an escrow transaction for both amounts to be deposited
+     */
+    public checkAllEscrows(extraHttpRequestParams?: any): Observable<models.ResultOk> {
+        return this.checkAllEscrowsWithHttpInfo(extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Returns the supported coins
+     * Returns supported coins
+     * @param key 
+     */
+    public confirmBuy(key: string, extraHttpRequestParams?: any): Observable<Array<string>> {
+        return this.confirmBuyWithHttpInfo(key, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Returns the supported coins
+     * Returns supported coins
+     * @param key 
+     */
+    public confirmSell(key: string, extraHttpRequestParams?: any): Observable<Array<string>> {
+        return this.confirmSellWithHttpInfo(key, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Create an escrow transaction
+     * Creates an escrow transaction and returns the needed info back to website
      * @param body 
      */
-    public deleteAddress(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.Success> {
-        return this.deleteAddressWithHttpInfo(body, extraHttpRequestParams)
+    public createService(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<models.EscrowTransaction> {
+        return this.createServiceWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -88,11 +120,11 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * Return all escrow
+     * Return escrows
      */
-    public getAddresses(extraHttpRequestParams?: any): Observable<Array<models.AddressBalance>> {
-        return this.getAddressesWithHttpInfo(extraHttpRequestParams)
+    public getEscrows(extraHttpRequestParams?: any): Observable<Array<models.EscrowTransaction>> {
+        return this.getEscrowsWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -103,43 +135,11 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     * @param body 
+     * Returns the supported coins
+     * Returns supported coins
      */
-    public getBalance(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.AddressBalance> {
-        return this.getBalanceWithHttpInfo(body, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
-     * @param body 
-     */
-    public getBlockOrTransaction(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<models.BlockOrTransactionResponse> {
-        return this.getBlockOrTransactionWithHttpInfo(body, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     */
-    public getLastBlock(extraHttpRequestParams?: any): Observable<models.BlockWrapper> {
-        return this.getLastBlockWithHttpInfo(extraHttpRequestParams)
+    public getProvidedCoins(extraHttpRequestParams?: any): Observable<Array<string>> {
+        return this.getProvidedCoinsWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -165,12 +165,12 @@ export class WalletApi {
     }
 
     /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
+     * Polling escrow transaction
+     * Pools an escrow transaction for both amounts to be deposited
      * @param body 
      */
-    public getTransactionsForAddress(body?: models.Address, extraHttpRequestParams?: any): Observable<models.TransactionItems> {
-        return this.getTransactionsForAddressWithHttpInfo(body, extraHttpRequestParams)
+    public pollResult(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<models.EscrowTransaction> {
+        return this.pollResultWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -182,56 +182,21 @@ export class WalletApi {
 
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     */
-    public createAddressWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/createAddress`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Create a payment
-     * Create a payment and return the hash of it.
+     * Accept an escrow transaction
+     * Accept an escrow transaction and returns the needed info back to website
      * @param body 
      */
-    public createPaymentWithHttpInfo(body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/createPayment`;
+    public acceptTradeWithHttpInfo(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/acceptTrade`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // to determine the Content-Type header
         let consumes: string[] = [
-            'application/json'
         ];
 
         // to determine the Accept header
         let produces: string[] = [
-            'application/json'
         ];
 
         headers.set('Content-Type', 'application/json');
@@ -252,188 +217,11 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     * @param body 
+     * Polling escrow transaction
+     * Pools an escrow transaction for both amounts to be deposited
      */
-    public deleteAddressWithHttpInfo(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/deleteAddress`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     */
-    public getAddressesWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getAddresses`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     * @param body 
-     */
-    public getBalanceWithHttpInfo(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getBalance`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
-     * @param body 
-     */
-    public getBlockOrTransactionWithHttpInfo(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getBlockOrTransaction`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
-     */
-    public getLastBlockWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getLastBlock`;
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
-            headers: headers,
-            search: queryParameters
-        });
-
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Is the Service running ?
-     * Returns if the service runs or not. Without other exceptions in mind, just running
-     */
-    public getResourceInfoWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/info`;
+    public checkAllEscrowsWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/checkAllEscrows`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -460,23 +248,221 @@ export class WalletApi {
     }
 
     /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
+     * Returns the supported coins
+     * Returns supported coins
+     * @param key 
+     */
+    public confirmBuyWithHttpInfo(key: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/confirmTradeBuy/${key}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'key' is not null or undefined
+        if (key === null || key === undefined) {
+            throw new Error('Required parameter key was null or undefined when calling confirmBuy.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Returns the supported coins
+     * Returns supported coins
+     * @param key 
+     */
+    public confirmSellWithHttpInfo(key: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/confirmTradeSell/${key}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'key' is not null or undefined
+        if (key === null || key === undefined) {
+            throw new Error('Required parameter key was null or undefined when calling confirmSell.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Create an escrow transaction
+     * Creates an escrow transaction and returns the needed info back to website
      * @param body 
      */
-    public getTransactionsForAddressWithHttpInfo(body?: models.Address, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getTransactionsForAddress`;
+    public createServiceWithHttpInfo(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/create`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
         // to determine the Content-Type header
         let consumes: string[] = [
-            'application/json'
         ];
 
         // to determine the Accept header
         let produces: string[] = [
-            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Return all escrow
+     * Return escrows
+     */
+    public getEscrowsWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/getEscrows`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Returns the supported coins
+     * Returns supported coins
+     */
+    public getProvidedCoinsWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/providedCoins`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Is the Service running ?
+     * Returns if the service runs or not. Without other exceptions in mind, just running
+     */
+    public getResourceInfoWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/info`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Get,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Polling escrow transaction
+     * Pools an escrow transaction for both amounts to be deposited
+     * @param body 
+     */
+    public pollResultWithHttpInfo(body?: models.EscrowTransaction, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/escrow/pollResult`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
         ];
 
         headers.set('Content-Type', 'application/json');

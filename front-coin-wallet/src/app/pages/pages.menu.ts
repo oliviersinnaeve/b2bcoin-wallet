@@ -112,6 +112,38 @@ export const PAGES_MENU = [
                     }
                 ]
             }
+            ,
+            {
+                path: 'escrow',
+                data: {
+                    menu: {
+                        title: 'Escrow',
+                        icon: 'ion-shuffle',
+                        selected: false,
+                        expanded: false,
+                        order: 250,
+                    }
+                },
+                children: [
+                    {
+                        path: 'overview',
+                        data: {
+                            menu: {
+                                title: 'Overview',
+                            }
+                        }
+                    }
+                    ,
+                    {
+                        path: 'create',
+                        data: {
+                            menu: {
+                                title: 'Create transaction',
+                            }
+                        }
+                    }
+                ]
+            }
         ]
     }
 ];

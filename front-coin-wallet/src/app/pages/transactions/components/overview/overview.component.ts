@@ -75,7 +75,7 @@ export class Overview implements OnInit {
     }
 
     public getFee(transactionWrapper: any): string {
-        console.log("Using trasnaxcitonWrapper", transactionWrapper);
+        //console.log("Using trasnaxcitonWrapper", transactionWrapper);
         return (transactionWrapper.transactions[0].fee / 1000000000000).toFixed(12) + " B2B";
     }
 

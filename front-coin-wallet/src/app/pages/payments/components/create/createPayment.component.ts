@@ -10,7 +10,7 @@ import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/mo
 import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
 
 
-import { B2BCurrencyFormatterDirective } from "../../../../theme/directives/formatter/b2bCurrencyFormatter.directive";
+//import { B2BCurrencyFormatterDirective } from "../../../../theme/directives/formatter/b2bCurrencyFormatter.directive";
 
 @Component({
     selector: 'create',

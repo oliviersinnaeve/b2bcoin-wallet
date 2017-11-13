@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { MarkdownModule } from 'angular2-markdown';
 
+import { AdsenseModule } from 'ng2-adsense';
+
 import * as user from './services/com.b2beyond.api.user';
 import * as b2bcoin from './services/com.b2beyond.api.b2bcoin';
 
@@ -23,6 +25,7 @@ import { App } from './app.component';
 import { UserState } from './user.state';
 import { WalletService } from './pages/walletService.service';
 import { TransactionsService } from './pages/transactions/transactions.service';
+import { EscrowService } from './pages/escrow/escrow.service';
 import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
@@ -37,9 +40,11 @@ const APP_PROVIDERS = [
     UserState,
     WalletService,
     TransactionsService,
+    EscrowService,
     GlobalState,
     user.UserApi,
-    b2bcoin.WalletApi
+    b2bcoin.WalletApi,
+    b2bcoin.EscrowApi
 ];
 
 export type StoreType = {
@@ -58,6 +63,11 @@ export type StoreType = {
     ],
     imports: [ // import Angular's modules
         BrowserModule,
+        // shown passing optional global defaults
+        AdsenseModule.forRoot({
+            adClient: 'ca-pub-5721689054603180',
+            adSlot: 6949772221,
+        }),
         HttpModule,
         RouterModule,
         FormsModule,

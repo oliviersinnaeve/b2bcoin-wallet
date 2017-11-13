@@ -85,7 +85,7 @@ export class Overview {
 
                 for (var i = 0; i < this.addresses.length; i++) {
                     var address = this.addresses[i];
-                    this.walletService.getBalanceObservable(address.address).subscribe(
+                    this.walletService.getBalanceObservable({"address": address.address, "currency": "b2b"}).subscribe(
                         (result) => {
                             for (var j = 0; j < this.addresses.length; j++) {
                                 var oldAddress = this.addresses[j];

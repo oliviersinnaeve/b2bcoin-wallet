@@ -66,7 +66,7 @@ export class WalletInfo {
         this.walletService.getAddressesObservable().subscribe(result => {
             this.numberOfAddresses = result.length;
             for (var i = 0; i < result.length; i++) {
-                this.walletService.getBalanceObservable(result[i].address).subscribe(result => {
+                this.walletService.getBalanceObservable({"address": result[i].address, currency: "b2b"}).subscribe(result => {
                         this.balance += result.availableBalance;
                         this.lockedBalance += result.lockedAmount;
                     },

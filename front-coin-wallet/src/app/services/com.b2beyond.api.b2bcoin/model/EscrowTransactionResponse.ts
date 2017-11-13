@@ -12,15 +12,7 @@
 
 import * as models from './models';
 
-export interface UserAddress {
-    userId?: string;
-
-    address?: string;
-
-    currency?: string;
-
-    name?: string;
-
-    groupName?: string;
+export interface EscrowTransactionResponse {
+    transactionDone?: boolean;
 
 }

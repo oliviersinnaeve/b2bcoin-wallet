@@ -39,7 +39,9 @@ import {
     BaSlimScroll,
     BaThemeRun,
     B2BCurrencyFormatterDirective,
-    B2BCurrencyPipe
+    BTCCurrencyFormatterDirective,
+    B2BCurrencyPipe,
+    BTCCurrencyPipe
 } from './directives';
 
 import {
@@ -85,14 +87,16 @@ const NGA_DIRECTIVES = [
     BaSlimScroll,
     BaThemeRun,
     BaCardBlur,
-    B2BCurrencyFormatterDirective
+    B2BCurrencyFormatterDirective,
+    BTCCurrencyFormatterDirective
 ];
 
 const NGA_PIPES = [
     BaAppPicturePipe,
     BaKameleonPicturePipe,
     BaProfilePicturePipe,
-    B2BCurrencyPipe
+    B2BCurrencyPipe,
+    BTCCurrencyPipe
 ];
 
 const NGA_SERVICES = [
@@ -134,6 +138,7 @@ export class NgaModule {
                 BaThemeConfigProvider,
                 BaThemeConfig,
                 B2BCurrencyPipe,
+                BTCCurrencyPipe,
                 ...NGA_VALIDATORS,
                 ...NGA_SERVICES
             ],
