@@ -193,10 +193,10 @@ public class MainFrame extends JFrame implements Observer {
             System.out.println(progressBar.getValue());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
 
-            if (blockCount.getCount() / 25000 > blockChucksFetched) {
-                actionController.restartCoinDaemon();
-                blockChucksFetched = blockCount.getCount() / 25000;
-            }
+//            if (blockCount.getCount() / 25000 > blockChucksFetched) {
+//                actionController.restartCoinDaemon();
+//                blockChucksFetched = blockCount.getCount() / 25000;
+//            }
         }
     }
 
