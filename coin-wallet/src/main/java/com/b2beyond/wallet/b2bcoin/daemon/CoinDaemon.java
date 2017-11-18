@@ -4,7 +4,10 @@ import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 /**
@@ -42,14 +45,24 @@ public class CoinDaemon implements Daemon {
 
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
                     "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
-            if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-                pb = new ProcessBuilder("cmd", "/c", "start", "/MIN", binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
-                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
-            }
+
+//            if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
+//                pb = new ProcessBuilder("cmd", "/c", "start", "/MIN", binariesLocation + daemonExecutable, "--config-file", configLocation + "coin.conf",
+//                        "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
+//            }
 
             process = pb.start();
             processPid = B2BUtil.getPid(process, operatingSystem, false);
             LOGGER.debug("Coin Process id retrieved : " + processPid);
+
+            InputStream inputStream = process.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                LOGGER.info(line);
+            }
+            inputStream.close();
+            bufferedReader.close();
         } catch (Exception ex) {
             LOGGER.error("Coin daemon failed to load", ex);
         }
