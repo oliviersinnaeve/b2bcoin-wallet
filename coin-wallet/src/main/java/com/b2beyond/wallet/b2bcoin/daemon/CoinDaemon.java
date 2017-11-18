@@ -55,14 +55,14 @@ public class CoinDaemon implements Daemon {
             processPid = B2BUtil.getPid(process, operatingSystem, false);
             LOGGER.debug("Coin Process id retrieved : " + processPid);
 
-            InputStream inputStream = process.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                LOGGER.info(line);
-            }
-            inputStream.close();
-            bufferedReader.close();
+//            InputStream inputStream = process.getInputStream();
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                LOGGER.info(line);
+//            }
+//            inputStream.close();
+//            bufferedReader.close();
         } catch (Exception ex) {
             LOGGER.error("Coin daemon failed to load", ex);
         }

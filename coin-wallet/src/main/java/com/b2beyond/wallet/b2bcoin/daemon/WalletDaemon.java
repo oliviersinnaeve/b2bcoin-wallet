@@ -30,15 +30,15 @@ public class WalletDaemon implements Daemon {
     private Process process;
     private int processPid;
 
-    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, final PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
         this.operatingSystem = operatingSystem;
         this.walletProperties = walletProperties;
 
-        String userHome = B2BUtil.getUserHome();
-        String binariesLocation = B2BUtil.getBinariesRoot();
-        String configLocation = B2BUtil.getConfigRoot();
-        String logLocation = B2BUtil.getLogRoot();
+        final String userHome = B2BUtil.getUserHome();
+        final String binariesLocation = B2BUtil.getBinariesRoot();
+        final String configLocation = B2BUtil.getConfigRoot();
+        final String logLocation = B2BUtil.getLogRoot();
 
         try {
             String daemonExecutable = daemonProperties.getString("wallet-daemon-" + operatingSystem);
@@ -101,24 +101,28 @@ public class WalletDaemon implements Daemon {
             processPid = B2BUtil.getPid(process, operatingSystem, true);
             LOGGER.debug("Wallet Process id retrieved : " + processPid);
 
-            InputStream inputStream = process.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                LOGGER.info(line);
-            }
-            inputStream.close();
-            bufferedReader.close();
+//            InputStream inputStream = process.getInputStream();
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                LOGGER.info(line);
+//            }
+//            inputStream.close();
+//            bufferedReader.close();
 
-            try {
-                Thread.sleep(15000);
-                LOGGER.info("Reset password");
-                walletProperties.setProperty("container-password", "");
-                saveProperties(walletProperties, configLocation);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(15000);
+                        LOGGER.info("Reset password");
+                        walletProperties.setProperty("container-password", "");
+                        saveProperties(walletProperties, configLocation);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }
