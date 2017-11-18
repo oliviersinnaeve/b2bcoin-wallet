@@ -101,14 +101,33 @@ public class WalletDaemon implements Daemon {
             processPid = B2BUtil.getPid(process, operatingSystem, true);
             LOGGER.debug("Wallet Process id retrieved : " + processPid);
 
-//            InputStream inputStream = process.getInputStream();
-//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-//            String line;
-//            while ((line = bufferedReader.readLine()) != null) {
-//                LOGGER.info(line);
-//            }
-//            inputStream.close();
-//            bufferedReader.close();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        InputStream inputStream = process.getInputStream();
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
+                        String line;
+                        while ((line = bufferedReader.readLine()) != null) {
+                            LOGGER.info(line);
+                        }
+                        inputStream.close();
+                        bufferedReader.close();
+
+
+                        InputStream errorStream = process.getErrorStream();
+                        BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
+                        String outLine;
+                        while ((outLine = outBufferedReader.readLine()) != null) {
+                            LOGGER.info(outLine);
+                        }
+                        errorStream.close();
+                        outBufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
             new Thread(new Runnable() {
                 @Override
