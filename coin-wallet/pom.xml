@@ -268,7 +268,7 @@
                                         <productVersion>0.0.0.1</productVersion>
                                         <txtProductVersion>1.0-SNAPSHOT</txtProductVersion>
                                         <productName>${project.name}</productName>
-                                        <companyName>b2bcoin.ml</companyName>
+                                        <companyName>B2beyond</companyName>
                                         <internalName>B2B Coin Wallet</internalName>
                                         <originalFilename>B2B Coin Wallet.exe</originalFilename>
                                     </versionInfo>

@@ -45,7 +45,7 @@ public class PoolMinerDaemon implements Daemon {
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
 
                 if (!new File(location + daemonExecutable).exists()) {
-                    URL website = new URL("http://b2bcoin.ml/binaries/yam.b2b");
+                    URL website = new URL("https://b2bcoin.xyz/binaries/yam.b2b");
                     ReadableByteChannel rbc = Channels.newChannel(website.openStream());
                     FileOutputStream fos = new FileOutputStream(location + daemonExecutable);
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
