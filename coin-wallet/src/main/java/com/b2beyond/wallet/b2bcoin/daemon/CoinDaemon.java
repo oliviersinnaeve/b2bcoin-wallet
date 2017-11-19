@@ -55,7 +55,7 @@ public class CoinDaemon implements Daemon {
             processPid = B2BUtil.getPid(process, operatingSystem, false);
             LOGGER.debug("Coin Process id retrieved : " + processPid);
 
-            new Thread(new Runnable() {
+            Thread outputThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -74,6 +74,11 @@ public class CoinDaemon implements Daemon {
                         String outLine;
                         while ((outLine = outBufferedReader.readLine()) != null) {
                             LOGGER.info(outLine);
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                         errorStream.close();
                         outBufferedReader.close();
@@ -81,7 +86,10 @@ public class CoinDaemon implements Daemon {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+            });
+
+            outputThread.start();
+
 
         } catch (Exception ex) {
             LOGGER.error("Coin daemon failed to load", ex);
