@@ -26,7 +26,7 @@ public class JsonRpcExecutor<T> {
     private String method;
     private Class<T> returnClass;
 
-    private int readTimeout = 5000;
+    private int readTimeout = 15000;
 
     public static final String EMPTY_PARAMS = "\"params\": {}";
 
@@ -92,10 +92,10 @@ public class JsonRpcExecutor<T> {
                 os.close();
                 httpConnection.disconnect();
             } catch (IOException e) {
-                LOGGER.error("JSon Rcp Executor failed : " + e.getMessage());
+                LOGGER.error("JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
             }
         } catch (Exception e) {
-            LOGGER.error("Json Rcp Executor failed : " + e.getMessage());
+            LOGGER.error("JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
             if (httpConnection != null) {
                 httpConnection.disconnect();
             }
