@@ -74,11 +74,11 @@ public class CoinDaemon implements Daemon {
                         String outLine;
                         while ((outLine = outBufferedReader.readLine()) != null) {
                             LOGGER.info(outLine);
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                Thread.sleep(5000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
                         }
                         errorStream.close();
                         outBufferedReader.close();

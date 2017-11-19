@@ -94,7 +94,21 @@ public final class B2BUtil {
                 FileResourceExtractor.extractFromJar(
                         "configs/coin-wallet.conf",
                         getConfigRoot() + "coin-wallet.conf");
+            } else {
+                PropertiesConfiguration currentFile = new PropertiesConfiguration(getConfigRoot() + "coin-wallet.conf");
+                String walletFile = currentFile.getString("container-file");
+
+                Paths.get(getConfigRoot() + "coin-wallet.conf").toFile().delete();
+                FileResourceExtractor.extractFromJar(
+                        "configs/coin-wallet.conf",
+                        getConfigRoot() + "coin-wallet.conf");
+
+                PropertiesConfiguration newFile = new PropertiesConfiguration(getConfigRoot() + "coin-wallet.conf");
+                newFile.setProperty("container-file", walletFile);
+                newFile.save();
+                LOGGER.debug("File coin-wallet.conf should be updated with new values");
             }
+
             if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.extractFromJar(
