@@ -25,7 +25,7 @@ public class PaymentController {
         try {
             return this.paymentExecutor.execute(input.getParams());
         } catch (KnownJsonRpcException e) {
-            e.printStackTrace();
+            LOGGER.error("Creating payment failed", e);
         }
 
         return null;

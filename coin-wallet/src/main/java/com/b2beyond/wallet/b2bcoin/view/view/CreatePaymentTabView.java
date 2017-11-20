@@ -137,41 +137,54 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         String command = e.getActionCommand();
 
         if (command.equals("Create payment(s)")) {
+            LOGGER.info("Payment button was clicked ...");
             PaymentInput input = new PaymentInput();
             input.setAddress(((JComboboxItem)addresses.getSelectedItem()).getValue());
             long feeAmount = CoinUtil.getLongForText(fee.getText());
             input.setFee(feeAmount);
             Map<String, Long> transferList = new HashMap<>();
 
+            LOGGER.info("Creating payment with address : " + input.getAddress());
+
             for (TransferPanel tmpTransfer : transfers) {
+                LOGGER.info("Adding destination address : " + tmpTransfer.getAddress());
                 long amount = CoinUtil.getLongForText(tmpTransfer.getAmount().getText());
                 transferList.put(tmpTransfer.getAddress().getText(), amount);
             }
             input.setTransfers(transferList);
 
-            Payment payment = paymentController.makePayment(input);
-            if (payment != null) {
-                JOptionPane.showMessageDialog(null,
-                        "Payment was successfully executed.",
-                        "Payment success",
-                        JOptionPane.INFORMATION_MESSAGE);
+            LOGGER.info("Start to create payment ...");
 
-                for (TransferPanel tmpTransfer : transfers) {
-                    transferPanel.remove(tmpTransfer);
+            int result = JOptionPane.showConfirmDialog(null,
+                    "You sure you want to execute the payment ?",
+                    "Create payment ?",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (result == 0) {
+                Payment payment = paymentController.makePayment(input);
+
+                if (payment != null) {
+                    JOptionPane.showMessageDialog(null,
+                            "Payment was successfully executed.",
+                            "Payment success",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    for (TransferPanel tmpTransfer : transfers) {
+                        transferPanel.remove(tmpTransfer);
+                    }
+
+                    transfers = new ArrayList<>();
+
+                    TransferPanel newPanel = new TransferPanel(false, this);
+                    transfers.add(newPanel);
+                    transferPanel.add(newPanel);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Failed to execute payment, retry later ...",
+                            "Fatal error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-
-                transfers = new ArrayList<>();
-
-                TransferPanel newPanel = new TransferPanel(false, this);
-                transfers.add(newPanel);
-                transferPanel.add(newPanel);
-            } else {
-                JOptionPane.showMessageDialog(null,
-                        "Failed to execute payment, retry later ...",
-                        "Fatal error",
-                        JOptionPane.ERROR_MESSAGE);
             }
-
         }
 
         if (command.equals("Add payment")) {
