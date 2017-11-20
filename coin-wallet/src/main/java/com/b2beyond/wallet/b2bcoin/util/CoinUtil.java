@@ -13,6 +13,7 @@ public class CoinUtil {
     public static BigDecimal DIVIDE_BY = new BigDecimal("1000000000000");
 
     public static long getLongForText(String text) {
+        text = text.replace(",", ".");
         LOGGER.info("Converting " + text + " text to long : " + text);
         BigDecimal decimal = new BigDecimal(text);
         decimal = decimal.multiply(DIVIDE_BY);
