@@ -147,10 +147,12 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
             LOGGER.info("Creating payment with address : " + input.getAddress());
 
             for (TransferPanel tmpTransfer : transfers) {
-                LOGGER.info("Adding destination address : " + tmpTransfer.getAddress().getText());
-                long amount = CoinUtil.getLongForText(tmpTransfer.getAmount().getText());
-                LOGGER.info("Adding amount address : " + amount);
-                transferList.put(tmpTransfer.getAddress().getText(), amount);
+                if (tmpTransfer != null) {
+                    LOGGER.info("Adding destination address : " + tmpTransfer.getAddress().getText());
+                    long amount = CoinUtil.getLongForText(tmpTransfer.getAmount().getText());
+                    LOGGER.info("Adding amount : " + amount);
+                    transferList.put(tmpTransfer.getAddress().getText(), amount);
+                }
             }
             input.setTransfers(transferList);
 
