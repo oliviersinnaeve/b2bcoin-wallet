@@ -41,8 +41,8 @@ public final class B2BUtil {
     public static Color mainColor = new Color(56, 174, 204);
     public static Color selectedColor = new Color(8, 103, 136);
 
-    public static final DateFormat readFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aa");
-    public static final DateFormat alternativeReadFormat = new SimpleDateFormat("dd MMM. yyyy hh:mm:ss");
+//    public static final DateFormat readFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aa");
+//    public static final DateFormat alternativeReadFormat = new SimpleDateFormat("dd MMM. yyyy hh:mm:ss");
     public static final DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
 
     public static final DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));

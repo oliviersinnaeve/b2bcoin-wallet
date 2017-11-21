@@ -11,6 +11,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
+import com.b2beyond.wallet.b2bcoin.util.DateUtil;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractAddressJPanel;
 import org.apache.commons.lang.StringUtils;
@@ -154,13 +155,9 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                 String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
                 Date date = null;
                 try {
-                    date = B2BUtil.readFormat.parse(dateStr);
+                    date = DateUtil.parse(dateStr);
                 } catch (ParseException e) {
-                    try {
-                        date = B2BUtil.alternativeReadFormat.parse(dateStr);
-                    } catch (ParseException e1) {
-                        LOGGER.error("Could not parse data", e);
-                    }
+                    LOGGER.error("Could not parse data", e);
                 }
 
                 if (amount < 0) {

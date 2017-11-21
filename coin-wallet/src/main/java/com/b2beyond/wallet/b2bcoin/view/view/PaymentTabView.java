@@ -7,6 +7,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
+import com.b2beyond.wallet.b2bcoin.util.DateUtil;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractAddressJPanel;
 import org.apache.commons.lang.StringUtils;
@@ -101,14 +102,11 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                 String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
                 Date date = null;
                 try {
-                    date = B2BUtil.readFormat.parse(dateStr);
+                    date = DateUtil.parse(dateStr);
                 } catch (ParseException e) {
-                    try {
-                        date = B2BUtil.alternativeReadFormat.parse(dateStr);
-                    } catch (ParseException e1) {
-                        LOGGER.error("Could not parse data", e);
-                    }
+                    LOGGER.error("Could not parse data", e);
                 }
+
                 long amount = transaction.getAmount();
 
                 if (transaction.getUnlockTime() != 0) {
