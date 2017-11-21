@@ -156,7 +156,11 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                 try {
                     date = B2BUtil.readFormat.parse(dateStr);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    try {
+                        date = B2BUtil.alternativeReadFormat.parse(dateStr);
+                    } catch (ParseException e1) {
+                        LOGGER.error("Could not parse data", e);
+                    }
                 }
 
                 if (amount < 0) {

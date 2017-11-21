@@ -103,7 +103,11 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                 try {
                     date = B2BUtil.readFormat.parse(dateStr);
                 } catch (ParseException e) {
-                    LOGGER.error("Could not parse data", e);
+                    try {
+                        date = B2BUtil.alternativeReadFormat.parse(dateStr);
+                    } catch (ParseException e1) {
+                        LOGGER.error("Could not parse data", e);
+                    }
                 }
                 long amount = transaction.getAmount();
 
