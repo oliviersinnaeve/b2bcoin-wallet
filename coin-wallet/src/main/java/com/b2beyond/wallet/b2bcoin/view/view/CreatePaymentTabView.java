@@ -3,6 +3,7 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.PaymentInput;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.PaymentController;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
@@ -149,6 +150,7 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
             for (TransferPanel tmpTransfer : transfers) {
                 if (tmpTransfer != null) {
                     LOGGER.info("Adding destination address : " + tmpTransfer.getAddress().getText());
+                    LOGGER.info("Converting amount text to long : " + tmpTransfer.getAmount().getText());
                     long amount = CoinUtil.getLongForText(tmpTransfer.getAmount().getText());
                     LOGGER.info("Adding amount : " + amount);
                     transferList.put(tmpTransfer.getAddress().getText(), amount);
@@ -164,26 +166,34 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
                     JOptionPane.YES_NO_OPTION);
 
             if (result == 0) {
-                Payment payment = paymentController.makePayment(input);
+                Payment payment = null;
+                try {
+                    payment = paymentController.makePayment(input);
 
-                if (payment != null) {
-                    JOptionPane.showMessageDialog(this,
-                            "Payment was successfully executed.",
-                            "Payment success",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    if (payment != null) {
+                        JOptionPane.showMessageDialog(this,
+                                "Payment was successfully executed.",
+                                "Payment success",
+                                JOptionPane.INFORMATION_MESSAGE);
 
-                    for (TransferPanel tmpTransfer : transfers) {
-                        transferPanel.remove(tmpTransfer);
+                        for (TransferPanel tmpTransfer : transfers) {
+                            transferPanel.remove(tmpTransfer);
+                        }
+
+                        transfers = new ArrayList<>();
+
+                        TransferPanel newPanel = new TransferPanel(false, this);
+                        transfers.add(newPanel);
+                        transferPanel.add(newPanel);
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Failed to execute payment, retry later ...",
+                                "Fatal error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
-
-                    transfers = new ArrayList<>();
-
-                    TransferPanel newPanel = new TransferPanel(false, this);
-                    transfers.add(newPanel);
-                    transferPanel.add(newPanel);
-                } else {
+                } catch (KnownJsonRpcException e1) {
                     JOptionPane.showMessageDialog(null,
-                            "Failed to execute payment, retry later ...",
+                            "Failed to execute payment : " + e1.getError().getMessage(),
                             "Fatal error",
                             JOptionPane.ERROR_MESSAGE);
                 }

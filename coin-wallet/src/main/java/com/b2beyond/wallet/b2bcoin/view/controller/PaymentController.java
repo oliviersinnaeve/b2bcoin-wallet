@@ -19,16 +19,15 @@ public class PaymentController {
         this.paymentExecutor = paymentExecutor;
     }
 
-    public Payment makePayment(PaymentInput input) {
+    public Payment makePayment(PaymentInput input) throws KnownJsonRpcException {
         LOGGER.info("Create payment");
         this.paymentExecutor.setReadTimeout(300000);
         try {
             return this.paymentExecutor.execute(input.getParams());
         } catch (KnownJsonRpcException e) {
-            LOGGER.error("Creating payment failed", e);
+            LOGGER.error("Creating payment failed : " + e.getError().getMessage());
+            throw e;
         }
-
-        return null;
     }
 
 }
