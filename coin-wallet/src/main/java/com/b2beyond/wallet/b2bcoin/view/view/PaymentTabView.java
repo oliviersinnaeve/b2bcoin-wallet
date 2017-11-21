@@ -122,7 +122,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                         }
                     }
 
-                    final Object[] data = {address, B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(amount)};
+                    final Object[] data = {address, B2BUtil.writeFormat.format(date), amount};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
