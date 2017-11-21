@@ -103,7 +103,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                 try {
                     date = B2BUtil.readFormat.parse(dateStr);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Could not parse data", e);
                 }
                 long amount = transaction.getAmount();
 
@@ -115,7 +115,6 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                     String address = "";
                     for (Transfer transfer : transaction.getTransfers()) {
                         if (StringUtils.isNotBlank(transfer.getAddress())) {
-                            System.out.println(transfer.getAddress());
                             if (addressesList.getAddresses().contains(transfer.getAddress())) {
                                 address = transfer.getAddress();
                             }
