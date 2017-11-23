@@ -153,12 +153,12 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
             for (Transaction transaction : item.getTransactions()) {
                 long amount = transaction.getAmount();
                 String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
-                Date date = null;
-                try {
-                    date = DateUtil.parse(dateStr);
-                } catch (ParseException e) {
-                    LOGGER.error("Could not parse data", e);
-                }
+//                Date date = null;
+//                try {
+//                    date = DateUtil.parse(dateStr);
+//                } catch (ParseException e) {
+//                    LOGGER.error("Could not parse data", e);
+//                }
 
                 if (amount < 0) {
                     String address = "";
@@ -171,7 +171,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                         }
                     }
 
-                    final Object[] data = {address, B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(amount)};
+                    final Object[] data = {address, dateStr, CoinUtil.getTextForLong(amount)};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -187,7 +187,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                                 LOGGER.trace("Unlock time : " + transaction.getUnlockTime());
                             }
 
-                            final Object[] data = {transfer.getAddress(), B2BUtil.writeFormat.format(date), CoinUtil.getTextForLong(transfer.getAmount())};
+                            final Object[] data = {transfer.getAddress(), dateStr, CoinUtil.getTextForLong(transfer.getAmount())};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {

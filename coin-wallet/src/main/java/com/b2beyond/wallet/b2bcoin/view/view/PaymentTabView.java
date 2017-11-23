@@ -100,12 +100,12 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
         for (TransactionItem item : transactionItems.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
-                Date date = null;
-                try {
-                    date = DateUtil.parse(dateStr);
-                } catch (ParseException e) {
-                    LOGGER.error("Could not parse data", e);
-                }
+//                Date date = null;
+//                try {
+//                    date = DateUtil.parse(dateStr);
+//                } catch (ParseException e) {
+//                    LOGGER.error("Could not parse data", e);
+//                }
 
                 long amount = transaction.getAmount();
 
@@ -123,7 +123,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                         }
                     }
 
-                    final Object[] data = {address, B2BUtil.writeFormat.format(date), amount};
+                    final Object[] data = {address, dateStr, amount};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
