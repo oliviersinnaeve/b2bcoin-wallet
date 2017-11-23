@@ -9,14 +9,14 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
-import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
-import com.b2beyond.wallet.b2bcoin.util.DateUtil;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractAddressJPanel;
+import com.b2beyond.wallet.b2bcoin.view.view.renderer.DateTableCellRenderer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,15 +24,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -88,6 +88,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         transactionsTable = new JTable(transactionsTableModel);
         transactionsTable.getColumnModel().getColumn(0).setPreferredWidth(700);
         transactionsTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+        transactionsTable.getColumnModel().getColumn(1).setCellRenderer(new DateTableCellRenderer());
         transactionsTable.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
         transactionsTable.setRowHeight(30);
 
@@ -148,17 +149,10 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
         }
     }
 
-    public void update(TransactionItems transactions) {
+    public void update(final TransactionItems transactions) {
         for (TransactionItem item : transactions.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 long amount = transaction.getAmount();
-                String dateStr = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT).format(new Date(transaction.getTimestamp() * 1000));
-//                Date date = null;
-//                try {
-//                    date = DateUtil.parse(dateStr);
-//                } catch (ParseException e) {
-//                    LOGGER.error("Could not parse data", e);
-//                }
 
                 if (amount < 0) {
                     String address = "";
@@ -171,7 +165,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                         }
                     }
 
-                    final Object[] data = {address, dateStr, CoinUtil.getTextForLong(amount)};
+                    final Object[] data = {address, transaction.getTimestamp() * 1000, CoinUtil.getTextForLong(amount)};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -187,7 +181,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                                 LOGGER.trace("Unlock time : " + transaction.getUnlockTime());
                             }
 
-                            final Object[] data = {transfer.getAddress(), dateStr, CoinUtil.getTextForLong(transfer.getAmount())};
+                            final Object[] data = {transfer.getAddress(), transaction.getTimestamp() * 1000, CoinUtil.getTextForLong(transfer.getAmount())};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -211,7 +205,10 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                 public void run() {
                     if (transactionsTable != null) {
                         LOGGER.info("Filtering table");
-                        transactionsTable.getRowSorter().toggleSortOrder(1);
+                        List<RowSorter.SortKey> list = new ArrayList<>();
+                        list.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+                        transactionsTable.getRowSorter().setSortKeys(list);
+                        ((DefaultRowSorter) transactionsTable.getRowSorter()).sort();
                     }
                 }
             });
