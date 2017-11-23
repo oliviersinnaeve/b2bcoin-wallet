@@ -55,21 +55,21 @@ public abstract class AbstractAddressJPanel extends JPanel implements ActionList
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>();
         sorter.setRowFilter(filter);
         sorter.setModel(model);
-        sorter.setComparator(1, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
-                try {
-                    Date date1 = writeFormat.parse(o1);
-                    Date date2 = writeFormat.parse(o2);
-                    return date2.compareTo(date1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                return 0;
-            }
-        });
+//        sorter.setComparator(1, new Comparator<String>() {
+//            @Override
+//            public int compare(String o1, String o2) {
+//                DateFormat writeFormat = new SimpleDateFormat();
+//                try {
+//                    Date date1 = writeFormat.parse(o1);
+//                    Date date2 = writeFormat.parse(o2);
+//                    return date2.compareTo(date1);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                return 0;
+//            }
+//        });
         table.setRowSorter(sorter);
     }
 
