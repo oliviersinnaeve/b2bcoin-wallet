@@ -69,7 +69,7 @@ public class MenuBar extends JMenuBar {
         backupWalletMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 System.setProperty("apple.awt.fileDialogForDirectories", "true");
-                FileDialog fd = new FileDialog(mainFrame, "Choose a directory", FileDialog.LOAD);
+                FileDialog fd = new FileDialog(mainFrame, "Choose a directory", FileDialog.SAVE);
                 fd.setVisible(true);
                 String filename = fd.getDirectory() + fd.getFile();
                 System.setProperty("apple.awt.fileDialogForDirectories", "false");
