@@ -5,6 +5,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.PaymentInput;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
+import com.b2beyond.wallet.b2bcoin.util.ComponentFactory;
 import com.b2beyond.wallet.b2bcoin.view.controller.PaymentController;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractAddressJPanel;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,7 +45,9 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
     private JPanel transferPanel;
     private List<TransferPanel> transfers = new ArrayList<>();
 
+    private JTextField paymentId;
     private JTextField fee;
+    private JComboBox<JComboboxItem> mixinCount;
 
 
     public CreatePaymentTabView(PaymentController controller) {
@@ -52,26 +56,36 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         //construct preComponents
         GridBagLayout gbl = new GridBagLayout();
         gbl.columnWidths = new int[]  { 1, 1, 1, 1, 1 };
-        gbl.rowHeights = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        gbl.rowHeights = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         gbl.columnWeights = new double[]{0.01, 0.48, 0.02, 0.48, 0.01};
-        gbl.rowWeights = new double[] { 0.02, 0.02, 0.02, 0.02, 0.02, 0.88, 0.02, 0.02, 0.02 };
+        gbl.rowWeights = new double[] { 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.80, 0.02, 0.02, 0.02 };
         setLayout(gbl);
 
         //construct components
+        JLabel paymentIDLabel = new JLabel("Payment id :");
+        JLabel mixinCountLabel = new JLabel("Mixin count / anonymity :");
         JLabel addressFromLabel = new JLabel ("Adress from :");
         JLabel feeLabel = new JLabel ("Fee :");
 
         addresses = new JComboBox<>();
+        mixinCount = new JComboBox<>();
+        paymentId = new JTextField();
+
+        for (int i = 1; i < 10; i++) {
+            JComboboxItem item = new JComboboxItem(i, i);
+            mixinCount.addItem(item);
+        }
 
         NumberFormat amountFormat = NumberFormat.getNumberInstance();
+        amountFormat.setGroupingUsed(false);
         amountFormat.setMinimumFractionDigits(12);
         amountFormat.setMaximumFractionDigits(12);
         fee = new JFormattedTextField(amountFormat);
-        fee.setColumns(35);
+        //fee.setColumns(35);
         fee.setText("0.000001000000");
 
-        JButton addPaymentButton = new JButton ("Add payment");
-        JButton createPaymentButton = new JButton ("Create payment(s)");
+        JButton addPaymentButton = ComponentFactory.createSubButton("Add payment");
+        JButton createPaymentButton = ComponentFactory.createSubButton("Create payment(s)");
 
         //set components properties
         addressFromLabel.setToolTipText ("Address from");
@@ -92,34 +106,55 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.gridx = 1;
         gbc.gridy = 1;
-        add(addressFromLabel, gbc);
+        add(paymentIDLabel, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 1;
+        add(paymentId, gbc);
+
+
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        add(addressFromLabel, gbc);
+
+        gbc.gridx = 3;
+        gbc.gridy = 3;
         add(addresses, gbc);
 
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         add(feeLabel, gbc);
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 3;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         add(fee, gbc);
+
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx = 1;
+        gbc.gridy = 7;
+        add(mixinCountLabel, gbc);
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 3;
+        gbc.gridy = 7;
+        add(mixinCount, gbc);
 
         gbc.gridwidth = 3;
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 9;
         add(transferPanel, gbc);
 
         gbc.gridwidth = 1;
         gbc.gridx = 1;
-        gbc.gridy = 8;
+        gbc.gridy = 12;
         add(addPaymentButton, gbc);
 
         gbc.gridx = 3;
-        gbc.gridy = 8;
+        gbc.gridy = 12;
         add(createPaymentButton, gbc);
     }
 
@@ -140,7 +175,9 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         if (command.equals("Create payment(s)")) {
             LOGGER.info("Payment button was clicked ...");
             PaymentInput input = new PaymentInput();
+            input.setPaymentId(paymentId.getText());
             input.setAddress(((JComboboxItem)addresses.getSelectedItem()).getValue());
+            input.setAnonymity(Integer.parseInt(((JComboboxItem)mixinCount.getSelectedItem()).getValue()));
             long feeAmount = CoinUtil.getLongForText(fee.getText());
             input.setFee(feeAmount);
             Map<String, Long> transferList = new HashMap<>();

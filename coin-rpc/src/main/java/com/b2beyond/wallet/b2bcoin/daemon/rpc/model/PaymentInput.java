@@ -1,5 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.daemon.rpc.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,7 @@ public class PaymentInput {
 
     private int unlockTime = 10;
 
-    private int anonymity = 10;
+    private int anonymity = 6;
 
     private String paymentId;
 
@@ -81,8 +83,10 @@ public class PaymentInput {
                 "    \"anonymity\":" + getAnonymity() + ",\n" +
                 "    \"fee\":" + getFee() + ",\n" +
                 "    \"unlockTime\":" + getUnlockTime() + ",\n";
-//                "    \"paymentId\":\"" + input.getPaymentId() + "\",\n";
 
+        if (StringUtils.isNotBlank(getPaymentId())) {
+            params += "    \"paymentId\":\"" + getPaymentId() + "\",\n";
+        }
 
         int index = 0;
 //        if(getAddresses() != null && !getAddresses().isEmpty()) {

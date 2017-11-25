@@ -33,10 +33,15 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -58,6 +63,32 @@ public class B2BWallet extends MainFrame {
     private static int loadingCounter = 1;
 
     public static void main(String[] args) {
+        try {
+            for (UIManager.LookAndFeelInfo lnf :
+                    UIManager.getInstalledLookAndFeels()) {
+                System.out.println(lnf.getName());
+                if ("metal".equalsIgnoreCase(lnf.getName())) {
+                    UIManager.setLookAndFeel(lnf.getClassName());
+
+                    InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+                    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+                    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+                    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+                    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+
+                    UIManager.put("Table.foreground",
+                            new ColorUIResource(Color.black));
+                    UIManager.put("Table.background",
+                            new ColorUIResource(B2BUtil.mainColor));
+
+                    UIManager.put("OptionPane.border",
+                            new EmptyBorder(10, 10, 10, 10));
+                    break;
+                }
+            }
+        } catch (Exception e) { /* Lazy handling this >.> */ }
+
+
         System.setProperty("user.home.forknote", "b2bcoin");
 
         B2BUtil.copyConfigsOnRun();
@@ -111,11 +142,6 @@ public class B2BWallet extends MainFrame {
     public B2BWallet(PropertiesConfiguration applicationProperties, final ActionController actionController) {
         super(applicationProperties, actionController);
 
-        UIManager.put("Table.foreground",
-                new ColorUIResource(Color.black));
-        UIManager.put("Table.background",
-                new ColorUIResource(157, 217, 210));
-
         if (LOGGER.isDebugEnabled()) {
             Properties p = System.getProperties();
             Enumeration keys = p.keys();
@@ -164,7 +190,7 @@ public class B2BWallet extends MainFrame {
         actionController.setMiningController(miningController);
         actionController.setSoloMiningController(soloMiningController);
 
-        MenuBar menuBar = new MenuBar(actionController);
+        MenuBar menuBar = new MenuBar(this, walletDaemonProperties, actionController);
         setJMenuBar(menuBar);
         loadWindow.setProgress(loadingCounter++);
 

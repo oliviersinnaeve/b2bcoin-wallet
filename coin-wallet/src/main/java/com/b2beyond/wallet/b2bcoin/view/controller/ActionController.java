@@ -89,4 +89,13 @@ public class ActionController {
     public WalletRpcController getWalletRpcController() {
         return walletRpcController;
     }
+
+    public void resetWallet() {
+        try {
+            walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

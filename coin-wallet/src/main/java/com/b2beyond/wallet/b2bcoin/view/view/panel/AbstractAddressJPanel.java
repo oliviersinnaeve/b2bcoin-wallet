@@ -25,7 +25,7 @@ import java.util.Date;
 /**
  * Created by oliviersinnaeve on 14/09/17.
  */
-public abstract class AbstractAddressJPanel extends JPanel implements ActionListener {
+public abstract class AbstractAddressJPanel extends AbstractBorderlessJPanel implements ActionListener {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 

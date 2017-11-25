@@ -176,6 +176,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                     });
                 } else {
                     for (Transfer transfer : transaction.getTransfers()) {
+                        System.out.println(transfer.getAddress());
                         if (StringUtils.isNotBlank(transfer.getAddress())) {
                             if (transaction.getUnlockTime() != 0) {
                                 LOGGER.trace("Unlock time : " + transaction.getUnlockTime());

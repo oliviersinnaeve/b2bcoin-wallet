@@ -90,30 +90,30 @@ public class StatusTabView extends JPanel implements Observer {
         gbc_panel.gridy = 5;
         add(donationPanel, gbc_panel);
 
-        JButton resetButton = new JButton("Reset wallet");
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Resetting wallet");
-                actionController.stopBackgroundProcessesBeforeReset();
-                try {
-                    resetExecutor.execute(JsonRpcExecutor.EMPTY_PARAMS);
-                } catch (KnownJsonRpcException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-
-                actionController.startBackgroundProcessesAfterReset();
-            }
-        });
-
-        gbc_panel.gridx = 3;
-        gbc_panel.gridy = 7;
-        add(resetButton, gbc_panel);
+//        JButton resetButton = new JButton("Reset wallet");
+//        resetButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Resetting wallet");
+//                actionController.stopBackgroundProcessesBeforeReset();
+//                try {
+//                    resetExecutor.execute(JsonRpcExecutor.EMPTY_PARAMS);
+//                } catch (KnownJsonRpcException e1) {
+//                    e1.printStackTrace();
+//                }
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//                actionController.startBackgroundProcessesAfterReset();
+//            }
+//        });
+//
+//        gbc_panel.gridx = 3;
+//        gbc_panel.gridy = 7;
+//        add(resetButton, gbc_panel);
     }
 
 

@@ -4,6 +4,7 @@ import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.AbstractBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -12,7 +13,7 @@ import javax.swing.border.SoftBevelBorder;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-public class BalancePanel extends JPanel {
+public class BalancePanel extends AbstractBorderlessJPanel {
 
     private JLabel availableBalance;
     private JLabel lockedBalance;
@@ -23,10 +24,10 @@ public class BalancePanel extends JPanel {
     public BalancePanel() {
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
-        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        Border border = getBorder();
-        Border margin = new EmptyBorder(10,10,10,10);
-        setBorder(new CompoundBorder(border, margin));
+        //setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+//        Border border = getBorder();
+//        Border margin = new EmptyBorder(10,10,10,10);
+//        setBorder(new CompoundBorder(border, margin));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1};

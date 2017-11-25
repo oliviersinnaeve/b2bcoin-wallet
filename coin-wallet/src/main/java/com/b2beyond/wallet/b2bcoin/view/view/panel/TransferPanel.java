@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
-public class TransferPanel extends JPanel {
+public class TransferPanel extends AbstractBorderlessJPanel {
 
     private CreatePaymentTabView parent;
 
@@ -37,10 +37,10 @@ public class TransferPanel extends JPanel {
 
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
-        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        Border border = getBorder();
-        Border margin = new EmptyBorder(10,10,10,10);
-        setBorder(new CompoundBorder(border, margin));
+//        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+//        Border border = getBorder();
+//        Border margin = new EmptyBorder(10,10,10,10);
+//        setBorder(new CompoundBorder(border, margin));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1};
@@ -70,6 +70,7 @@ public class TransferPanel extends JPanel {
 
 
         NumberFormat amountFormat = NumberFormat.getNumberInstance();
+        amountFormat.setGroupingUsed(false);
         amountFormat.setMinimumFractionDigits(12);
         amountFormat.setMaximumFractionDigits(12);
         amount = new JFormattedTextField(amountFormat);

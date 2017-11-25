@@ -9,22 +9,30 @@ package com.b2beyond.wallet.b2bcoin.util;
  * compare to http://svn.terracotta.org/svn/tc/dso/tags/2.6.4/code/base/common/src/com/tc/util/runtime/Os.java
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
+import com.b2beyond.wallet.b2bcoin.view.view.SplashWindow;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.Socket;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public final class B2BUtil {
@@ -255,5 +263,50 @@ public final class B2BUtil {
             }
         }
         return 0;
+    }
+
+    public static void backupWallet(String fileLocation, String container, String timestamp) {
+        try {
+            String userHome = B2BUtil.getUserHome();
+            try {
+                String[] splitContainer = container.split("/");
+                String containerName = splitContainer[splitContainer.length - 1];
+
+                if (StringUtils.isNotBlank(timestamp)) {
+                    if (splitContainer.length == 1) {
+                        Files.copy(
+                                Paths.get(userHome + container),
+                                new FileOutputStream(fileLocation + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
+                    } else {
+                        Files.copy(
+                                Paths.get(container),
+                                new FileOutputStream(fileLocation + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
+                    }
+                } else {
+                    if (splitContainer.length == 1) {
+                        Files.copy(
+                                Paths.get(userHome + container),
+                                new FileOutputStream(fileLocation + B2BUtil.SEPARATOR + containerName));
+                    } else {
+                        Files.copy(
+                                Paths.get(container),
+                                new FileOutputStream(fileLocation + B2BUtil.SEPARATOR + containerName));
+                    }
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Icon getIcon() {
+        URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("icon.png");
+        if (splashScreenLocation != null) {
+            return new ImageIcon(splashScreenLocation);
+        }
+
+        throw new RuntimeException("icon not found");
     }
 }

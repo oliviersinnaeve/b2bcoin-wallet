@@ -5,6 +5,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractBorderlessJPanel;
 import org.apache.log4j.Logger;
 
 import javax.swing.JButton;
@@ -25,7 +26,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class AddressesTabView extends JPanel implements Observer {
+public class AddressesTabView extends AbstractBorderlessJPanel implements Observer {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 

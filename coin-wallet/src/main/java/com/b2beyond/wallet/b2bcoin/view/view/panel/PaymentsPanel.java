@@ -13,7 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
 
-public class PaymentsPanel extends JPanel {
+public class PaymentsPanel extends AbstractBorderlessJPanel {
 
     private JLabel numberOfPayments;
     private JLabel totalPaymentsAmount;
@@ -28,10 +28,10 @@ public class PaymentsPanel extends JPanel {
         setForeground(SystemColor.textInactiveText);
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
-        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        Border border = getBorder();
-        Border margin = new EmptyBorder(10,10,10,10);
-        setBorder(new CompoundBorder(border, margin));
+//        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+//        Border border = getBorder();
+//        Border margin = new EmptyBorder(10,10,10,10);
+//        setBorder(new CompoundBorder(border, margin));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1};

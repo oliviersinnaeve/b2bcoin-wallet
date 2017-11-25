@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -65,7 +66,7 @@ public class DaemonController {
                 PasswordPanel passwordPanel = new PasswordPanel(container);
 
                 JOptionPane.showMessageDialog(null, passwordPanel, "Enter wallet password",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.INFORMATION_MESSAGE, B2BUtil.getIcon());
 
                 password = passwordPanel.getPasswordField().getText();
             } catch (ConfigurationException | IOException e) {
@@ -113,32 +114,17 @@ public class DaemonController {
         walletDaemon.stop();
         coinDaemon.stop();
 
+        String timestamp = new SimpleDateFormat("dd-MM-yyyy-hh-mm").format(new Date());
+        LOGGER.info("Backing up for container : " + container + " : " + timestamp);
+        File userHomeBackupFiles = new File(userHome + "/backup/" + timestamp);
+        userHomeBackupFiles.mkdirs();
         try {
-            String timestamp = new SimpleDateFormat("dd-MM-yyyy-hh-mm").format(new Date());
-            LOGGER.info("Backing up for container : " + container + " : " + timestamp);
-            File userHomeBackupFiles = new File(userHome + "/backup/" + timestamp);
-            userHomeBackupFiles.mkdirs();
             walletProperties.save(new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + "coin-wallet-" + timestamp + ".conf"));
-
-            try {
-                String[] splitContainer = container.split("/");
-                String containerName = splitContainer[splitContainer.length - 1];
-
-                if (splitContainer.length == 1) {
-                    Files.copy(
-                            Paths.get(userHome + container),
-                            new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
-                } else {
-                    Files.copy(
-                            Paths.get(container),
-                            new FileOutputStream(userHomeBackupFiles + B2BUtil.SEPARATOR + containerName + "." + timestamp + ".bckp"));
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        } catch (Exception e) {
+        } catch (ConfigurationException | FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        B2BUtil.backupWallet(userHomeBackupFiles + B2BUtil.SEPARATOR, container, timestamp);
     }
 
     @Override

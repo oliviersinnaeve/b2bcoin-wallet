@@ -72,12 +72,12 @@ public class MainFrame extends JFrame implements Observer {
         this.setLocationRelativeTo(null);
 
         JPanel contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         contentPane.setLayout(new BorderLayout(0, 0));
         setContentPane(contentPane);
 
         JDesktopPane desktopPane = new JDesktopPane();
-        desktopPane.setBorder(null);
+        //desktopPane.setBorder(null);
         desktopPane.setBackground(SystemColor.window);
         contentPane.add(desktopPane, BorderLayout.CENTER);
         desktopPane.setLayout(new FormLayout(new ColumnSpec[] {
@@ -96,7 +96,7 @@ public class MainFrame extends JFrame implements Observer {
         desktopPane.add(splitPane, "2, 2, fill, fill");
 
         menu = new JPanel();
-        menu.setBorder(null);
+        //menu.setBorder(null);
         splitPane.setLeftComponent(menu);
         GridBagLayout gbl_Menu = new GridBagLayout();
         gbl_Menu.columnWidths = new int[] {150, 0};
@@ -108,7 +108,7 @@ public class MainFrame extends JFrame implements Observer {
 
         content = new JPanel();
         content.setBackground(B2BUtil.mainColor);
-        content.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+        //content.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
         splitPane.setRightComponent(content);
         content.setLayout(new CardLayout(0, 0));
 
@@ -120,6 +120,7 @@ public class MainFrame extends JFrame implements Observer {
 
         // Creat panel and add it to the parent panel !!
         JPanel footerPanel = new JPanel(gbl);
+        footerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPane.add(footerPanel, BorderLayout.SOUTH);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -224,7 +225,7 @@ public class MainFrame extends JFrame implements Observer {
         JPanel buttonShowOverviewPanel = new JPanel();
         buttonShowOverviewPanel.setBackground(B2BUtil.mainColor);
         buttonShowOverviewPanel.setOpaque(true);
-        buttonShowOverviewPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+        //buttonShowOverviewPanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
         GridBagConstraints gbc_buttonShowOverviewPanel = new GridBagConstraints();
         gbc_buttonShowOverviewPanel.fill = GridBagConstraints.BOTH;
         gbc_buttonShowOverviewPanel.gridx = 0;
@@ -240,7 +241,7 @@ public class MainFrame extends JFrame implements Observer {
         final JButton buttonShowOverview = new JButton(buttonCaption);
         buttonShowOverview.setIcon(icon);
         buttonShowOverview.setBackground(B2BUtil.mainColor);
-        buttonShowOverview.setBorder(null);
+        //buttonShowOverview.setBorder(null);
         buttonShowOverview.setOpaque(true);
         buttonShowOverview.setEnabled(enabled);
 

@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view.panel;
 
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import com.b2beyond.wallet.b2bcoin.util.ComponentFactory;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -10,7 +11,10 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -23,7 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class DonationPanel extends JPanel {
+public class DonationPanel extends AbstractBorderlessJPanel {
 
     /**
      * Create the panel.
@@ -31,10 +35,10 @@ public class DonationPanel extends JPanel {
     public DonationPanel() {
         setBackground(B2BUtil.mainColor);
         setToolTipText("This panel gives you some wallet you can donate to. The is purely made on private funds.");
-        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        Border border = getBorder();
-        Border margin = new EmptyBorder(10,10,10,10);
-        setBorder(new CompoundBorder(border, margin));
+//        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+//        Border border = getBorder();
+//        Border margin = new EmptyBorder(10,10,10,10);
+//        setBorder(new CompoundBorder(border, margin));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1, 1};
@@ -50,7 +54,7 @@ public class DonationPanel extends JPanel {
         gbc.gridy = 1;
         add(btcDonationAddressLabel, gbc);
 
-        JButton copyBtcAddress = new JButton("Copy address");
+        JButton copyBtcAddress = ComponentFactory.createSubButton("Copy address");
         copyBtcAddress.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,7 +76,7 @@ public class DonationPanel extends JPanel {
         gbc.gridy = 3;
         add(litecoinDonationAddressLabel, gbc);
 
-        JButton copyLtcAddress = new JButton("Copy address");
+        JButton copyLtcAddress = ComponentFactory.createSubButton("Copy address");
         copyLtcAddress.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
