@@ -7,6 +7,7 @@ import com.b2beyond.wallet.b2bcoin.view.view.panel.AboutPanel;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -16,6 +17,7 @@ import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 
 public class MenuBar extends JMenuBar {
@@ -69,16 +71,17 @@ public class MenuBar extends JMenuBar {
         backupWalletMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 System.setProperty("apple.awt.fileDialogForDirectories", "true");
-                FileDialog fd = new FileDialog(mainFrame, "Choose a directory", FileDialog.SAVE);
-                fd.setVisible(true);
-                String filename = fd.getDirectory() + fd.getFile();
-                System.setProperty("apple.awt.fileDialogForDirectories", "false");
 
-                if (fd.getFile() != null) {
-                    B2BUtil.backupWallet(filename, walletProperties.getString("container-file"), null);
+                final JFileChooser fc = new JFileChooser();
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int result = fc.showOpenDialog(mainFrame);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    B2BUtil.backupWallet(file.getAbsolutePath(), walletProperties.getString("container-file"), null);
 
                     JOptionPane.showMessageDialog(null,
-                            "You wallet has been backed up to directory : " + filename,
+                            "You wallet has been backed up to directory : " + file.getAbsolutePath(),
                             "Address backed up",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
