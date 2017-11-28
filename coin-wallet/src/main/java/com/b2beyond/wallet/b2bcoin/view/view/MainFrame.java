@@ -1,8 +1,8 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
@@ -23,18 +23,16 @@ import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.SoftBevelBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -64,6 +62,12 @@ public class MainFrame extends JFrame implements Observer {
 
         this.setTitle("B2BCoin GUI");
         this.setBackground(B2BUtil.mainColor);
+
+        URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("my-logo.ico");
+        if (splashScreenLocation != null) {
+            this.setIconImage(new ImageIcon(splashScreenLocation).getImage());
+        }
+
         Dimension minimumSize = new Dimension(applicationProperties.getInt("min-width"), applicationProperties.getInt("min-height"));
         this.setMinimumSize(minimumSize);
         this.setPreferredSize(minimumSize);
