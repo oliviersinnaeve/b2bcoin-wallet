@@ -26,12 +26,8 @@ public class PaymentsPanel extends AbstractBorderlessJPanel {
     public PaymentsPanel() {
         setName("paymentsPanel");
         setForeground(SystemColor.textInactiveText);
-        setBackground(B2BUtil.mainColor);
-        setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
-//        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-//        Border border = getBorder();
-//        Border margin = new EmptyBorder(10,10,10,10);
-//        setBorder(new CompoundBorder(border, margin));
+        setBackground(B2BUtil.panelColor);
+        setToolTipText("This panel gives you an overview on your payments, how many has been executed and yet to be executed.");
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1};
@@ -49,6 +45,7 @@ public class PaymentsPanel extends AbstractBorderlessJPanel {
         add(lblBalance, gbc);
 
         numberOfPayments = new JLabel("Loading ...");
+        numberOfPayments.setForeground(B2BUtil.textColor);
         numberOfPayments.setName("numberOfPayments");
         gbc.gridx = 3;
         gbc.gridy = 1;
@@ -61,6 +58,7 @@ public class PaymentsPanel extends AbstractBorderlessJPanel {
         add(lblLockedBalance, gbc);
 
         totalPaymentsAmount = new JLabel("Loading ...");
+        totalPaymentsAmount.setForeground(B2BUtil.textColor);
         totalPaymentsAmount.setName("totalPaymentsAmount");
         gbc.gridx = 3;
         gbc.gridy = 3;
@@ -73,6 +71,7 @@ public class PaymentsPanel extends AbstractBorderlessJPanel {
         add(lblUnconfirmedLockedBalance, gbc);
 
         totalPaymentsLockedAmount = new JLabel("Loading ...");
+        totalPaymentsLockedAmount.setForeground(B2BUtil.textColor);
         totalPaymentsLockedAmount.setName("totalPaymentsLockedAmount");
         gbc.gridx = 3;
         gbc.gridy = 5;

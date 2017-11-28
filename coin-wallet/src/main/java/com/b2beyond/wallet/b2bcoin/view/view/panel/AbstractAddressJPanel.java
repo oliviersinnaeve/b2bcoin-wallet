@@ -6,25 +6,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
 
-/**
- * Created by oliviersinnaeve on 14/09/17.
- */
+
 public abstract class AbstractAddressJPanel extends AbstractBorderlessJPanel implements ActionListener {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
@@ -55,21 +45,6 @@ public abstract class AbstractAddressJPanel extends AbstractBorderlessJPanel imp
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>();
         sorter.setRowFilter(filter);
         sorter.setModel(model);
-//        sorter.setComparator(1, new Comparator<String>() {
-//            @Override
-//            public int compare(String o1, String o2) {
-//                DateFormat writeFormat = new SimpleDateFormat();
-//                try {
-//                    Date date1 = writeFormat.parse(o1);
-//                    Date date2 = writeFormat.parse(o2);
-//                    return date2.compareTo(date1);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                return 0;
-//            }
-//        });
         table.setRowSorter(sorter);
     }
 

@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -78,7 +79,7 @@ public class MainFrame extends JFrame implements Observer {
 
         JDesktopPane desktopPane = new JDesktopPane();
         //desktopPane.setBorder(null);
-        desktopPane.setBackground(SystemColor.window);
+        desktopPane.setBackground(Color.WHITE);
         contentPane.add(desktopPane, BorderLayout.CENTER);
         desktopPane.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -92,7 +93,7 @@ public class MainFrame extends JFrame implements Observer {
         splitPane.setEnabled(false);
         splitPane.setDividerSize(0);
         splitPane.setOneTouchExpandable(false);
-        splitPane.setBackground(SystemColor.window);
+        splitPane.setBackground(Color.WHITE);
         desktopPane.add(splitPane, "2, 2, fill, fill");
 
         menu = new JPanel();
@@ -107,7 +108,7 @@ public class MainFrame extends JFrame implements Observer {
 
 
         content = new JPanel();
-        content.setBackground(B2BUtil.mainColor);
+        content.setBackground(Color.WHITE);
         //content.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
         splitPane.setRightComponent(content);
         content.setLayout(new CardLayout(0, 0));
@@ -120,6 +121,7 @@ public class MainFrame extends JFrame implements Observer {
 
         // Creat panel and add it to the parent panel !!
         JPanel footerPanel = new JPanel(gbl);
+        footerPanel.setBackground(Color.WHITE);
         footerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPane.add(footerPanel, BorderLayout.SOUTH);
 
@@ -163,7 +165,6 @@ public class MainFrame extends JFrame implements Observer {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Show card : " + button.getText());
                     CardLayout cl = (CardLayout) (content.getLayout());
                     cl.show(content, button.getText());
 

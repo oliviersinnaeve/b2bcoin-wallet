@@ -40,8 +40,8 @@ public class SplashWindow extends JWindow {
 
         // Adding to JPanel
         JLabel authorLabel = new JLabel("Author : Olivier Sinnaeve");
-        JLabel logoDesignerLabel = new JLabel("Logo Designer : Pitchie");
-        JLabel versionLabel = new JLabel("Wallet version 1.0-SNAPSHOT");
+        JLabel logoDesignerLabel = new JLabel("https://b2bcoin.xyz");
+        JLabel versionLabel = new JLabel("Wallet version 1.0.0");
         JLabel copyrightLabel = new JLabel("Copyright @ B2B Coin");
         JPanel centerPanel = new JpanelWithBackground(imageIcon.getImage());
         centerPanel.setLayout(null);
@@ -51,9 +51,10 @@ public class SplashWindow extends JWindow {
         centerPanel.add(versionLabel);
 
         // Setting colors
-        authorLabel.setForeground(B2BUtil.splashTextColor);
-        logoDesignerLabel.setForeground(B2BUtil.splashTextColor);
-        versionLabel.setForeground(B2BUtil.splashTextColor);
+        authorLabel.setForeground(B2BUtil.selectedColor);
+        logoDesignerLabel.setForeground(B2BUtil.selectedColor);
+        versionLabel.setForeground(B2BUtil.selectedColor);
+        copyrightLabel.setForeground(B2BUtil.selectedColor);
 
         // Setting bounds
         authorLabel.setBounds(270, 20, 210, 25);

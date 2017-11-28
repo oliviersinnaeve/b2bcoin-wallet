@@ -25,12 +25,8 @@ public class ServerPanel extends AbstractBorderlessJPanel {
      * Create the panel.
      */
     public ServerPanel() {
-        setBackground(B2BUtil.mainColor);
-        setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
-//        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-//        Border border = getBorder();
-//        Border margin = new EmptyBorder(10,10,10,10);
-//        setBorder(new CompoundBorder(border, margin));
+        setBackground(B2BUtil.panelColor);
+        setToolTipText("This panel gives you an overview of the network.");
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1};
@@ -47,6 +43,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblPeers, gbc);
 
         peers = new JLabel("Loading ...");
+        peers.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(peers, gbc);
@@ -58,6 +55,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblLastBlockHash, gbc);
 
         lastBlockHash = new JLabel("Loading ...");
+        lastBlockHash.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 3;
         add(lastBlockHash, gbc);
@@ -69,6 +67,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblHeight, gbc);
 
         blockHeight = new JLabel("Loading ...");
+        blockHeight.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 5;
         add(blockHeight, gbc);
@@ -80,6 +79,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblCoinsInNetwork, gbc);
 
         coinsInNetwork = new JLabel("Loading ...");
+        coinsInNetwork.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 7;
         add(coinsInNetwork, gbc);
@@ -91,6 +91,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblBaseReward, gbc);
 
         baseReward = new JLabel("Loading ...");
+        baseReward.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 9;
         add(baseReward, gbc);
@@ -102,6 +103,7 @@ public class ServerPanel extends AbstractBorderlessJPanel {
         add(lblDifficulty, gbc);
 
         difficulty = new JLabel("Loading ...");
+        difficulty.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 11;
         add(difficulty, gbc);

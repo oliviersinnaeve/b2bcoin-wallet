@@ -5,6 +5,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ngx-bootstrap';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { MarkdownModule } from 'angular2-markdown';
+import { AdsenseModule } from 'ng2-adsense';
 
 import { routing }       from './escrow.routing';
 import { Escrow } from './escrow.component';
@@ -23,6 +24,11 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
         ModalModule.forRoot(),
         MarkdownModule.forRoot(),
         SimpleNotificationsModule.forRoot(),
+        // shown passing optional global defaults
+        AdsenseModule.forRoot({
+            adClient: 'ca-pub-5721689054603180',
+            adSlot: 7693847990,
+        }),
         routing
     ],
     declarations: [

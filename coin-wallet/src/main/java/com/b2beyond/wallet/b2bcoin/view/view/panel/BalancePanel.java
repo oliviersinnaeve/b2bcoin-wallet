@@ -22,7 +22,7 @@ public class BalancePanel extends AbstractBorderlessJPanel {
      * Create the panel.
      */
     public BalancePanel() {
-        setBackground(B2BUtil.mainColor);
+        setBackground(B2BUtil.panelColor);
         setToolTipText("This panel gives you your spendable balance and your locked balance. The locked balance needs 10 blocks to be confirmed.");
         //setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 //        Border border = getBorder();
@@ -44,6 +44,7 @@ public class BalancePanel extends AbstractBorderlessJPanel {
         add(lblBalance, gbc);
 
         availableBalance = new JLabel("Loading ...");
+        availableBalance.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(availableBalance, gbc);
@@ -55,6 +56,7 @@ public class BalancePanel extends AbstractBorderlessJPanel {
         add(lblLockedBalance, gbc);
 
         lockedBalance = new JLabel("Loading ...");
+        lockedBalance.setForeground(B2BUtil.textColor);
         gbc.gridx = 3;
         gbc.gridy = 3;
         add(lockedBalance, gbc);

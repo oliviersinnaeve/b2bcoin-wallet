@@ -33,7 +33,7 @@ public class DonationPanel extends AbstractBorderlessJPanel {
      * Create the panel.
      */
     public DonationPanel() {
-        setBackground(B2BUtil.mainColor);
+        setBackground(B2BUtil.panelColor);
         setToolTipText("This panel gives you some wallet you can donate to. The is purely made on private funds.");
 //        setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 //        Border border = getBorder();

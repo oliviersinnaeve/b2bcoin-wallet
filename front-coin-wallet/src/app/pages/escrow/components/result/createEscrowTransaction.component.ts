@@ -65,7 +65,6 @@ export class CreateEscrowTransaction implements OnInit {
                 this.pollRequest(result);
             },
             error => {
-                this.loading = false;
                 if (error.status === 401) {
                     this.userState.handleError(error, this.createEscrowTransaction, this);
                 }
@@ -90,7 +89,7 @@ export class CreateEscrowTransaction implements OnInit {
                     }
                 }
             );
-        }, 1000, result);
+        }, 60000, result);
     }
 
     public newTransaction() {
@@ -132,7 +131,6 @@ export class CreateEscrowTransaction implements OnInit {
 
             if (t.total <= 0) {
                 clearInterval(timeinterval);
-
             }
         }
 

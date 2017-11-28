@@ -14,17 +14,14 @@ import org.apache.log4j.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.MenuComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -203,7 +200,7 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
                     JOptionPane.YES_NO_OPTION);
 
             if (result == 0) {
-                Payment payment = null;
+                Payment payment;
                 try {
                     payment = paymentController.makePayment(input);
 

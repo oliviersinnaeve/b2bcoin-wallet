@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 
@@ -63,6 +64,8 @@ public class B2BWallet extends MainFrame {
     private static int loadingCounter = 1;
 
     public static void main(String[] args) {
+        //Locale.setDefault(Locale.GERMAN);
+
         try {
             for (UIManager.LookAndFeelInfo lnf :
                     UIManager.getInstalledLookAndFeels()) {
@@ -178,7 +181,7 @@ public class B2BWallet extends MainFrame {
         LOGGER.info("Controllers started.");
 
         LOGGER.info("Creating tab view instances ...");
-        final StatusTabView statusTabView = new StatusTabView(actionController, addressesController, actionController.getWalletRpcController().getResetExecutor(), actionController.getWalletRpcController().getTransactionExecutor());
+        final StatusTabView statusTabView = new StatusTabView(actionController, addressesController, actionController.getWalletRpcController().getTransactionExecutor());
         final TransactionsTabView transactionsTabView = new TransactionsTabView(actionController.getWalletRpcController().getTransactionExecutor());
         final AddressesTabView addressesTabView = new AddressesTabView(addressesController);
         final PaymentTabView paymentTabView = new PaymentTabView();
@@ -229,7 +232,7 @@ public class B2BWallet extends MainFrame {
         loadWindow.setProgress(loadingCounter++);
 
         RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
-        TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 5000);
+        TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 10000);
         UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
 
         actionController.getWalletRpcController().addPollers(addressesPoller);

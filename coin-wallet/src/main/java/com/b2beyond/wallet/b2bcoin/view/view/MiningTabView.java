@@ -3,6 +3,7 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.view.controller.MiningController;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class MiningTabView extends JPanel implements ActionListener, Observer {
+public class MiningTabView extends AbstractWhitePanel implements ActionListener, Observer {
 
     private MiningController miningController;
 

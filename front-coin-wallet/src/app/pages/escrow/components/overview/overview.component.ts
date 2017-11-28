@@ -142,7 +142,7 @@ export class Overview implements OnInit {
                     }
                 }
             );
-        }, 5000, this.escrowTransaction);
+        }, 60000, this.escrowTransaction);
     }
 
     public getTimeRemaining(endtime) {

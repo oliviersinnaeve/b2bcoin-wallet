@@ -1,6 +1,5 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
@@ -8,7 +7,6 @@ import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractBorderlessJPanel;
 import org.apache.log4j.Logger;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,10 +16,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -68,7 +64,9 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
 
 
         totalAmountLabel = new JLabel("Loading ...");
+        totalAmountLabel.setBackground(Color.white);
         totalAmountLockedLabel = new JLabel("Loading ...");
+        totalAmountLockedLabel.setBackground(Color.white);
         JPanel amountPanel = new JPanel();
         amountPanel.add(totalAmountLabel);
         amountPanel.add(totalAmountLockedLabel);

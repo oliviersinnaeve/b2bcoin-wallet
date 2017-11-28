@@ -3,7 +3,6 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transaction;
@@ -11,10 +10,12 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItem;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.DonationPanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.PaymentsPanel;
@@ -22,17 +23,13 @@ import com.b2beyond.wallet.b2bcoin.view.view.panel.ServerPanel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
 
-public class StatusTabView extends JPanel implements Observer {
+public class StatusTabView extends AbstractWhitePanel implements Observer {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
@@ -52,7 +49,6 @@ public class StatusTabView extends JPanel implements Observer {
 
     public StatusTabView(final ActionController actionController,
                          final AddressesController addressController,
-                         final JsonRpcExecutor<Void> resetExecutor,
                          final JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor) {
         this.actionController = actionController;
         this.addressController= addressController;
@@ -89,31 +85,6 @@ public class StatusTabView extends JPanel implements Observer {
         gbc_panel.gridx = 1;
         gbc_panel.gridy = 5;
         add(donationPanel, gbc_panel);
-
-//        JButton resetButton = new JButton("Reset wallet");
-//        resetButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Resetting wallet");
-//                actionController.stopBackgroundProcessesBeforeReset();
-//                try {
-//                    resetExecutor.execute(JsonRpcExecutor.EMPTY_PARAMS);
-//                } catch (KnownJsonRpcException e1) {
-//                    e1.printStackTrace();
-//                }
-//                try {
-//                    Thread.sleep(5000);
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//
-//                actionController.startBackgroundProcessesAfterReset();
-//            }
-//        });
-//
-//        gbc_panel.gridx = 3;
-//        gbc_panel.gridy = 7;
-//        add(resetButton, gbc_panel);
     }
 
 

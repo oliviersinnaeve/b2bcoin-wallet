@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 
 
 public class CoinUtil {
@@ -22,13 +23,18 @@ public class CoinUtil {
     }
 
     public static String getTextForLong(Long amount) {
+        NumberFormat amountFormat = NumberFormat.getNumberInstance();
+        amountFormat.setGroupingUsed(false);
+        amountFormat.setMinimumFractionDigits(12);
+        amountFormat.setMaximumFractionDigits(12);
+
         String text = amount.toString().replace(",", ".");
         LOGGER.info("getTextForLong : Converting " + text + " to long");
         BigDecimal decimal = new BigDecimal(amount.toString());
         decimal = decimal.setScale(12, RoundingMode.UP);
         decimal = decimal.divide(DIVIDE_BY, RoundingMode.UP);
         LOGGER.info("getTextForLong : Converted " + text + " to long : " + decimal.toPlainString());
-        return decimal.toPlainString();
+        return amountFormat.format(decimal.doubleValue());
     }
 
 }
