@@ -2,12 +2,17 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
-import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
+import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractBorderlessJPanel;
+import com.b2beyond.wallet.b2bcoin.view.view.table.ButtonColumn;
 import org.apache.log4j.Logger;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,6 +23,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -26,7 +32,7 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
-    private AddressesController controller;
+    private ActionController controller;
 
     private JTable addressesTable;
     private DefaultTableModel addressesTableModel;
@@ -35,10 +41,10 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
     private JLabel totalAmountLockedLabel;
 
 
-    String[] columnNames = { "Address", "Available", "Locked" };
+    String[] columnNames = { "Address", "Available", "Locked", "" };
 
 
-    public AddressesTabView(AddressesController controller) {
+    public AddressesTabView(ActionController controller) {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
 
@@ -97,8 +103,38 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
                 if (addressBalance != null) {
                     fullAmount += addressBalance.getAvailableBalance();
                     fullLockedAmount += addressBalance.getLockedAmount();
-                    Object[] rowData = {address, CoinUtil.getTextForLong(addressBalance.getAvailableBalance()), CoinUtil.getTextForLong(addressBalance.getLockedAmount())};
+
+                    Action delete = new AbstractAction() {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            JTable table = (JTable)e.getSource();
+                            int modelRow = Integer.valueOf( e.getActionCommand() );
+                            String address = (String)table.getModel().getValueAt(modelRow, 0);
+                            AddressBalance balance = controller.getBalance(address);
+                            if (balance != null && balance.getAvailableBalance() == 0 && balance.getLockedAmount() == 0) {
+                                Success success = controller.deleteAddress(address);
+                                JOptionPane.showMessageDialog(null,
+                                        "The address has been deleted with response : " + success.getStatus(),
+                                        "Address deleted",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                ((DefaultTableModel)table.getModel()).removeRow(modelRow);
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "There are still funds on the address, transfer them first.",
+                                        "Address deletion error",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    };
+
+                    Object[] rowData = {
+                            address,
+                            CoinUtil.getTextForLong(addressBalance.getAvailableBalance()), CoinUtil.getTextForLong(addressBalance.getLockedAmount()),
+                            "Delete"
+                    };
                     addressesTableModel.addRow(rowData);
+
+                    new ButtonColumn(addressesTable, delete, 3);
                 }
             }
 

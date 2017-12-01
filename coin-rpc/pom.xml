@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.b2beyond</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,6 +26,11 @@
             <groupId>com.jgoodies</groupId>
             <artifactId>jgoodies-forms</artifactId>
             <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.2.1</version>
         </dependency>
     </dependencies>
 

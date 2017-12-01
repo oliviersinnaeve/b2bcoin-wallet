@@ -1,6 +1,10 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AboutPanel;
@@ -18,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MenuBar extends JMenuBar {
@@ -88,6 +94,38 @@ public class MenuBar extends JMenuBar {
             }
         });
 
+        // Get spend keys sub menu
+        JMenuItem spendKeysMenuItem = new JMenuItem("Spend keys", icon);
+        spendKeysMenuItem.setToolTipText("Get your send keys");
+        spendKeysMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    Addresses addresses  = actionController.getWalletRpcController().getAddressesExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+
+                    String html = "<html><body>";
+                    for (String address: addresses.getAddresses()) {
+                        SpendKeys keys = actionController.getSpendKeys(address);
+
+                        html += "<h3>" + address + "</h3>";
+                        html += "<textarea rows='2' cols='75'  style='overflow:auto'>" +
+                                "Spend public key : " + keys.getSpendPublicKey() +
+                                "&#13;&#10;" +
+                                "Spend secret key : " + keys.getSpendSecretKey() +
+                                "</textarea>";
+                    }
+                    html += "</body></html>";
+
+                    JOptionPane.showMessageDialog(
+                            mainFrame,
+                            html,
+                            "Overview of spending keys",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } catch (KnownJsonRpcException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         // Help sub menu
         JMenuItem aboutMenuItem = new JMenuItem("About the wallet");
         aboutMenuItem.addActionListener(new ActionListener() {
@@ -103,6 +141,7 @@ public class MenuBar extends JMenuBar {
         file.add(exitMenuItem);
 
         wallet.add(backupWalletMenuItem);
+        wallet.add(spendKeysMenuItem);
         wallet.add(resetWalletMenuItem);
         wallet.add(createNewAddressMenuItem);
 

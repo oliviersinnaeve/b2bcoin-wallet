@@ -16,7 +16,6 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
-import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
 import com.b2beyond.wallet.b2bcoin.view.controller.PaymentController;
 import com.b2beyond.wallet.b2bcoin.view.controller.PoolMiningController;
 import com.b2beyond.wallet.b2bcoin.view.controller.SoloMiningController;
@@ -96,9 +95,8 @@ public class B2BWallet extends MainFrame {
 
         B2BUtil.copyConfigsOnRun();
 
-        loadingFrame();
-        loadWindow.setProgress(loadingCounter++);
         applicationProperties = new PropertiesLoader("application.config").getProperties();
+        loadingFrame(applicationProperties.getString("version"));
         loadWindow.setProgress(loadingCounter++);
         walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
@@ -165,11 +163,7 @@ public class B2BWallet extends MainFrame {
         new Thread(new DaemonPortChecker(walletDaemonProperties)).start();
 
         LOGGER.info("Starting controllers ...");
-        AddressesController addressesController = new AddressesController(
-                actionController.getWalletRpcController().getCreateAddressExecutor(),
-                actionController.getWalletRpcController().getBalanceExecutor());
-        PaymentController paymentController = new PaymentController(
-                actionController.getWalletRpcController().getPaymentExecutor());
+        PaymentController paymentController = new PaymentController(actionController);
         PoolMiningController miningController = new PoolMiningController(
                 applicationProperties,
                 B2BUtil.getOperatingSystem());
@@ -181,9 +175,9 @@ public class B2BWallet extends MainFrame {
         LOGGER.info("Controllers started.");
 
         LOGGER.info("Creating tab view instances ...");
-        final StatusTabView statusTabView = new StatusTabView(actionController, addressesController, actionController.getWalletRpcController().getTransactionExecutor());
+        final StatusTabView statusTabView = new StatusTabView(actionController);
         final TransactionsTabView transactionsTabView = new TransactionsTabView(actionController.getWalletRpcController().getTransactionExecutor());
-        final AddressesTabView addressesTabView = new AddressesTabView(addressesController);
+        final AddressesTabView addressesTabView = new AddressesTabView(actionController);
         final PaymentTabView paymentTabView = new PaymentTabView();
         final CreatePaymentTabView createPaymentTabView = new CreatePaymentTabView(paymentController);
         final MiningTabView miningTabView = new MiningTabView(miningController, applicationProperties);
@@ -268,10 +262,10 @@ public class B2BWallet extends MainFrame {
         this.setVisible(true);
     }
 
-    private static void loadingFrame() {
+    private static void loadingFrame(String version) {
         URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
         if (splashScreenLocation != null) {
-            loadWindow = new SplashWindow(new ImageIcon(splashScreenLocation));
+            loadWindow = new SplashWindow(new ImageIcon(splashScreenLocation), version);
         }
         loadWindow.setLocationRelativeTo(null);
         loadWindow.setProgressMax(10);

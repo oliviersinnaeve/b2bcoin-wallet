@@ -20,9 +20,11 @@ public class SplashWindow extends JWindow {
     FlowLayout southPanelFlowLayout = new FlowLayout();
     JProgressBar progressBar = new JProgressBar();
     ImageIcon imageIcon;
+    String version;
 
-    public SplashWindow(ImageIcon imageIcon) {
+    public SplashWindow(ImageIcon imageIcon, String version) {
         this.imageIcon = imageIcon;
+        this.version = version;
         try {
             jbInit();
         }
@@ -41,7 +43,7 @@ public class SplashWindow extends JWindow {
         // Adding to JPanel
         JLabel authorLabel = new JLabel("Author : Olivier Sinnaeve");
         JLabel logoDesignerLabel = new JLabel("https://b2bcoin.xyz");
-        JLabel versionLabel = new JLabel("Wallet version 1.0.0");
+        JLabel versionLabel = new JLabel("Wallet version " + version);
         JLabel copyrightLabel = new JLabel("Copyright @ B2B Coin");
         JPanel centerPanel = new JpanelWithBackground(imageIcon.getImage());
         centerPanel.setLayout(null);

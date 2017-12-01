@@ -113,9 +113,9 @@ public class PaymentInput {
         index = 0;
         for (String key : getTransfers().keySet()) {
             Long amount = getTransfers().get(key);
-            if (index == 0) {
-                amount += this.getFee();
-            }
+//            if (index == 0) {
+//                amount += this.getFee();
+//            }
             params += "        {\n" +
                     "            \"amount\":" + amount + ",\n" +
                     "            \"address\":\"" + key + "\"\n" +

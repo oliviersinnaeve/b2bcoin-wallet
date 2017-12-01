@@ -7,6 +7,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
@@ -20,6 +21,7 @@ import java.util.List;
 public class WalletRpcController {
 
     private JsonRpcExecutor<ViewSecretKey> viewSecretKeyExecutor;
+    private JsonRpcExecutor<SpendKeys> spendKeysExecutor;
     private JsonRpcExecutor<Status> statusExecutor;
     private JsonRpcExecutor<Address> createAddressExecutor;
     private JsonRpcExecutor<Success> deleteAddressExecutor;
@@ -37,6 +39,7 @@ public class WalletRpcController {
 
     public WalletRpcController(String baseUrl) {
         viewSecretKeyExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getViewKey", ViewSecretKey.class);
+        spendKeysExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getSpendKeys", SpendKeys.class);
         statusExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getStatus", Status.class);
         createAddressExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "createAddress", Address.class);
         deleteAddressExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "deleteAddress", Success.class);
@@ -70,6 +73,10 @@ public class WalletRpcController {
 
     public JsonRpcExecutor<ViewSecretKey> getViewSecretKeyExecutor() {
         return viewSecretKeyExecutor;
+    }
+
+    public JsonRpcExecutor<SpendKeys> getSpendKeysExecutor() {
+        return spendKeysExecutor;
     }
 
     public JsonRpcExecutor<Status> getStatusExecutor() {

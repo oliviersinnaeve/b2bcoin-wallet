@@ -5,6 +5,9 @@ import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
+import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import org.apache.log4j.Logger;
@@ -95,6 +98,42 @@ public class ActionController {
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
+        }
+    }
+
+    public SpendKeys getSpendKeys(String address) {
+        try {
+            return walletRpcController.getSpendKeysExecutor().execute("\"params\": {\"address\": \"" + address + "\"}");
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    public AddressBalance getBalance(String address) {
+        LOGGER.info("Get address balance : " + address);
+
+        try {
+            return this.walletRpcController.getBalanceExecutor().execute("\"params\": {" +
+                    "\"address\": \"" + address + "\"" +
+                    "}");
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Success deleteAddress(String address) {
+        try {
+            return this.walletRpcController.getDeleteAddressExecutor().execute("\"params\": {" +
+                "\"address\": \"" + address + "\"" +
+            "}");
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

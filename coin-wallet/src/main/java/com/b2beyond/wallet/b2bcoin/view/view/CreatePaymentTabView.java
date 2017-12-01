@@ -205,11 +205,6 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
                     payment = paymentController.makePayment(input);
 
                     if (payment != null) {
-                        JOptionPane.showMessageDialog(this,
-                                "Payment was successfully executed.",
-                                "Payment success",
-                                JOptionPane.INFORMATION_MESSAGE);
-
                         for (TransferPanel tmpTransfer : transfers) {
                             transferPanel.remove(tmpTransfer);
                         }
@@ -219,11 +214,6 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
                         TransferPanel newPanel = new TransferPanel(false, this);
                         transfers.add(newPanel);
                         transferPanel.add(newPanel);
-                    } else {
-                        JOptionPane.showMessageDialog(null,
-                                "Failed to execute payment, retry later ...",
-                                "Fatal error",
-                                JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (KnownJsonRpcException e1) {
                     JOptionPane.showMessageDialog(null,

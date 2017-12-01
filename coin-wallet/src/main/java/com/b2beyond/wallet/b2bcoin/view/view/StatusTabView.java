@@ -1,6 +1,5 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
@@ -14,7 +13,6 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
-import com.b2beyond.wallet.b2bcoin.view.controller.AddressesController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.DonationPanel;
@@ -34,8 +32,6 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
     private ActionController actionController;
-    private AddressesController addressController;
-    private JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor;
 
     private String lastBlockHash;
 
@@ -47,12 +43,8 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
     private long fullPayedAmount = 0;
 
 
-    public StatusTabView(final ActionController actionController,
-                         final AddressesController addressController,
-                         final JsonRpcExecutor<SingleTransactionItem> transactionItemsJsonRpcExecutor) {
+    public StatusTabView(final ActionController actionController) {
         this.actionController = actionController;
-        this.addressController= addressController;
-        this.transactionItemsJsonRpcExecutor = transactionItemsJsonRpcExecutor;
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{1, 1, 1, 1, 1};
@@ -112,7 +104,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
             long fullLockedAmount = 0;
 
             for (String address: addresses.getAddresses()) {
-                AddressBalance addressBalance = addressController.getBalance(address);
+                AddressBalance addressBalance = actionController.getBalance(address);
 
                 if (addressBalance != null) {
                     fullAmount += addressBalance.getAvailableBalance();
@@ -139,7 +131,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
         for (String hash : transactionItems.getTransactionHashes()) {
             SingleTransactionItem transactionItem;
             try {
-                transactionItem = transactionItemsJsonRpcExecutor.execute("\"params\":{  " +
+                transactionItem = actionController.getWalletRpcController().getTransactionExecutor().execute("\"params\":{  " +
                         "     \"transactionHash\":\"" + hash + "\"" +
                         "  }");
                 TransactionItem item = new TransactionItem();
