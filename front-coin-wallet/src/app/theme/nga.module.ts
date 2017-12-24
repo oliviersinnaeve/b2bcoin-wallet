@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgUploaderModule } from 'ngx-uploader';
 
+import { TranslateModule } from 'ng2-translate';
+
 import {
   BaThemeConfig
 } from './theme.config';
@@ -123,6 +125,7 @@ const NGA_VALIDATORS = [
         FormsModule,
         ReactiveFormsModule,
         NgUploaderModule,
+        TranslateModule.forRoot()
     ],
     exports: [
         ...NGA_PIPES,

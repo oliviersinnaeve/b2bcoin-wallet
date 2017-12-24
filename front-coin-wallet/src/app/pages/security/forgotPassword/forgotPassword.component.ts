@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { EmailValidator } from '../../../theme/validators';
 
+import { TranslateService } from 'ng2-translate';
+
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
 import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
 
@@ -29,16 +31,22 @@ export class ForgotPassword {
     constructor (private fb: FormBuilder,
                  private userState: UserState,
                  private userApi: UserApi,
-                 private router: Router) {
+                 private router: Router,
+                 private translate: TranslateService) {
         this.form = fb.group({
             'userId': ['', Validators.compose([Validators.required, EmailValidator.validate])]
         });
 
         this.userId = this.form.controls['userId'];
+
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
     public onSubmit (values: any): void {
-        console.log("Submitting password forgot email", values);
+        //console.log("Submitting password forgot email", values);
         this.messages = [];
         this.errors = [];
 

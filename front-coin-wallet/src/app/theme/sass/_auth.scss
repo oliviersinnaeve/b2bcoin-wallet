@@ -11,7 +11,12 @@ $text-color: #ffffff;
 }
 
 .auth-block {
-  width: 540px;
+
+  background-image: url("/assets/img/B2B-loginBG.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  width: 640px;
   margin: 0 auto;
   border-radius: 5px;
   color: #fff;
@@ -43,11 +48,28 @@ $text-color: #ffffff;
   .form-group {
     margin-bottom: 12px;
   }
+
+  .circle {
+    background: #fff;
+    position: absolute;
+    display: inline-block;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    margin-left: 20px;
+  }
+
+  .circle > img {
+    width: 78px;
+    margin-left: 21px;
+    margin-top: 19px;
+  }
 }
 
 .auth-input {
   width: 300px;
   margin-bottom: 24px;
+  background-color: #fff;
   input {
     display: block;
     width: 100%;
@@ -71,7 +93,8 @@ a.forgot-pass {
   display: block;
   font-size: 16px;
   text-align: center;
-  margin-bottom: 33px;
+  margin-bottom: 15px;
+  margin-right: -30px;
 }
 
 .auth-sep {
@@ -123,4 +146,13 @@ a.forgot-pass {
 
 .btn-auth {
   color: #ffffff !important;
+  float: right;
+}
+
+.login-title {
+  font-size: 32px;
+}
+
+.login-sign-in {
+  font-size: 18px;
 }

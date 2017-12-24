@@ -1,18 +1,22 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
+import { WalletService } from '../../../pages/walletService.service';
+
 @Pipe({ name: "b2bCurrency" })
 export class B2BCurrencyPipe implements PipeTransform {
 
     private DECIMAL_SEPARATOR: string;
     private THOUSANDS_SEPARATOR: string;
 
-    constructor() {
+    constructor(
+        private walletService: WalletService
+    ) {
         // TODO comes from configuration settings
         this.DECIMAL_SEPARATOR = ".";
         this.THOUSANDS_SEPARATOR = "";
     }
 
-    transform(value: number | string, fractionSize: number = 12): string {
+    transform(value: number | string): string {
         console.log("Transforming value");
         var floatValue;
 
@@ -22,14 +26,14 @@ export class B2BCurrencyPipe implements PipeTransform {
             floatValue = value;
         }
 
-        floatValue *= 1000000000000;
-        floatValue /= 1000000000000;
-        return floatValue.toFixed(fractionSize);
+        floatValue *= this.walletService.selectedCoin.convertAmount;
+        floatValue /= this.walletService.selectedCoin.convertAmount;
+        return floatValue.toFixed(this.walletService.selectedCoin.fractionDigits);
     }
 
-    parse(value: string, fractionSize: number = 12): string {
+    parse(value: string): string {
         console.log("Parsing value");
-        return ((parseFloat(value) * 1000000000000) / 1000000000000).toFixed(fractionSize);
+        return ((parseFloat(value) * this.walletService.selectedCoin.convertAmount) / this.walletService.selectedCoin.convertAmount).toFixed(this.walletService.selectedCoin.fractionDigits);
     }
 
 }

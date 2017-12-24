@@ -2,8 +2,8 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { MarkdownModule } from 'angular2-markdown';
+import { AdsenseModule } from 'ng2-adsense';
 
 import { ModalModule } from 'ngx-bootstrap';
 
@@ -18,7 +18,11 @@ import { Overview } from './components/overview/overview.component';
         NgaModule,
         ModalModule.forRoot(),
         MarkdownModule.forRoot(),
-        SimpleNotificationsModule.forRoot(),
+        // shown passing optional global defaults
+        AdsenseModule.forRoot({
+            adClient: 'ca-pub-5721689054603180',
+            adSlot: 6949772221,
+        }),
         routing
     ],
     declarations: [

@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.b2beyond</groupId>
             <artifactId>coin-rpc</artifactId>
-            <version>1.0.1</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -74,6 +74,7 @@
 
                                 <configuration>
                                     <generateDiskImageFile>true</generateDiskImageFile>
+                                    <diskImageFile>target/b2bcoin-wallet-mac</diskImageFile>
                                     <iconFile>src/main/resources/my-logo.icns</iconFile>
                                     <includeApplicationsSymlink>true</includeApplicationsSymlink>
                                     <version>1.0</version>

@@ -1,12 +1,19 @@
 <div class="page-top clearfix" baScrollPosition maxHeight="50" (scrollChange)="scrolledChanged($event)"
      [ngClass]="{scrolled: isScrolled}">
-    <a routerLink="/pages/dashboard" class="al-logo clearfix"><span>b2b-</span>wallet</a>
-    <a href (click)="toggleMenu()" class="collapse-menu-link ion-navicon"></a>
+    <a routerLink="/pages/dashboard/mainWallet" class="al-logo clearfix">
+        <img class="top-logo-img img-responsive" src="https://b2bcoin.xyz/icons/B2Bweb-icon-logo-white.svg" width="48px">
+        <span class="top-text">B2B Coin Multi - Wallet</span>
+    </a>
+    <a href (click)="toggleMenu()" class="collapse-menu-link ion-navicon top-menu-toggle" style="color: white"></a>
 
-    <div class="search">
-        <a (click)="startSearch()" style="color: #ffffff"><i class="fa fa-search"></i></a>
-        <input type="text" [(ngModel)]="transactionsService.searchString" placeholder="Search for transaction or block ...">
-    </div>
+    <!--<div class="search">-->
+        <!--<a (click)="startSearch()" style="color: #ffffff"><i class="fa fa-search"></i></a>-->
+        <!--<input type="text" [(ngModel)]="transactionsService.searchString" placeholder="Search for transaction or block ...">-->
+    <!--</div>-->
+
+    <!--<select class="row-spacer-15" [(ngModel)]="transactionsService.coin">-->
+        <!--<option *ngFor="let coin of walletService.coins" [ngValue]="coin">{{coin.name}}</option>-->
+    <!--</select>-->
 
     <div class="user-profile clearfix">
         <div class="dropdown al-userId-profile">

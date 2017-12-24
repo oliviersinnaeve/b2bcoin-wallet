@@ -33,6 +33,8 @@ export interface EscrowTransaction {
 
     sellReceived?: boolean;
 
+    sellPaid?: boolean;
+
     buyStartTransaction?: Date;
 
     buyEndTransaction?: Date;
@@ -47,11 +49,17 @@ export interface EscrowTransaction {
 
     buyReceived?: boolean;
 
+    buyPaid?: boolean;
+
     intermediateSellAddress?: string;
 
     intermediateBuyAddress?: string;
 
     locked?: boolean;
+
+    processing?: boolean;
+
+    payable?: boolean;
 
     totalSellAmount?: number;
 

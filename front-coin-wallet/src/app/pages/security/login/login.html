@@ -1,59 +1,86 @@
 <div class="auth-main">
+
     <div class="auth-block">
-        <h1>Sign in to B2B Coin Wallet</h1>
-        <a routerLink="/register" class="auth-link btn btn-default btn-auth">New to B2B Coin Wallet? Sign up!</a>
 
         <div class="col-md-12">
-            <div class="error" *ngFor="let message of messages">{{message}}</div>
+            <span class="circle">
+                <img class="heading-logo center" src="https://b2bcoin.xyz/symbols/symbol_128x128.png">
+            </span>
+        </div>
+
+        <div class="col-md-4">&nbsp;</div>
+        <div class="col-md-8 row-spacer-25">
+            <div class="login-title">B2B Coin Multi - Wallet</div>
+            <div class="login-sign-in row-spacer-10">{{'SIGN_IN' | translate}}.</div>
+        </div>
+
+        <div class="col-md-12">
+            <a routerLink="/register" class="auth-link btn btn-default btn-auth row-spacer-15">{{'NEW_SIGN_UP' | translate}}!</a>
+        </div>
+
+
+        <div class="col-md-12">
+            <div class="col-md-4">&nbsp;</div>
+            <div class="col-md-8">
+                <div class="error" *ngFor="let message of messages">{{message}}</div>
+            </div>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
             <div class="form-group row"
                  [ngClass]="{'has-error': (!userId.valid && userId.touched), 'has-success': (userId.valid && userId.touched)}">
-                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-
-                <div class="col-sm-10">
+                <div class="col-md-4">
+                    <label for="inputEmail3" class="control-label pull-right">{{'EMAIL' | translate}}</label>
+                </div>
+                <div class="col-sm-8">
                     <input [formControl]="userId" type="email" class="form-control" id="inputEmail3"
-                           placeholder="Email">
+                           placeholder="{{'EMAIL' | translate}}">
                 </div>
             </div>
             <div class="form-group row"
                  [ngClass]="{'has-error': (!password.valid && password.touched), 'has-success': (password.valid && password.touched)}">
-                <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                <div class="col-md-4">
+                    <label for="inputPassword3" class="control-label pull-right">{{'PASSWORD' | translate}}</label>
+                </div>
 
-                <div class="col-sm-10">
+                <div class="col-sm-8">
                     <input [formControl]="password" type="password" class="form-control" id="inputPassword3"
-                           placeholder="Password">
+                           placeholder="{{'PASSWORD' | translate}}">
                 </div>
             </div>
             <div class="form-group row" *ngIf="show2FA">
-                <label for="code2FA" class="col-sm-2 control-label">2FA Code</label>
+                <label for="code2FA" class="col-sm-2 control-label">{{'2FA_CODE' | translate}}</label>
 
                 <div class="col-sm-10">
                     <input [formControl]="code2FA" type="number" class="form-control" id="code2FA"
-                           placeholder="2FA Google authenticator code">
+                           placeholder="{{'2FA_CODE_PLACEHOLDER' | translate}}">
                 </div>
             </div>
             <div class="form-group row">
                 <div class="offset-sm-2 col-sm-10">
-                    <button *ngIf="!submitted" [disabled]="!form.valid" type="submit" style="width:75px" class="btn btn-default btn-auth pull-right">Sign in
-                    </button>
-                    <button *ngIf="submitted" style="width:75px" class="btn btn-default btn-auth pull-right"><img style="width:16px" src="/assets/img/button-loading.svg"/></button>
-                    <a routerLink="/forgotPassword" class="btn btn-default btn-auth pull-right">Forgot password?</a>
+                    <button *ngIf="!submitted" [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth pull-right">{{'SIGN_IN' | translate}}</button>
+                    <button *ngIf="submitted" class="btn btn-default btn-auth pull-right"><img style="width:16px" src="/assets/img/button-loading.svg"/></button>
+                    <a routerLink="/forgotPassword" class="btn btn-default btn-auth pull-right">{{'FORGOT_PASSWORD' | translate}}?</a>
                 </div>
             </div>
         </form>
-
-        <!--<div class="auth-sep"><span><span>or Sign in with one click</span></span></div>-->
-
-        <!--<div class="al-share-auth">-->
-            <!--&lt;!&ndash;<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true"></div>&ndash;&gt;-->
-            <!--<ul class="al-share clearfix">-->
-                <!--<li><i class="socicon socicon-facebook" title="Share on Facebook" (click)="loginWithFacebook()"></i>-->
-                <!--</li>-->
-                <!--<li><i class="socicon socicon-twitter" title="Share on Twitter"></i></li>-->
-                <!--<li><i class="socicon socicon-google" title="Share on Google Plus"></i></li>-->
-            <!--</ul>-->
-        <!--</div>-->
     </div>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-3 center margin-top-60 center">
+            <a href="https://www.facebook.com/b2beyond/" target="_blank"><img class="img-responsive" src="https://b2bcoin.xyz/icons/B2Bweb-icon-facebook.svg"></a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 center margin-top-60 center">
+            <a href="https://twitter.com/CoinB2b" target="_blank"><img class="img-responsive" src="https://b2bcoin.xyz/icons/B2Bweb-icon-twitter.svg"></a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 center margin-top-60 center">
+            <a href="https://t.me/joinchat/Fxlb2Qw8ivAta7iYgM0Wiw" target="_blank"><img class="img-responsive" src="https://b2bcoin.xyz/icons/B2Bweb-icon-telegram.svg"></a>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 center margin-top-60 center">
+            <a href="https://discord.gg/QwhhqPY" target="_blank"><img class="img-responsive" src="https://b2bcoin.xyz/icons/B2Bweb-icon-discord.svg"></a>
+        </div>
+    </div>
+</div>
+

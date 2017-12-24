@@ -1,0 +1,113 @@
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'DASHBOARD' | translate}}</span><span class="vertical-line"></span><span class="location-2">{{'MAIN_WALLET_LOWER' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div class="col-md-12 col-xs-12">
+    <a class="btn btn-primary" [routerLink]="'/pages/dashboard/mainWallet'">{{'MAIN_WALLET' | translate}}</a>
+    <a class="btn btn-secondary" [routerLink]="'/pages/dashboard/multiWallet'">{{'MULTI_WALLET' | translate}}</a>
+</div>
+
+<div class="row col-md-12 row-spacer-10">&nbsp;</div>
+
+<div id="wallet-info-full">
+    <div class="col-md-12 col-xs-12">
+        <div class="card">
+            <div class="card-block">
+                <div class="card-title row">
+                    <div class="col-md-12">
+                        <span class="font-weight-100">{{'WALLET_INFO' | translate}}</span>
+                    </div>
+                    <div class="col-md-12 center">
+                        <span class="circle">
+                            <img class="heading-logo center" src="{{walletService.primaryCoin.logo}}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-text row vertical-divider-white">
+                    <div class="col-md-12 heading-text row-spacer-15">
+                        <span class="font-size-36">{{walletService.primaryCoin.name}} {{'COIN_WALLET' | translate}}</span>
+                    </div>
+
+                    <div class="col-md-12 row-spacer-25">
+                        <div class="col-md-1 row-spacer-10"></div>
+                        <div class="col-md-7 row-spacer-10">
+                            <label class="font-weight-300">{{'TOTAL_BALANCE' | translate}}: </label>
+                        </div>
+                        <div class="col-md-4 row-spacer-10">
+                            <div class="font-weight-300">{{walletService.getBalance(walletService.primaryCoin)}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-1 row-spacer-10"></div>
+                        <div class="col-md-7 row-spacer-10">
+                            <label class="font-weight-300">{{'LOCKED_BALANCE' | translate}}: </label>
+                        </div>
+                        <div class="col-md-4 row-spacer-10">
+                            <div class="font-weight-300">{{walletService.getLockedBalance(walletService.primaryCoin)}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-7">
+                            <!--{{'ADDRESSES_IN_WALLET' | translate: {"value": walletService.getNumberOfAddresses(walletService.primaryCoin)} }}-->
+                            <p class="row-spacer-25 font-weight-100" [innerHTML]="'ADDRESSES_IN_WALLET' | translate:getNumberOfAddresses()"></p>
+                        </div>
+                        <div class="col-md-4 row-spacer-20">
+                            <div class="col-md-4 center"></div>
+                            <div class="col-md-4 center">
+                                <a *ngIf="creatingWallet" class="btn btn-primary" tooltip="{{'CREATING_ADDRESS' | translate}}"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                                <a *ngIf="!creatingWallet" class="btn btn-primary" (click)="createNewAddress()" tooltip="{{'ADD_ADDRESS' | translate}}"><img style="width:16px" src="/assets/img/add_address.svg"/></a>
+                            </div>
+                            <div class="col-md-4 center">
+                                <a *ngIf="!creatingWallet" class="btn btn-primary" (click)="createNewPayment()" tooltip="{{'ADD_NEW_PAYMENT' | translate}}"><img style="width:16px" src="/assets/img/payment.svg"/></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <server-info [coin]="walletService.primaryCoin"></server-info>
+    <address-overview [coin]="walletService.primaryCoin" [showCoinLogo]="false"></address-overview>
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-top-30">
+        <ng2-adsense></ng2-adsense>
+    </div>
+
+    <payment-overview [coin]="walletService.primaryCoin"></payment-overview>
+    <transaction-overview [coin]="walletService.primaryCoin"></transaction-overview>
+
+
+
+
+    <!-- Static modal -->
+    <div class="modal fade" bsModal #createAddressModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-label="Close" (click)="createAddressModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{'ADDRESS_CREATION_TITLE' | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{'ADDRESS_CREATED' | translate}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" (click)="createAddressModal.hide()">{{'OK' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

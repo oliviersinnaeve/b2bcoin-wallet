@@ -3,10 +3,10 @@ export const PAGES_MENU = [
         path: 'pages',
         children: [
             {
-                path: 'dashboard',
+                path: 'dashboard/mainWallet/',
                 data: {
                     menu: {
-                        title: 'Dashboard',
+                        title: "PAGES_MENU.DASHBOARD",
                         icon: 'ion-android-home',
                         selected: false,
                         expanded: false,
@@ -15,109 +15,100 @@ export const PAGES_MENU = [
                 }
             },
             {
-                path: 'addresses',
+                path: 'coins',
                 data: {
                     menu: {
-                        title: 'Addresses',
+                        title: "PAGES_MENU.COIN_OVERVIEW",
                         icon: 'ion-ios-book-outline',
                         selected: false,
                         expanded: false,
                         order: 250,
                     }
-                },
-                children: [
-                    {
-                        path: 'overview',
-                        data: {
-                            menu: {
-                                title: 'Overview',
-                            }
-                        }
-                    }
-                ]
+                }
             },
             {
-                path: 'transactions',
+                path: 'explorer',
                 data: {
                     menu: {
-                        title: 'Blockchain',
+                        title: "PAGES_MENU.BLOCKCHAIN",
                         icon: 'ion-link',
                         selected: false,
                         expanded: false,
                         order: 250,
                     }
-                },
-                children: [
-                    {
-                        path: 'result',
-                        data: {
-                            menu: {
-                                title: 'Explorer',
-                            }
-                        }
-                    }
-                ]
-            }
-            ,
-            {
-                path: 'payments',
-                data: {
-                    menu: {
-                        title: 'Payments',
-                        icon: 'ion-cash',
-                        selected: false,
-                        expanded: false,
-                        order: 250,
-                    }
-                },
-                children: [
-                    {
-                        path: 'overview',
-                        data: {
-                            menu: {
-                                title: 'Overview',
-                            }
-                        }
-                    },
-                    {
-                        path: 'create',
-                        data: {
-                            menu: {
-                                title: 'Create payment',
-                            }
-                        }
-                    }
-                ]
-            }
-            ,
-            {
-                path: 'transactions',
-                data: {
-                    menu: {
-                        title: 'Transactions',
-                        icon: 'ion-network',
-                        selected: false,
-                        expanded: false,
-                        order: 250,
-                    }
-                },
-                children: [
-                    {
-                        path: 'overview',
-                        data: {
-                            menu: {
-                                title: 'Overview',
-                            }
-                        }
-                    }
-                ]
-            }
-            ,
+                }
+            },
+            //    children: [
+            //        {
+            //            path: 'result',
+            //            data: {
+            //                menu: {
+            //                    title: 'Explorer',
+            //                }
+            //            }
+            //        }
+            //    ]
+            //}
+            //,
+            //{
+            //    path: 'payments',
+            //    data: {
+            //        menu: {
+            //            title: 'Payments',
+            //            icon: 'ion-cash',
+            //            selected: false,
+            //            expanded: false,
+            //            order: 250,
+            //        }
+            //    },
+            //    children: [
+            //        {
+            //            path: 'overview',
+            //            data: {
+            //                menu: {
+            //                    title: 'Overview',
+            //                }
+            //            }
+            //        },
+            //        {
+            //            path: 'create',
+            //            data: {
+            //                menu: {
+            //                    title: 'Create payment',
+            //                }
+            //            }
+            //        }
+            //    ]
+            //}
+            //,
+            //{
+            //    path: 'transactions',
+            //    data: {
+            //        menu: {
+            //            title: 'Transactions',
+            //            icon: 'ion-network',
+            //            selected: false,
+            //            expanded: false,
+            //            order: 250,
+            //        }
+            //    },
+            //    children: [
+            //        {
+            //            path: 'overview',
+            //            data: {
+            //                menu: {
+            //                    title: 'Overview',
+            //                }
+            //            }
+            //        }
+            //    ]
+            //}
+            //,
             {
                 path: 'escrow',
                 data: {
                     menu: {
-                        title: 'Escrow',
+                        title: "PAGES_MENU.ESCROW",
                         icon: 'ion-shuffle',
                         selected: false,
                         expanded: false,
@@ -129,7 +120,7 @@ export const PAGES_MENU = [
                         path: 'overview',
                         data: {
                             menu: {
-                                title: 'Overview',
+                                title: "PAGES_MENU.OVERVIEW",
                             }
                         }
                     }
@@ -138,7 +129,7 @@ export const PAGES_MENU = [
                         path: 'create',
                         data: {
                             menu: {
-                                title: 'Create transaction',
+                                title: "PAGES_MENU.CREATE_TRANSACTION",
                             }
                         }
                     }

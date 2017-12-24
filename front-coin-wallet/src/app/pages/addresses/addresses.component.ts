@@ -1,8 +1,11 @@
 import {Component} from '@angular/core';
 
+import { WalletService } from '../walletService.service';
+
 @Component({
     selector: 'addresses',
-    template: `<router-outlet></router-outlet><simple-notifications [options]="options"></simple-notifications>`
+    styleUrls: ['./addresses.scss'],
+    templateUrl: './addresses.html'
 })
 export class Addresses {
 
@@ -12,7 +15,7 @@ export class Addresses {
         lastOnBottom: false
     };
 
-    constructor () {
+    constructor (private walletService: WalletService) {
     }
 
 }

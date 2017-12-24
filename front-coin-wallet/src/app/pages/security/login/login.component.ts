@@ -7,6 +7,8 @@ import { Router } from "@angular/router";
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { EmailValidator } from '../../../theme/validators';
 
+import { TranslateService } from 'ng2-translate';
+
 import { FacebookService, InitParams, LoginResponse } from 'ngx-facebook';
 
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
@@ -38,7 +40,8 @@ export class Login implements OnInit {
                  private userState: UserState,
                  private userApi: UserApi,
                  private router: Router,
-                 private facebookService: FacebookService) {
+                 private facebookService: FacebookService,
+                 private translate: TranslateService) {
         this.form = fb.group({
             'userId': ['', Validators.compose([Validators.required, EmailValidator.validate])],
             'password': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -49,7 +52,10 @@ export class Login implements OnInit {
         this.password = this.form.controls['password'];
         this.code2FA = this.form.controls['code2FA'];
 
-        // FACEBOOK init is done in the index.html !!! Only way it worked ...
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
     ngOnInit () {

@@ -17,10 +17,14 @@ export interface UserAddress {
 
     address?: string;
 
-    currency?: string;
+    currency?: models.WalletCoin;
 
     name?: string;
 
     groupName?: string;
+
+    balance?: models.AddressBalance;
+
+    key?: models.UserAddressPK;
 
 }

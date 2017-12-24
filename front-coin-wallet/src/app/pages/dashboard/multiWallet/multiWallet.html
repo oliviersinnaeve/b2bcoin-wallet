@@ -1,0 +1,93 @@
+<!--<div id="multi-wallet">-->
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'DASHBOARD' | translate}}</span><span class="vertical-line"></span><span class="location-2">{{'MAIN_WALLET_LOWER' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div class="col-md-12 col-xs-12">
+    <a class="btn btn-primary" [routerLink]="'/pages/dashboard/mainWallet'">{{'MAIN_WALLET' | translate}}</a>
+    <a class="btn btn-secondary" [routerLink]="'/pages/dashboard/multiWallet'">{{'MULTI_WALLET' | translate}}</a>
+</div>
+
+<div class="row col-md-12 row-spacer-10">&nbsp;</div>
+
+<div class="row row-spacer-10">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngFor="let item of walletService.coins">
+            <wallet-info [coin]="item"></wallet-info>
+        </div>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ng2-adsense></ng2-adsense>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 row-spacer-15">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Announcements</h4>
+
+                    <div class="card-text">
+                        <!--<h4>17-11-2017</h4>-->
+                        <!--<ul>-->
+                        <!--<li>2FA was added and being used by some users (so working)</li>-->
+                        <!--<li>Escrow services were added in beta testing</li>-->
+                        <!--<li>Performance tweak has been applied, we have more tweaks in store for performance, so be patient,-->
+                        <!--to site will only get faster ...</li>-->
+                        <!--<li>-->
+                        <!--Paper wallet is next on the list, so addresses can be exported.-->
+                        <!--Importing wallets will never ne supported, the only reason is that in that case-->
+                        <!--we would obtain all wallet, so never upload your paper wallet.-->
+                        <!--</li>-->
+                        <!--</ul>-->
+
+                        <!--<h4>15-10-2017</h4>-->
+                        <!--<ul>-->
+                        <!--<li>Create payment is ready</li>-->
+                        <!--<li>Blockchain explorer is ready</li>-->
+                        <!--<li>Some helps are ready ...</li>-->
+                        <!--</ul>-->
+
+                        <!--<h4>14-10-2017</h4>-->
+                        <!--<ul>-->
+                        <!--<li>Airdrop has finished - 100people got 100 coins in there wallet.</li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                        <!--<td class="pull-right">-->
+                        <!--Best regards, Olivier-->
+                        <!--</td>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+
+        </div>
+    </div>
+
+    <!-- Static modal -->
+    <div class="modal fade" bsModal #dashboardHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+         role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-label="Close" (click)="dashboardHelpModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Dashboard help</h4>
+                </div>
+                <div class="modal-body">
+                    <markdown class="markdown" [path]="'assets/docs/dashboard.md'"></markdown>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary confirm-btn" (click)="dashboardHelpModal.hide()">{{'CLOSE' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--</div>-->

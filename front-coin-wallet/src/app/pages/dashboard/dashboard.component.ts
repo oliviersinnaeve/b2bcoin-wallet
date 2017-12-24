@@ -1,13 +1,27 @@
 import {Component} from '@angular/core';
 
+import { TranslateService } from 'ng2-translate';
+
+
 @Component({
     selector: 'dashboard',
     styleUrls: ['./dashboard.scss'],
-    templateUrl: './dashboard.html'
+    template: '<router-outlet></router-outlet><simple-notifications [options]="options"></simple-notifications>'
+    //templateUrl: './dashboard.html'
 })
 export class Dashboard {
 
-    constructor () {
+    public options = {
+        position: ["top", "right"],
+        timeOut: 5000,
+        lastOnBottom: false
+    };
+
+    constructor (private translate: TranslateService) {
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
 }

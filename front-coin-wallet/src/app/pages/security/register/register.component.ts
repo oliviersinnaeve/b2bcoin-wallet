@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {EmailValidator, EqualPasswordsValidator} from '../../../theme/validators';
 
+import { TranslateService } from 'ng2-translate';
+
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
 import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
 
@@ -31,7 +33,8 @@ export class Register {
     public submitted: boolean = false;
 
     constructor (private fb: FormBuilder,
-                 private userApi: UserApi) {
+                 private userApi: UserApi,
+                 private translate: TranslateService) {
 
         this.form = fb.group({
             'name': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -47,6 +50,11 @@ export class Register {
         this.passwords = <FormGroup> this.form.controls['passwords'];
         this.password = this.passwords.controls['password'];
         this.repeatPassword = this.passwords.controls['repeatPassword'];
+
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
     public onSubmit (values: {name: "", email: "", passwords: {password}}): void {
@@ -59,15 +67,15 @@ export class Register {
         user.password = values.passwords.password;
         //user.password = CryptoJS.AES.encrypt(values.passwords.password, values.email).toString();
 
-        console.log(user);
+        //console.log(user);
         this.submitted = true;
         if (this.form.valid) {
             this.userApi.register(user).subscribe(result => {
-                    console.log(result);
+                    //console.log(result);
                     this.messages.push("You have successfully registered, please check your mail and click the activation link");
                 },
                     error => {
-                    console.log(error);
+                    //console.log(error);
                     this.errors.push("Registration failed, try again later");
                 });
         }

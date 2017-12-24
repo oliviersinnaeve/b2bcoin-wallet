@@ -1,26 +1,27 @@
-<div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="addressHelpModal.show()"><i
-        class="ion-help"></i></div>
-
 <div id="addressOverview">
-    <div class="horizontal-scroll">
+    <div *ngIf="showCoinLogo" class="col-md-12 center">
+        <img src="{{coin.logo}}" height="64px">
+    </div>
+
+    <div class="row col-md-12 horizontal-scroll" style="margin-left: 0;">
         <table class="table table-hover address_table">
             <thead>
-            <tr class="black-muted-bg">
-                <th class="align-left">Address</th>
-                <th class="align-right">Balance</th>
-                <th class="align-right">Locked Balance</th>
-                <th class="align-right">Actions</th>
+            <tr class="black-muted-bg white-text">
+                <th class="align-left">{{'ADDRESS' | translate}}</th>
+                <th class="align-right">{{'BALANCE' | translate}}</th>
+                <th class="align-right">{{'LOCKED_BALANCE' | translate}}</th>
+                <th class="align-right">{{'ACTIONS' | translate}}</th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let item of addresses" class="no-top-border">
+            <tr *ngFor="let item of walletService.getAddressesForCoin(coin)" class="no-top-border">
                 <td class="columnAddress">{{item.address}}</td>
-                <td ngClass="columnAmount align-right">{{getBalance(item)}}</td>
-                <td ngClass="columnLocked align-right">{{getLockedBalance(item)}}</td>
+                <td ngClass="columnAmount align-right">{{walletService.getBalanceForAddress(coin, item)}}</td>
+                <td ngClass="columnLocked align-right">{{walletService.getLockedBalanceForAddress(coin, item)}}</td>
                 <td class="columnActions align-right">
-                    <a class="btn btn-primary" (click)="setDeleteAddress(item)">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
+                    <i class="fa fa-copy" (click)="copyAddressToClipboard(item)" style="cursor: pointer"></i>
+                    <span class="vertical-line"></span>
+                    <i class="fa fa-trash-o" (click)="setDeleteAddress(item)" style="cursor: pointer"></i>
                 </td>
             </tr>
             </tbody>
@@ -36,18 +37,16 @@
                 <button class="close" aria-label="Close" (click)="confirmDeleteAddressModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Wallet address creation</h4>
+                <h4 class="modal-title">{{'DELETE_ADDRESS_TITLE' | translate}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        Are you sure you want to continue this is irreversible, can NOT be undone.
-                    </div>
+                    <div class="col-md-12">{{'DELETE_ADDRESS_CONFIRM' | translate}}</div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="confirmDeleteAddressModal.hide()">Cancel</button>
-                <button type="submit" class="btn btn-primary" (click)="deleteAddress()">Ok</button>
+                <button type="submit" class="btn btn-primary" (click)="confirmDeleteAddressModal.hide()">{{'CANCEL' | translate}}</button>
+                <button type="submit" class="btn btn-primary" (click)="deleteAddress()">{{'OK' | translate}}</button>
             </div>
         </div>
     </div>
@@ -61,38 +60,17 @@
                 <button class="close" aria-label="Close" (click)="deleteAddressModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Delete wallet address</h4>
+                <h4 class="modal-title">{{'DELETE_ADDRESS_TITLE' | translate}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        Address was successfuly deleted.
+                        {{'DELETE_ADDRESS_SUCCESS' | translate}}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="deleteAddressModal.hide()">Ok</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Static modal -->
-<div class="modal fade" bsModal #addressHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
-     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" aria-label="Close" (click)="addressHelpModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Addresses help</h4>
-            </div>
-            <div class="modal-body">
-                <markdown class="markdown" [path]="'assets/docs/addresses.md'"></markdown>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary confirm-btn" (click)="addressHelpModal.hide()">Close</button>
+                <button type="submit" class="btn btn-primary" (click)="deleteAddressModal.hide()">{{'OK' | translate}}</button>
             </div>
         </div>
     </div>

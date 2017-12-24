@@ -10,6 +10,7 @@ import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.log4j.Logger;
 
 
@@ -24,10 +25,24 @@ public class ActionController {
     private SoloMiningController soloMiningController;
 
 
-    public ActionController(DaemonController controller, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
+    public ActionController(final DaemonController controller, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
         this.controller = controller;
         this.coinRpcController = coinRpcController;
         this.walletRpcController = walletRpcController;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                    if (B2BUtil.availableForConnection(controller.getDaemonPort())) {
+                        controller.restartDaemon();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public void setMiningController(PoolMiningController miningController) {

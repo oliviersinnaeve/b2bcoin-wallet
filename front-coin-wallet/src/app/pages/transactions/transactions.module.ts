@@ -3,13 +3,12 @@ import { CommonModule }  from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ngx-bootstrap';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { MarkdownModule } from 'angular2-markdown';
+
+import { TranslateModule } from 'ng2-translate';
 
 import { routing }       from './transactions.routing';
 import { Transactions } from './transactions.component';
-import { Overview } from './components/overview/overview.component';
-import { SingleResult } from './components/result/singleResult.component';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
@@ -22,13 +21,11 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
         Ng2SmartTableModule,
         ModalModule.forRoot(),
         MarkdownModule.forRoot(),
-        SimpleNotificationsModule.forRoot(),
+        TranslateModule.forRoot(),
         routing
     ],
     declarations: [
-        Transactions,
-        Overview,
-        SingleResult
+        Transactions
     ]
 })
 export class TransactionsModule {

@@ -1,6 +1,6 @@
 $default: #ffffff;
 // default colors for layout
-$body-bg: #F0F3F4;
+$body-bg: #ffffff;
 // default bg color
 
 $default-text: $default;
@@ -39,7 +39,7 @@ $progress-background: rgba(0, 0, 0, 0.15);
 $progress-default: rgba($default-text, 0.95);
 
 // bootstrap card panel styles
-$bootstrap-panel-radius: 7px;
+$bootstrap-panel-radius: 0;
 $bootstrap-panel-text: #ffffff;
 $bootstrap-panel-bg: rgba(0, 0, 0, 0.1);
 $bootstrap-panel-header-bg: transparent;

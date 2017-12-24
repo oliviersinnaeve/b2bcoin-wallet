@@ -43,9 +43,10 @@ export class WalletApi {
     /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
      */
-    public createAddress(extraHttpRequestParams?: any): Observable<models.Address> {
-        return this.createAddressWithHttpInfo(extraHttpRequestParams)
+    public createAddress(coinType: string, extraHttpRequestParams?: any): Observable<models.UserAddress> {
+        return this.createAddressWithHttpInfo(coinType, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -58,10 +59,11 @@ export class WalletApi {
     /**
      * Create a payment
      * Create a payment and return the hash of it.
+     * @param coinType 
      * @param body 
      */
-    public createPayment(body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<models.Payment> {
-        return this.createPaymentWithHttpInfo(body, extraHttpRequestParams)
+    public createPayment(coinType: string, body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<models.Payment> {
+        return this.createPaymentWithHttpInfo(coinType, body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -74,10 +76,11 @@ export class WalletApi {
     /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
      * @param body 
      */
-    public deleteAddress(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.Success> {
-        return this.deleteAddressWithHttpInfo(body, extraHttpRequestParams)
+    public deleteAddress(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.Success> {
+        return this.deleteAddressWithHttpInfo(coinType, body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -91,7 +94,7 @@ export class WalletApi {
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
      */
-    public getAddresses(extraHttpRequestParams?: any): Observable<Array<models.AddressBalance>> {
+    public getAddresses(extraHttpRequestParams?: any): Observable<Array<models.UserAddress>> {
         return this.getAddressesWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -121,10 +124,26 @@ export class WalletApi {
     /**
      * Find the block or transaction in the coin daemon by hash
      * Returns the block or the transaction for the given hash.
+     * @param coinType 
      * @param body 
      */
-    public getBlockOrTransaction(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<models.BlockOrTransactionResponse> {
-        return this.getBlockOrTransactionWithHttpInfo(body, extraHttpRequestParams)
+    public getBlockOrTransaction(coinType: string, body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<models.BlockOrTransactionResponse> {
+        return this.getBlockOrTransactionWithHttpInfo(coinType, body, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * Get supported coins
+     * Returns the coins supported by the wallet
+     */
+    public getCoinTypes(extraHttpRequestParams?: any): Observable<Array<models.WalletCoin>> {
+        return this.getCoinTypesWithHttpInfo(extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -137,9 +156,10 @@ export class WalletApi {
     /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
      */
-    public getLastBlock(extraHttpRequestParams?: any): Observable<models.BlockWrapper> {
-        return this.getLastBlockWithHttpInfo(extraHttpRequestParams)
+    public getLastBlock(coinType: string, extraHttpRequestParams?: any): Observable<models.BlockWrapper> {
+        return this.getLastBlockWithHttpInfo(coinType, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -165,12 +185,13 @@ export class WalletApi {
     }
 
     /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
+     * Find the transactions for the address
+     * Find the transactions for the address.
+     * @param coinType 
      * @param body 
      */
-    public getTransactionsForAddress(body?: models.Address, extraHttpRequestParams?: any): Observable<models.TransactionItems> {
-        return this.getTransactionsForAddressWithHttpInfo(body, extraHttpRequestParams)
+    public getTransactionsForAddress(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.TransactionItems> {
+        return this.getTransactionsForAddressWithHttpInfo(coinType, body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -184,12 +205,17 @@ export class WalletApi {
     /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
      */
-    public createAddressWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/createAddress`;
+    public createAddressWithHttpInfo(coinType: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/createAddress/${coinType}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling createAddress.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -217,13 +243,18 @@ export class WalletApi {
     /**
      * Create a payment
      * Create a payment and return the hash of it.
+     * @param coinType 
      * @param body 
      */
-    public createPaymentWithHttpInfo(body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/createPayment`;
+    public createPaymentWithHttpInfo(coinType: string, body?: models.PaymentInput, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/createPayment/${coinType}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling createPayment.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -254,13 +285,18 @@ export class WalletApi {
     /**
      * Find the component fragment by ID
      * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
      * @param body 
      */
-    public deleteAddressWithHttpInfo(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/deleteAddress`;
+    public deleteAddressWithHttpInfo(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/deleteAddress/${coinType}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling deleteAddress.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -361,13 +397,18 @@ export class WalletApi {
     /**
      * Find the block or transaction in the coin daemon by hash
      * Returns the block or the transaction for the given hash.
+     * @param coinType 
      * @param body 
      */
-    public getBlockOrTransactionWithHttpInfo(body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getBlockOrTransaction`;
+    public getBlockOrTransactionWithHttpInfo(coinType: string, body?: models.BlockOrTransactionRequest, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getBlockOrTransaction/${coinType}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling getBlockOrTransaction.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -396,14 +437,52 @@ export class WalletApi {
     }
 
     /**
-     * Find the component fragment by ID
-     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * Get supported coins
+     * Returns the coins supported by the wallet
      */
-    public getLastBlockWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getLastBlock`;
+    public getCoinTypesWithHttpInfo(extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getCoinTypes`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Find the component fragment by ID
+     * Returns the fragments for the given ID. It&#39;s a composite ID, so it is used as criteria
+     * @param coinType 
+     */
+    public getLastBlockWithHttpInfo(coinType: string, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getLastBlock/${coinType}`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling getLastBlock.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'
@@ -460,15 +539,20 @@ export class WalletApi {
     }
 
     /**
-     * Find the block or transaction in the coin daemon by hash
-     * Returns the block or the transaction for the given hash.
+     * Find the transactions for the address
+     * Find the transactions for the address.
+     * @param coinType 
      * @param body 
      */
-    public getTransactionsForAddressWithHttpInfo(body?: models.Address, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + `/wallet/getTransactionsForAddress`;
+    public getTransactionsForAddressWithHttpInfo(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getTransactionsForAddress/${coinType}`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'coinType' is not null or undefined
+        if (coinType === null || coinType === undefined) {
+            throw new Error('Required parameter coinType was null or undefined when calling getTransactionsForAddress.');
+        }
         // to determine the Content-Type header
         let consumes: string[] = [
             'application/json'

@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { EmailValidator, EqualPasswordsValidator } from '../../../theme/validators';
 
+import { TranslateService } from 'ng2-translate';
+
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
 import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
 
@@ -32,7 +34,8 @@ export class ResetPassword {
                  private userState: UserState,
                  private userApi: UserApi,
                  private router: Router,
-                 private route: ActivatedRoute) {
+                 private route: ActivatedRoute,
+                 private translate: TranslateService) {
 
         this.form = fb.group({
             'passwords': fb.group({
@@ -44,6 +47,11 @@ export class ResetPassword {
         this.passwords = <FormGroup> this.form.controls['passwords'];
         this.password = this.passwords.controls['password'];
         this.repeatPassword = this.passwords.controls['repeatPassword'];
+
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
     ngOnInit () {
@@ -54,7 +62,7 @@ export class ResetPassword {
     }
 
     public onSubmit (values: {passwords: { password}}): void {
-        console.log("Submitting password forgot email", values);
+        //console.log("Submitting password forgot email", values);
         // this.messages = [];
         let user: userModels.User = {};
         user.password = values.passwords.password;

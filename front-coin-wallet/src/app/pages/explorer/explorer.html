@@ -1,0 +1,31 @@
+<div class="row row-spacer-10">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <explorer-result></explorer-result>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <ng2-adsense></ng2-adsense>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #addressHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="addressHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Addresses help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/addresses.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="addressHelpModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

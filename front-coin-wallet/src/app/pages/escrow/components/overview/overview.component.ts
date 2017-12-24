@@ -15,6 +15,7 @@ import { websiteId } from '../../../../environment';
 
 @Component({
     selector: 'overview',
+    styleUrls: ['./overview.scss'],
     templateUrl: './overview.html',
 })
 

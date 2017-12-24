@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 
+import { TranslateService } from 'ng2-translate';
+
 import { BaMenuService } from '../theme';
 import { PAGES_MENU } from './pages.menu';
 
@@ -23,7 +25,7 @@ import { PAGES_MENU } from './pages.menu';
     <ba-page-top></ba-page-top>
     <div class="al-main">
       <div class="al-content">
-        <ba-content-top></ba-content-top>
+        <!--<ba-content-top></ba-content-top>-->
         <router-outlet></router-outlet>
       </div>
     </div>
@@ -32,7 +34,14 @@ import { PAGES_MENU } from './pages.menu';
 })
 export class Pages {
 
-    constructor (private _menuService: BaMenuService) {
+    constructor (
+        private _menuService: BaMenuService,
+        private translate: TranslateService) {
+
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        console.log("Using language", language);
+        translate.use(language);
     }
 
     ngOnInit () {

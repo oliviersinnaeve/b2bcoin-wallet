@@ -6,8 +6,11 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { MarkdownModule } from 'angular2-markdown';
+import { TranslateModule } from 'ng2-translate';
 
 import { AdsenseModule } from 'ng2-adsense';
+
+import { TooltipModule } from 'ngx-bootstrap';
 
 import * as user from './services/com.b2beyond.api.user';
 import * as b2bcoin from './services/com.b2beyond.api.b2bcoin';
@@ -32,6 +35,8 @@ import { NgaModule } from './theme/nga.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { PagesModule } from './pages/pages.module';
 
+import { PagerService } from './services/pager.service';
+
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -44,7 +49,8 @@ const APP_PROVIDERS = [
     GlobalState,
     user.UserApi,
     b2bcoin.WalletApi,
-    b2bcoin.EscrowApi
+    b2bcoin.EscrowApi,
+    PagerService
 ];
 
 export type StoreType = {
@@ -73,9 +79,11 @@ export type StoreType = {
         FormsModule,
         ReactiveFormsModule,
         NgaModule.forRoot(),
+        TooltipModule.forRoot(),
         SimpleNotificationsModule.forRoot(),
         MarkdownModule.forRoot(),
         PagesModule,
+        TranslateModule.forRoot(),
         routing
     ],
     providers: [ // expose our Services and Providers into Angular's dependency injection

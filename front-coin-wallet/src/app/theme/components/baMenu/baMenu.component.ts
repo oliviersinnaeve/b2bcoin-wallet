@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
+import { TranslateService } from 'ng2-translate';
+
 import { BaMenuService } from '../../services';
 import { GlobalState } from '../../../global.state';
 
@@ -26,11 +28,19 @@ export class BaMenu {
     protected _onRouteChange: Subscription;
     public outOfArea: number = -200;
 
-    constructor (private _router: Router, private _service: BaMenuService, private _state: GlobalState) {
+    constructor (private _router: Router, private _service: BaMenuService, private _state: GlobalState, private translate: TranslateService) {
     }
 
     public updateMenu (newMenuItems) {
         this.menuItems = newMenuItems;
+
+        for (let i = 0; i < this.menuItems.length; i++) {
+            this.translate.get(this.menuItems[i].title).subscribe((res: string) => {
+                console.log(res);
+                this.menuItems[i].title = res;
+            });
+        }
+
         this.selectMenuAndNotify();
     }
 

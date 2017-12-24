@@ -1,0 +1,144 @@
+<div id="blockchain_explorer">
+
+    <div class="col-md-12 col-xs-12 row-spacer-25">
+        <span class="location-1">{{transactionService.coin.name}} {{'BLOCK_EXPLORER' | translate}}</span>
+    </div>
+
+    <div class="col-md-12 row-spacer-25">
+        <div class="form-group">
+            <div class="col-md-11">
+                <input type="text" [(ngModel)]="transactionService.searchString" placeholder="Search for transaction or block ..." class="form-control">
+            </div>
+            <div class="col-md-1">
+                <a (click)="search()" style="color: #528ea6"><i class="fa fa-2x fa-search"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" *ngIf="searching">
+        <div style="text-align: center">
+            <img src="/assets/img/loader.gif"/>
+        </div>
+    </div>
+
+    <div *ngIf="isBlockFetched()">
+        <div class="col-md-12 col-xs-12">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Block {{transactionService.searchString}}</h4>
+
+                    <div class="col-lg-6 col-md-12 col-sx-12 stats">
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_HEIGHT' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.height}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TIMESTAMP' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{getDate(result.blockWrapper.block.timestamp)}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_DIFF' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.difficulty}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_ORPHAN' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.orphan_status}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TRANSACTIONS' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.transactions.length}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TOTAL_COINS' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{getParsedAmount(result.blockWrapper.block.alreadyGeneratedCoins)}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TOTAL_TRANSACTIONS' | translate}}:</div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.alreadyGeneratedTransactions}}</div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-sx-12 stats">
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TRANSACIONS_SIZE' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.transactionsCumulativeSize}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_BLOCK_SIZE' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.blockSize}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_CURENT_MEDIAN' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.sizeMedian}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_REWARD_PENALTY' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{result.blockWrapper.block.penalty}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_BASE_REWARD' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{getParsedAmount(result.blockWrapper.block.baseReward)}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_TRANSACTION_FEE' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{getBlockTransactionFees()}}</div>
+                        <div class="col-md-6"><i class="fa fa-circle-o"></i> {{'BLOCK_INFO_REWARD' | translate}}: </div> <div class="col-md-6 pull-right">&nbsp;{{getParsedAmount(result.blockWrapper.block.reward)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="white-text">
+                        <th><i class="fa fa-paw"></i> {{'HASH' | translate}}</th>
+                        <th><i class="fa fa-paw"></i> {{'FEE' | translate}}</th>
+                        <th><i class="fa fa-money"></i> {{'TOTAL_AMOUNT' | translate}}</th>
+                        <th><i class="fa fa-arrows"></i> {{'SIZE' | translate}}</th>
+                    </tr>
+                    </thead>
+                    <tbody id="transactions_rows">
+                    <tr class="no-top-border" *ngFor="let item of result.blockWrapper.block.transactions">
+                        <td><a (click)="search(item.hash)">{{item.hash}}</a></td>
+                        <td>{{getParsedAmount(item.fee)}}</td>
+                        <td>{{getParsedAmount(item.amount_out)}}</td>
+                        <td>{{item.size}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isTransactionFetched()">
+        <div class="col-md-12 col-xs-12">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Transaction {{transactionService.searchString}}</h4>
+
+                    <div class="col-md-6 stats">
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'HASH' | translate}}:</div> <div class="col-md-8"><div style="width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">&nbsp;{{result.transactionWrapper.txDetails.hash}}</div></div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'FEE' | translate}}:</div> <div class="col-md-8">&nbsp;{{getParsedAmount(result.transactionWrapper.txDetails.fee)}}</div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'SUM_OF_OUTPUTS' | translate}}:</div> <div class="col-md-8">&nbsp;{{getParsedAmount(result.transactionWrapper.txDetails.amount_out)}}</div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'MIXIN' | translate}}:</div> <div class="col-md-8">&nbsp;{{result.transactionWrapper.txDetails.mixin}}</div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'SIZE' | translate}}:</div> <div class="col-md-8">&nbsp;{{result.transactionWrapper.txDetails.size}}</div>
+                    </div>
+
+                    <div class="col-md-6 stats">
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'HASH' | translate}}: </div> <div class="col-md-8">
+                        <a (click)="search(result.transactionWrapper.block.hash)">
+                            <div style="width: 150px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">&nbsp;{{result.transactionWrapper.block.hash}}</div>
+                        </a>
+                    </div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'HEIGHT' | translate}}: </div> <div class="col-md-8">&nbsp;{{result.transactionWrapper.block.height}}</div>
+                        <div class="col-md-4"><i class="fa fa-circle-o"></i> {{'TIMESTAMP' | translate}}: </div> <div class="col-md-8">&nbsp;{{getDate(result.transactionWrapper.block.timestamp)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-xs-12">
+            <h3 class="inputs">{{'INPUTS' | translate}}</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="white-text">
+                        <th><i class="fa fa-money"></i> {{'AMOUNT' | translate}}</th>
+                        <th><i class="fa fa-paw"></i> {{'IMAGE' | translate}}</th>
+                    </tr>
+                    </thead>
+                    <tbody id="inputs_rows">
+                    <tr class="no-top-border" *ngFor="let item of result.transactionWrapper.tx.vin">
+                        <td>{{getParsedAmount(item.value.amount)}}</td>
+                        <td>{{item.value.k_image}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row-spacer-20">
+                <h3 class="outputs">{{'OUTPUTS' | translate}}</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr class="white-text">
+                            <th><i class="fa fa-money"></i> {{'AMOUNT' | translate}}</th>
+                            <th><i class="fa fa-paw"></i> {{'KEY' | translate}}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="outputs_rows">
+                        <tr class="no-top-border" *ngFor="let item of result.transactionWrapper.tx.vout">
+                            <td>{{getParsedAmount(item.amount)}}</td>
+                            <td>{{item.target.data.key}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

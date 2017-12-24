@@ -1,61 +1,68 @@
-<div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
-        class="ion-help"></i></div>
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'PAYMENT' | translate}}</span><span class="vertical-line"></span><span class="location-2">{{'CREATE_PAYMENT' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
 
-<div id="create_payment" class="col-md-12 col-xs-12">
+<div id="createPayment" class="col-md-12 col-xs-12">
     <div class="card">
         <div class="card-block">
-            <h4 class="card-title">Payment data</h4>
+            <h4 class="card-title">{{'CREATE_PAYMENT_TITLE' | translate:walletService.selectedCoin}}</h4>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 row-spacer-20">
                     <div class="form-group">
-                        <label for="websiteName">PaymentId:</label>
-                        <input type="text" class="form-control" id="websiteName" [(ngModel)]="payment.paymentId"
-                               placeholder="PaymentId name - optional">
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Address</label>
+                        <label>{{'PAYMENT_ADDRESS_LABEL' | translate}}:</label>
                         <select class="form-control" [(ngModel)]="selectedAddress">
                             <option *ngFor="let address of addresses" [ngValue]="address">{{address.address}}</option>
                         </select>
                     </div>
                 </div>
-
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>Fee: </label>
-                        <label>{{getParsedAmount(payment.fee)}}</label>
+                        <label for="websiteName">{{'PAYMENT_ID_LABEL' | translate}}:</label>
+                        <input type="text" class="form-control" id="websiteName" [(ngModel)]="payment.paymentId"
+                               placeholder="{{'PAYMENT_ID_PLACEHOLDER' | translate}}">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>{{'FEE' | translate}}: </label>
+                        <label>{{getParsedAmount(fee)}}</label>
                     </div>
                 </div>
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-primary" (click)="createTransferModal.show()">Add transaction</a>
-                <a *ngIf="!submitting" style="width:150px" class="btn btn-primary" (click)="createPayment()">Create payment</a>
-                <a *ngIf="submitting" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                <a class="btn btn-primary" (click)="createTransferModal.show()">{{'ADD_PAYMENT' | translate}}</a>
             </div>
         </div>
     </div>
 
-    <div class="horizontal-scroll">
+    <div *ngIf="transfers.length > 0" class="horizontal-scroll">
         <table class="table table-hover address_table">
             <thead>
             <tr class="black-muted-bg">
-                <th class="align-left">Address</th>
-                <th class="align-right">Amount</th>
-                <th>Actions</th>
+                <th class="align-left">{{'ADDRESS' | translate}}</th>
+                <th class="align-right">{{'AMOUNT' | translate}}</th>
+                <th><span style="float: right">{{'ACTIONS' | translate}}</span></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let transfer of transfers" class="no-top-border">
                 <td class="columnAddress">{{transfer.address}}</td>
                 <td ngClass="columnAmount align-right">{{getParsedAmount(transfer.amount)}}</td>
-                <td>Coming soon</td>
+                <td style="float: right">
+                    <i class="fa fa-trash-o" (click)="deleteTransfer(transfer)"></i>
+                </td>
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="pull-right row-spacer-25">
+        <a *ngIf="!submitting && transfers.length > 0" style="width:150px" class="btn btn-primary" (click)="createPayment()">{{'PAY' | translate}}</a>
+        <a *ngIf="submitting && transfers.length > 0" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
     </div>
 </div>
 
@@ -68,7 +75,7 @@
                 <button class="close" aria-label="Close" (click)="createTransferModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Add new transfer</h4>
+                <h4 class="modal-title">{{'ADD_NEW_TRANSFER' | translate}}</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -81,14 +88,14 @@
                         <div class="input-group">
                             <input type="text" class="form-control" [(ngModel)]="transfer.amount" placeholder="Amount to transfer" aria-describedby="basic-addon2"
                                    (ngModelChange)="onAmountChange($event)" b2bCurrencyFormatter>
-                            <span class="input-group-addon" id="basic-addon2">B2B</span>
+                            <span class="input-group-addon" id="basic-addon2">{{walletService.selectedCoin.name}}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="createTransferModal.hide()">Cancel</button>
-                <button type="submit" class="btn btn-primary" (click)="addTransaction()">Ok</button>
+                <button type="submit" class="btn btn-primary" (click)="createTransferModal.hide()">{{'CANCEL' | translate}}</button>
+                <button type="submit" class="btn btn-primary" (click)="addTransaction()">{{'OK' | translate}}</button>
             </div>
         </div>
     </div>
@@ -103,20 +110,20 @@
                 <button class="close" aria-label="Close" (click)="messageModal.hide()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 *ngIf="!error" class="modal-title">Payment success</h4>
-                <h4 *ngIf="error" class="modal-title">Payment failed</h4>
+                <h4 *ngIf="!error" class="modal-title">{{'PAYMENT_SUCCESS' | translate}}</h4>
+                <h4 *ngIf="error" class="modal-title">{{'PAYMENT_FAILED' | translate}}</h4>
             </div>
             <div class="modal-body">
                 <div *ngIf="!error">
-                    Payment executed: (There is a possibility that the hash is not found. Just be patient, it will get processed.
+                    {{'PAYMENT_EXECUTED' | translate}}
                     <a (click)='gotoPayment(this.transactionHash)'>{{transactionHash}}</a>
                 </div>
                 <div *ngIf="error">
-                    Payment failed: {{message}}
+                    {{'PAYMENT_FAILED' | translate}}: {{message}}
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary confirm-btn" (click)="messageModal.hide()">Close</button>
+                <button class="btn btn-primary confirm-btn" (click)="messageModal.hide()">{{'CLOSE' | translate}}</button>
             </div>
         </div>
     </div>

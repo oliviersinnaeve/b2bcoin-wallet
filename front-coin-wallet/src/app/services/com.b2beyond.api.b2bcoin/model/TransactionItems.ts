@@ -13,6 +13,10 @@
 import * as models from './models';
 
 export interface TransactionItems {
+    address?: string;
+
+    currencyName?: string;
+
     items?: Array<models.TransactionItem>;
 
 }

@@ -1,0 +1,87 @@
+#createPayment {
+
+  width: 100%;
+
+  table {
+    width: 100%;
+  }
+
+  tr:nth-child(even) {
+    color: #528ea6;
+    background-color: #d9ebf2;
+  }
+
+  tr:nth-child(odd) {
+    color: #528ea6;
+    background-color: #ffffff;
+  }
+
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #38aecc;
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    color: #38aecc;
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    color: #38aecc;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    color: #38aecc;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 699px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 1023px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1389px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 524px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+
+@media screen and (min-width: 1390px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+//
+//.table-text-wrapper {
+//  max-width: 1024px;
+//  overflow: hidden;
+//  white-space: nowrap;
+//  text-overflow: ellipsis;
+//}
+

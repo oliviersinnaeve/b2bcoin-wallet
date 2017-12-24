@@ -1,63 +1,119 @@
-<div class="col-md-6 col-xs-12">
-    <div class="card">
-        <div class="card-block">
-            <h4 class="card-title">Wallet info</h4>
+<div id="wallet-info" *ngIf="walletService.getNumberOfAddresses(coin) > 0">
 
-            <p class="card-text">You have {{numberOfAddresses}} addresses(s) in your account.</p>
-            <td class="pull-right">
-                <a class="btn btn-primary" [routerLink]="'/pages/addresses/overview'">
-                    <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
-                </a>
-                <a *ngIf="!creatingWallet" style="width:150px" class="btn btn-primary" (click)="createNewAddress()">Add new address</a>
-                <a *ngIf="creatingWallet" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
-            </td>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-6 col-xs-12">
-    <div class="card">
-        <div class="card-block">
-            <h4 class="card-title">Wallet balance</h4>
-
-            <div class="card-text">
-                <label>Total balance: </label>
-
-                <div style="float:right">{{getBalance()}}</div>
-                <br/>
-                <label>Total locked balance: </label>
-
-                <div style="float:right">{{getLockedBalance()}}</div>
-            </div>
-            <td class="pull-right">
-                <a class="btn btn-primary" [routerLink]="'/pages/addresses/overview'">
-                    <i ng-reflect-class-name="ion-edit" class="ion-edit"></i>
-                </a>
-            </td>
-        </div>
-    </div>
-</div>
-
-<!-- Static modal -->
-<div class="modal fade" bsModal #createAddressModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" aria-label="Close" (click)="createAddressModal.hide()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Wallet address creation</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        Address was created.
+    <div class="col-md-6 col-xs-6">
+        <div class="card">
+            <div class="card-block">
+                <div class="card-title row">
+                    <div class="col-md-12 center">
+                        <img class="heading-logo" src="{{coin.logo}}">
+                    </div>
+                    <div class="col-md-12 heading-text">
+                        <span>{{coin.name}} {{'COIN_WALLET' | translate}}</span>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" (click)="createAddressModal.hide()">Ok</button>
+
+                <div class="card-text row">
+                    <label>{{'TOTAL_BALANCE' | translate}}: </label>
+                    <div style="float:right">{{walletService.getBalance(coin)}}</div>
+                    <br/>
+
+                    <label>{{'LOCKED_BALANCE' | translate}}: </label>
+                    <div style="float:right">{{walletService.getLockedBalance(coin)}}</div>
+                    <br/>
+                    <p class="row-spacer-20" [innerHTML]="'ADDRESSES_IN_WALLET' | translate:getNumberOfAddresses()"></p>
+                </div>
+                <div class="center">
+                    <a *ngIf="!creatingWallet && !serverError" class="btn btn-primary" (click)="createNewAddress()" tooltip="{{'ADD_ADDRESS' | translate}}"><i class="fa fa-plus white-text"></i></a>
+                    <a *ngIf="creatingWallet && !serverError" class="btn btn-primary" tooltip="{{'CREATING_ADDRESS' | translate}}"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                    <!--<a *ngIf="!creatingWallet && !serverError" style="width:150px" class="btn btn-primary" (click)="createNewAddress()">Add new address</a>-->
+                    <!--<a *ngIf="creatingWallet && !serverError" style="width:150px" class="btn btn-primary"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>-->
+                    <a *ngIf="!serverError" class="btn btn-primary" (click)="walletService.showCoinFull(coin)" tooltip="{{'GOTO_COIN_OVERVIEW' | translate}}"><i class="fa fa-bars white-text"></i></a>
+                    <a *ngIf="!serverError" class="btn btn-primary" (click)="serverInfoModal.show()" tooltip="{{'BLOCKCHAIN_INFO' | translate}}"><i class="fa fa-desktop"></i></a>
+                    <a *ngIf="serverError" class="btn btn-danger" (click)="serverInfoModal.show()" tooltip="{{'BLOCKCHAIN_INFO' | translate}}"><i class="fa fa-desktop"></i></a>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Static modal -->
+    <div class="modal fade" bsModal #createAddressModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-label="Close" (click)="createAddressModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{'ADDRESS_CREATION_TITLE' | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">{{'ADDRESS_CREATED' | translate}}</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" (click)="createAddressModal.hide()">{{'OK' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static modal -->
+    <div class="modal fade" bsModal #serverInfoModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-label="Close" (click)="serverInfoModal.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{'SERVER_INFO' | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="server_info" class="col-md-12 col-xs-12">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <!--<h4 class="card-title">{{'SERVER_INFO' | translate}}</h4>-->
+
+                                        <div *ngIf="!serverError" class="card-text">
+                                            <label>{{'LAST_BLOCK_HASH' | translate}}: </label>
+
+                                            <div style="float:right"><a (click)="gotoLastBlock()">{{getLastBlockHash()}}</a></div>
+                                            <br/>
+                                            <label>{{'COINS_IN_NETWORK' | translate}}: </label>
+
+                                            <div style="float:right">{{getNumberOfCoinsInNetwork()}}</div>
+
+                                            <br/>
+                                            <label>{{'NETWORK_DIFFICULTY' | translate}}: </label>
+
+                                            <div style="float:right">{{difficulty}}</div>
+
+                                            <br/>
+                                            <label>{{'CURRENT_BLOCK_REWARD' | translate}}: </label>
+
+                                            <div style="float:right">{{getCurrentBlockReward()}}</div>
+
+                                            <br/>
+                                            <label>{{'CURRENT_BLOCK_HEIGHT' | translate}}: </label>
+
+                                            <div style="float:right">{{currentBlockHeight}}</div>
+                                        </div>
+
+                                        <div *ngIf="serverError" class="card-text">
+                                            {{'SERVER_ERROR_TEXT' | translate}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" (click)="serverInfoModal.hide()">{{'OK' | translate}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

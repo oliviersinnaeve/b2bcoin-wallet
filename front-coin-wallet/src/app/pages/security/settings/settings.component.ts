@@ -51,12 +51,12 @@ export class Settings implements OnInit {
     }
 
     public checkbox2faClicked(event) {
-        console.log(event);
+        //console.log(event);
         if (this.is2faEnabled) {
 
             this.userApi.requestEnable2FA({websiteId: websiteId}).subscribe(
                 result => {
-                    console.log("The qr response", result);
+                    //console.log("The qr response", result);
                     this.secretKeyUrl = result.qrImageUrl;
                     this.secretKey = result.secretKey;
                     this.userState.getUser().secretKey = result.secretKey;
@@ -77,13 +77,12 @@ export class Settings implements OnInit {
                 result => {
                     this.failed = false;
                     this.error = undefined;
-                    console.log("The qr response", result);
+                    //console.log("The qr response", result);
 
                     this.enable2FAModal.hide();
                     this.twoFASuccessModal.show();
             },
                 error => {
-                    console.log(error);
                     if (error.status == 412) {
                         this.failed = true;
                         this.error = JSON.parse(error._body).error;

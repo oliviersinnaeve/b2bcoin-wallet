@@ -5,6 +5,7 @@ import { NotificationsService } from 'angular2-notifications';
 import 'rxjs/add/operator/catch'
 
 import { UserState } from '../../user.state';
+import * as b2bcoinModels from '../../services/com.b2beyond.api.b2bcoin/model/models';
 
 import { languages } from '../../environment';
 
@@ -14,6 +15,7 @@ export class TransactionsService {
     public searchUpdated:EventEmitter<any> = new EventEmitter<any>();
 
     public searchString: string;
+    public coin: b2bcoinModels.WalletCoin;
 
     constructor (private http: Http,
                  private notificationsService: NotificationsService,

@@ -3,9 +3,10 @@ import { CommonModule }  from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ngx-bootstrap';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { MarkdownModule } from 'angular2-markdown';
 import { AdsenseModule } from 'ng2-adsense';
+
+import { TooltipModule } from 'ngx-bootstrap';
 
 import { routing }       from './escrow.routing';
 import { Escrow } from './escrow.component';
@@ -23,7 +24,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
         Ng2SmartTableModule,
         ModalModule.forRoot(),
         MarkdownModule.forRoot(),
-        SimpleNotificationsModule.forRoot(),
+        TooltipModule.forRoot(),
         // shown passing optional global defaults
         AdsenseModule.forRoot({
             adClient: 'ca-pub-5721689054603180',

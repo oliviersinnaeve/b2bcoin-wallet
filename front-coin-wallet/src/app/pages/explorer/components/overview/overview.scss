@@ -1,0 +1,172 @@
+#blockchain_explorer {
+
+  width: 100%;
+
+  table {
+    width: 100%;
+  }
+
+  tr:nth-child(even) {
+    color: #528ea6;
+    background-color: #d9ebf2;
+  }
+
+  tr:nth-child(odd) {
+    color: #528ea6;
+    background-color: #ffffff;
+  }
+
+  // Import icon font, I've used Entypo (http://entypo.com/)
+  @import url(http://weloveiconfonts.com/api/?family=entypo);
+
+  //// Import Roboto font
+  //@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+  //
+  //
+  .b2b-pagination-container {
+    margin-top: 1em;
+    padding-top: 2em;
+    border-top: 1px solid #d7dadb;
+    text-align: center;
+  }
+
+  .b2b-pagination-item {
+    list-style-type: none;
+    display: inline-block;
+    border-right: 1px solid #d7dadb;
+
+    transform: scale(1) rotate(19deg) translateX(0px) translateY(0px) skewX(-10deg) skewY(-20deg);
+  }
+
+  .b2b-pagination-item:hover,
+  .b2b-pagination-item.is-active {
+    background-color: #38aecc;
+    border-right: 1px solid #fff;
+
+    transform: scale(1) rotate(19deg) translateX(0px) translateY(0px) skewX(-10deg) skewY(-20deg);
+
+    .b2b-pagination-link {
+      color: #fff;
+    }
+
+  }
+
+  .b2b-pagination-item.first-number {
+    border-left: 1px solid #d7dadb;
+  }
+
+  .b2b-pagination-link {
+    padding: 1.1em 1.6em;
+    display: inline-block;
+    text-decoration: none;
+    color: #8b969c;
+
+    transform: scale(1) rotate(0deg) translateX(0px) translateY(0px) skewX(20deg) skewY(0deg);
+  }
+
+  .b2b-pagination-item--wide {
+    //@extend .b2b-pagination-item;
+    list-style-type: none;
+    display: inline-block;
+  }
+
+  .b2b-pagination-item--wide.first {
+    margin: 0 1em 0 0;
+  }
+
+  .b2b-pagination-item--wide.last {
+    margin: 0 0 0 1em;
+  }
+
+  .b2b-pagination-link--wide {
+    text-decoration: none;
+    color: #8b969c;
+    padding: 1.1em 1.6em;
+  }
+
+  .b2b-pagination-link--wide:hover {
+    color: #086788;
+  }
+
+  .b2b-pagination-link--wide.first:before,
+  .b2b-pagination-link--wide.last:after {
+    font-family: 'entypo';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    // Better Font Rendering
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .b2b-pagination-link--wide.first::before {
+    content: "\E765";
+    margin-right: 0.5em;
+  }
+
+  .b2b-pagination-link--wide.last::after {
+    content: "\E766";
+    margin-left: 0.5em;
+  }
+
+}
+
+@media screen and (min-width: 320px) and (max-width: 699px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 50px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 1023px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1389px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      max-width: 524px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+
+@media screen and (min-width: 1390px) {
+  #paymentsOverview {
+
+    td.columnAddress {
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+//
+//.table-text-wrapper {
+//  max-width: 1024px;
+//  overflow: hidden;
+//  white-space: nowrap;
+//  text-overflow: ellipsis;
+//}
+

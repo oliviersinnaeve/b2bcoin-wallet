@@ -127,6 +127,10 @@ public class DaemonController {
         B2BUtil.backupWallet(userHomeBackupFiles + B2BUtil.SEPARATOR, container, timestamp);
     }
 
+    public int getDaemonPort() {
+        return walletProperties.getInt("p2p-bind-port");
+    }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

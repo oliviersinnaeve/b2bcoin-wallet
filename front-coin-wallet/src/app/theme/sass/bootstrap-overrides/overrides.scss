@@ -1,3 +1,34 @@
 @import "card";
 @import "dropdown";
 @import "tabs";
+
+.btn-secondary {
+  color: #086788;
+  background-color: #c8e2e7;
+  border-color: #ccc;
+  margin-left: 15px;
+}
+
+.form-control {
+  color: #086788 !important;
+  background-color: white !important;
+  box-shadow: none;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+
+.tooltip-inner {
+  width: 150px;
+  background-color: white;
+  color: #086788;
+  border: 1px solid #086788;
+  word-wrap: normal;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.tooltip-arrow {
+  color: white !important;
+}

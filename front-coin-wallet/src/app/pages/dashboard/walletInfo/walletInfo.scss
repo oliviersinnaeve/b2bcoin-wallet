@@ -1,1 +1,18 @@
 @import '../../../theme/sass/conf/conf';
+
+#wallet-info {
+  .heading-logo {
+    text-align: center;
+    width: 32px !important;
+    height: 32px !important;
+    margin-bottom: 15px;
+  }
+
+  .heading-text {
+    width:100%;
+    text-align: center;
+    font-size: 18px;
+    height: 32px;
+  }
+
+}

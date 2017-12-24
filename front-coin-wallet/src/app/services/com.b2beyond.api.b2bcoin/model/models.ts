@@ -25,3 +25,5 @@ export * from './TransactionOutType';
 export * from './TransactionWrapper';
 export * from './Transfer';
 export * from './UserAddress';
+export * from './UserAddressPK';
+export * from './WalletCoin';

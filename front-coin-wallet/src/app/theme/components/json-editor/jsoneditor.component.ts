@@ -31,7 +31,7 @@ export class JsonEditorComponent {
         }
 
         if (null == this.data) {
-            console.log("Data set is null");
+            //console.log("Data set is null");
             this.data = {};
         }
 
@@ -87,7 +87,7 @@ export class JsonEditorComponent {
     }
 
     public validate () {
-        console.log("Triggering schema validation");
+        //console.log("Triggering schema validation");
         this.editor.validate();
     }
 

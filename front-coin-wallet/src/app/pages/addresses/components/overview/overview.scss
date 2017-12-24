@@ -6,6 +6,27 @@
     width: 100%;
   }
 
+  tr:nth-child(even) {
+    color: #528ea6;
+    background-color: #d9ebf2;
+  }
+
+  tr:nth-child(odd) {
+    color: #528ea6;
+    background-color: #ffffff;
+  }
+
+  .columnActions {
+    //width: 100px;
+  }
+
+  .vertical-line {
+    border-left: 1px solid #086788;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0 10px 0 10px;
+  }
+
 }
 
 @media screen and (min-width: 320px) and (max-width: 699px) {

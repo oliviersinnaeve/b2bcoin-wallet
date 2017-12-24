@@ -9,7 +9,7 @@ const routes: Routes = [
         path: '',
         component: Addresses,
         children: [
-            {path: 'overview', component: Overview}
+            //{path: 'overview', component: Overview}
         ]
     }
 ];

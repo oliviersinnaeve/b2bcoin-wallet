@@ -1,0 +1,63 @@
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'MULTI_WALLET' | translate}}</span><span class="vertical-line"></span><span class="location-2">{{'COIN_OVERVIEW' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="dashboardHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div id="coinsOverview">
+
+    <div class="row col-md-12 horizontal-scroll" style="margin-left: 0;">
+        <table class="table table-hover address_table">
+            <thead>
+            <tr class="black-muted-bg white-text">
+                <th class="align-left">&nbsp;</th>
+                <th class="center">{{'COIN' | translate}}</th>
+                <th class="align-right">{{'BALANCE' | translate}}</th>
+                <th class="align-right">{{'LOCKED_BALANCE' | translate}}</th>
+                <th class="center">{{'ACTIONS' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of walletService.coins" class="no-top-border height-64">
+                <td class="columnAddress"><img class="table-logo-img" src="{{item.logo}}"></td>
+                <td class="center">{{item.name}}</td>
+                <td ngClass="columnAmount align-right">{{walletService.getBalance(item)}}</td>
+                <td ngClass="columnLocked align-right">{{walletService.getLockedBalance(item)}}</td>
+                <td class="columnActions center">
+                    <button *ngIf="walletService.hasAddresses(item)" class="btn btn-primary" (click)="walletService.showCoinFull(item)" tooltip="{{'GOTO_COIN_OVERVIEW' | translate}}">
+                        <i class="fa fa-bars white-text"></i>
+                    </button>
+
+                    <a *ngIf="!walletService.hasAddresses(item) && !creatingWallet" class="btn btn-primary" (click)="createAddress(item)" tooltip="{{'ADD_COIN' | translate}}"><i class="fa fa-plus white-text"></i></a>
+                    <a *ngIf="!walletService.hasAddresses(item) && creatingWallet" class="btn btn-primary" tooltip="{{'CREATING_ADDRESS' | translate}}"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #createAddressModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="createAddressModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{'ADD_COIN_TITLE' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{'ADD_COIN_TEXT' | translate}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="createAddressModal.hide();walletService.showCoinFull(selectedCoin);">{{'OK' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+

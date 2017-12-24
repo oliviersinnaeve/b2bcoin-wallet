@@ -2,7 +2,7 @@
 @import '../baMsgCenter/baMsgCenter';
 
 .page-top {
-  background-color: $sidebar;
+  background-color: #086788;
   position: fixed;
   z-index: 904;
   box-shadow: 2px 0 3px rgba(0, 0, 0, 0.5);
@@ -14,6 +14,25 @@
   .dropdown-toggle::after {
     display: none;
   }
+}
+
+.top-logo-img {
+  width: 32px;
+  margin-left: -20px;
+  margin-right: 20px;
+}
+
+.top-text {
+  color: white;
+  float: right;
+  margin-top: 5px;
+  font-weight: 300;
+}
+
+.top-menu-toggle {
+  color: white !important;
+  font-size: 64px !important;
+  margin-top: 2px !important;
 }
 
 .blur {
@@ -133,7 +152,7 @@ a.collapse-menu-link {
   overflow: hidden;
   width: 60%;
   float: left;
-  margin: 20px 0 0 30px;
+  margin: 15px 0 0 30px;
 
   label {
     cursor: pointer;

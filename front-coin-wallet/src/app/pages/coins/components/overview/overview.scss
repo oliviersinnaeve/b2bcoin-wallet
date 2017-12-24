@@ -1,0 +1,46 @@
+#coinsOverview {
+
+  .table-logo-img {
+    width: 32px;
+  }
+
+  .height-64 {
+    height: 64px;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  tr:nth-child(even) {
+    color: #528ea6;
+    background-color: #d9ebf2;
+  }
+
+  tr:nth-child(odd) {
+    color: #528ea6;
+    background-color: #ffffff;
+  }
+
+}
+
+
+
+.location-1 {
+  color: #086788;
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.location-2 {
+  color: #086788;
+  font-size: 20px;
+  font-weight: 300;
+  margin-left: 10px;
+}
+
+.vertical-line {
+  border-left: 2px solid #086788;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}

@@ -57,13 +57,12 @@ export class UserState {
                 }
             )
         } else {
-            if (this.user !== null) {
+            //if (this.user !== null) {
                 console.log("Recalling function")
                 callback.call(context);
                 this.handlingError = false;
-            }
+            //}
         }
-
     }
 
     public setUser (user: userModels.User) {

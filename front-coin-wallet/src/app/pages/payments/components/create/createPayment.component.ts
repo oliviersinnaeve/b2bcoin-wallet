@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
@@ -14,19 +14,21 @@ import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/Wal
 
 @Component({
     selector: 'create',
+    styleUrls: ['createPayment.scss'],
     templateUrl: './createPayment.html'
 })
 
-export class CreatePayment {
+export class CreatePayment implements OnInit {
 
     @ViewChild('createTransferModal') createTransferModal: ModalDirective;
     @ViewChild('messageModal') messageModal: ModalDirective;
 
     public selectedAddress: b2bcoinModels.AddressBalance = {};
+    public fee: number = 0.000001;
 
     public submitting: boolean = false;
 
-    public addresses: Array<b2bcoinModels.AddressBalance> = [];
+    public addresses: Array<b2bcoinModels.UserAddress> = [];
 
     public transfers: Array<any> = [];
 
@@ -40,7 +42,7 @@ export class CreatePayment {
     };
 
     public payment: b2bcoinModels.PaymentInput = {
-        fee: 0.000001,
+        fee: 0,
         transfers: {}
     };
 
@@ -52,7 +54,9 @@ export class CreatePayment {
 
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
-        this.initialize();
+        if (this.walletService.selectedCoin.name == "") {
+            this.router.navigateByUrl("pages/dashboard/mainWallet");
+        }
     }
 
     public addTransaction() {
@@ -74,17 +78,17 @@ export class CreatePayment {
     public createPayment() {
         this.submitting = true;
         for (let i = 0; i < this.transfers.length; i++) {
-            this.payment.transfers[this.transfers[i].address] = this.transfers[i].amount * 1000000000000;
+            this.payment.transfers[this.transfers[i].address] = this.transfers[i].amount * this.walletService.selectedCoin.convertAmount;
         }
 
-        this.payment.fee = this.payment.fee * 1000000000000;
+        this.payment.fee = this.fee * this.walletService.selectedCoin.convertAmount;
         this.payment.addresses = [];
         let address: b2bcoinModels.Address = {};
         address.address = this.selectedAddress.address;
         this.payment.addresses.push(address);
         this.payment.address = this.selectedAddress.address;
 
-        this.walletApi.createPayment(this.payment).subscribe(result => {
+        this.walletApi.createPayment(this.walletService.selectedCoin.name, this.payment).subscribe(result => {
                 this.transactionHash = result.transactionHash;
 
                 this.payment = {
@@ -97,9 +101,9 @@ export class CreatePayment {
                 this.submitting = false;
             },
             (error) => {
-                console.log("Known error", error);
+                //console.log("Known error", error);
                 if (error.status === 401) {
-                    this.userState.handleError(error, this.initialize, this);
+                    this.userState.handleError(error, this.createPayment, this);
                     this.submitting = false;
                 }
 
@@ -114,28 +118,34 @@ export class CreatePayment {
             });
     }
 
+    public deleteTransfer(transfer) {
+        //console.log("deleting transfer", transfer);
+        if (this.transfers.length == 1) {
+            this.transfers = [];
+        } else {
+            for (let i = 0; i < this.transfers.length; i++) {
+                if (this.transfers[i].address == transfer.address && this.transfers[i].amount == transfer.amount) {
+                    this.transfers.splice(i, 1);
+                }
+            }
+        }
+    }
+
     public getParsedAmount(amount: number): string {
         if (amount != undefined && amount != null) {
-            return ((amount * 1000000000000) / 1000000000000).toFixed(12) + " B2B";
+            return ((amount * this.walletService.selectedCoin.convertAmount) / this.walletService.selectedCoin.convertAmount).toFixed(this.walletService.selectedCoin.fractionDigits) + " " + this.walletService.selectedCoin.name;
         } else {
-            return (0 / 1000000000000).toFixed(12) + " B2B";
+            return (0 / this.walletService.selectedCoin.convertAmount).toFixed(this.walletService.selectedCoin.fractionDigits) + " " + this.walletService.selectedCoin.name;
         }
     }
 
     public onAmountChange(amount: string) {
         // explicitly update state (one way data flow)
-        console.log("New parsed amount", amount);
+        //console.log("New parsed amount", amount);
     }
 
-    private initialize () {
-        this.walletService.getAddressesObservable().subscribe(result => {
-            this.addresses = result;
-        },
-        (error) => {
-            if (error.status === 401) {
-                this.userState.handleError(error, this.initialize, this);
-            }
-        });
+    public ngOnInit (): void {
+        this.addresses = this.walletService.getAddressesForCoin(this.walletService.selectedCoin);
     }
 
 }

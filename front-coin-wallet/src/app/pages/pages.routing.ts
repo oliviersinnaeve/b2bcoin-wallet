@@ -24,11 +24,12 @@ export const routes: Routes = [
         path: 'pages',
         component: Pages,
         children: [
-            {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+            {path: '', redirectTo: 'dashboard/mainWallet', pathMatch: 'full'},
             {path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule'},
-            {path: 'addresses', loadChildren: 'app/pages/addresses/addresses.module#AddressesModule'},
+            {path: 'coins', loadChildren: 'app/pages/coins/coins.module#CoinsModule'},
+            {path: 'explorer', loadChildren: 'app/pages/explorer/explorer.module#ExplorerModule'},
             {path: 'payments', loadChildren: 'app/pages/payments/payments.module#PaymentsModule'},
-            {path: 'transactions', loadChildren: 'app/pages/transactions/transactions.module#TransactionsModule'},
+            //{path: 'transactions', loadChildren: 'app/pages/transactions/transactions.module#TransactionsModule'},
             {path: 'escrow', loadChildren: 'app/pages/escrow/escrow.module#EscrowModule'},
             {path: 'profile', loadChildren: 'app/pages/security/profile/profile.module#ProfileModule'},
             {path: 'settings', loadChildren: 'app/pages/security/settings/settings.module#SettingsModule'}

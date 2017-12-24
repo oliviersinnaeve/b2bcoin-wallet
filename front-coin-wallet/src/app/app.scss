@@ -3,23 +3,22 @@
 
 html,body { height:100%; }
 
-::-webkit-input-placeholder {
-  color: #9dd9d2;
-  font-weight: bolder;
-}
-:-moz-placeholder {
-  color: #9dd9d2;
-  font-weight: bolder;
-}
-:-ms-input-placeholder {
-  color: #9dd9d2;
-  font-weight: bolder;
-}
-
 .modal-body {
   a {
     color: #38aecc !important;
   }
+}
+
+.center {
+  text-align: center;
+}
+
+.white-text {
+  color: white !important;
+}
+
+.fa-15x {
+  font-size: 1.5em;
 }
 
 // notification plugin

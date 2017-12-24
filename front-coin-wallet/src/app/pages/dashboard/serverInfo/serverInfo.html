@@ -1,31 +1,33 @@
 <div id="server_info" class="col-md-12 col-xs-12">
-    <div class="card">
+    <div class="text-color">
         <div class="card-block">
-            <h4 class="card-title">Server info</h4>
+            <h4 class="card-title text-color">{{'SERVER_INFO' | translate}}</h4>
 
             <div class="card-text">
-                <label>Last block hash: </label>
+                <div class="row col-md-12">
+                    <label class="col-md-3 font-weight-300">{{'LAST_BLOCK_HASH' | translate}}: </label>
+                    <div class="col-md-7"><a (click)="gotoLastBlock()">{{getLastBlockHash()}}</a></div>
+                </div>
 
-                <div style="float:right"><a (click)="gotoLastBlock()">{{getLastBlockHash()}}</a></div>
-                <br/>
-                <label>Number of coins in network: </label>
+                <div class="row col-md-12">
+                    <label class="col-md-3 font-weight-300">{{'COINS_IN_NETWORK' | translate}}: </label>
+                    <div class="col-md-7">{{getNumberOfCoinsInNetwork()}}</div>
+                </div>
 
-                <div style="float:right">{{getNumberOfCoinsInNetwork()}}</div>
+                <div class="row col-md-12">
+                    <label class="col-md-3 font-weight-300">{{'NETWORK_DIFFICULTY' | translate}}: </label>
+                    <div class="col-md-7">{{getDifficulty()}}</div>
+                </div>
 
-                <br/>
-                <label>Network difficulty : </label>
+                <div class="row col-md-12">
+                    <label class="col-md-3 font-weight-300">{{'CURRENT_BLOCK_REWARD' | translate}}: </label>
+                    <div class="col-md-7">{{getCurrentBlockReward()}}</div>
+                </div>
 
-                <div style="float:right">{{difficulty}}</div>
-
-                <br/>
-                <label>Current block reward : </label>
-
-                <div style="float:right">{{getCurrentBlockReward()}}</div>
-
-                <br/>
-                <label>Current block height : </label>
-
-                <div style="float:right">{{currentBlockHeight}}</div>
+                <div class="row col-md-12">
+                    <label class="col-md-3 font-weight-300">{{'CURRENT_BLOCK_HEIGHT' | translate}}: </label>
+                    <div class="col-md-7">{{getCurrentBlockHeight()}}</div>
+                </div>
             </div>
         </div>
     </div>

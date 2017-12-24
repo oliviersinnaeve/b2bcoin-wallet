@@ -13,6 +13,8 @@
 import * as models from './models';
 
 export interface BlockWrapper {
+    currencyName?: string;
+
     block?: models.Block;
 
 }

@@ -4,6 +4,7 @@ import { GlobalState } from '../../../global.state';
 import { UserState } from '../../../user.state';
 
 import { TransactionsService } from '../../../pages/transactions/transactions.service';
+import { WalletService } from '../../../pages/walletService.service';
 
 import 'style-loader!./baPageTop.scss';
 
@@ -20,6 +21,7 @@ export class BaPageTop {
     constructor (private _state: GlobalState,
                  private userState: UserState,
                  private transactionsService: TransactionsService,
+                 private walletService: WalletService,
                  private router: Router) {
         this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
             this.isMenuCollapsed = isCollapsed;
@@ -36,14 +38,6 @@ export class BaPageTop {
         this.isMenuCollapsed = !this.isMenuCollapsed;
         this._state.notifyDataChanged('menu.isCollapsed', this.isMenuCollapsed);
         return false;
-    }
-
-    public startSearch() {
-        console.log("Starting blockchain search", this.transactionsService.searchString);
-        if (this.transactionsService.searchString != "") {
-            this.router.navigateByUrl("pages/transactions/result");
-            this.transactionsService.triggerSearch();
-        }
     }
 
     public scrolledChanged (isScrolled) {
