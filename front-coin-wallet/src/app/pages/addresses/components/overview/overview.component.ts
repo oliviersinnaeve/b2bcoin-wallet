@@ -24,7 +24,7 @@ export class Overview {
     public coin: b2bcoinModels.WalletCoin;
 
     @Input('showCoinLogo')
-    public showCoinLogo: b2bcoinModels.WalletCoin = true;
+    public showCoinLogo: boolean = true;
 
     @ViewChild('confirmDeleteAddressModal') confirmDeleteAddressModal: ModalDirective;
     @ViewChild('deleteAddressModal') deleteAddressModal: ModalDirective;
@@ -42,7 +42,7 @@ export class Overview {
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
-        this.walletService.getAddresses();
+        this.walletService.getAddresses(false);
     }
 
     public deleteAddress () {
@@ -54,7 +54,7 @@ export class Overview {
                     this.addressToDelete = undefined;
                     this.walletService.addresses = [];
                     this.walletService.addressBalances = {};
-                    this.walletService.getAddresses();
+                    this.walletService.getAddresses(false);
 
                     this.notificationsService.success(this.translate.instant('DELETE_ADDRESS_TITLE'), this.translate.instant('DELETE_ADDRESS_SUCCESS'), {
                         timeOut: 3000,

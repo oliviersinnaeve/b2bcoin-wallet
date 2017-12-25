@@ -30,7 +30,7 @@ export class CoinOverview {
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
-        this.walletService.getAddresses();
+        this.walletService.getAddresses(false);
     }
 
     public createAddress (coin) {
@@ -42,7 +42,7 @@ export class CoinOverview {
                         this.creatingWallet = false;
                         this.walletService.addresses = [];
                         this.walletService.addressBalances = {};
-                        this.walletService.getAddresses();
+                        this.walletService.getAddresses(false);
                         this.createAddressModal.show();
                 },
                     error => {

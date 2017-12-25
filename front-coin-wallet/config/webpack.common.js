@@ -270,9 +270,9 @@ module.exports = function (options) {
          */
         new CopyWebpackPlugin([
             {from: 'src/assets', to: 'assets'},
+            {from: 'src/i18n', to: 'i18n'},
             // {from: 'node_modules/ckeditor', to: 'ckeditor'},
-            {from: 'src/meta'},
-            {from: 'node_modules/monaco-editor/min/vs', to: 'assets/monaco'}
+            {from: 'src/meta'}
         ]),
 
         /*

@@ -43,7 +43,7 @@ export class MultiWalletInfoFull implements OnInit {
                     result => {
                     this.walletService.addresses = [];
                     this.walletService.addressBalances = {};
-                    this.walletService.getAddresses();
+                    this.walletService.getAddresses(false);
                     this.creatingWallet = false;
                     this.createAddressModal.show();
                 },

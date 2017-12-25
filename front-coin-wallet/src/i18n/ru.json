@@ -9,7 +9,7 @@
   },
   "SIGN_IN": "Войти",
   "NEW_SIGN_UP": "Зарегистрироваться",
-  "EMAIL": "Электронная почта",
+  "EMAIL": "Эл. почта",
   "PASSWORD": "Пароль",
   "2FA_CODE": "Код двухфакторной авторизации",
   "2FA_CODE_PLACEHOLDER": "Код Google authenticator",

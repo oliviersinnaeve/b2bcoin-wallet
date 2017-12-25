@@ -38,7 +38,7 @@ export class WalletInfoFull {
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
-        this.walletService.getAddresses();
+        this.walletService.getAddresses(false);
     }
 
     public createNewAddress () {
@@ -48,7 +48,7 @@ export class WalletInfoFull {
                     result => {
                         this.walletService.addresses = [];
                         this.walletService.addressBalances = {};
-                        this.walletService.getAddresses();
+                        this.walletService.getAddresses(false);
                         this.creatingWallet = false;
                         this.createAddressModal.show();
                 },

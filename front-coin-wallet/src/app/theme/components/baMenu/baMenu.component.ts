@@ -35,10 +35,13 @@ export class BaMenu {
         this.menuItems = newMenuItems;
 
         for (let i = 0; i < this.menuItems.length; i++) {
-            this.translate.get(this.menuItems[i].title).subscribe((res: string) => {
-                console.log(res);
-                this.menuItems[i].title = res;
-            });
+            console.log(this.menuItems[i]);
+            this.menuItems[i].title = this.translate.instant(this.menuItems[i].title);
+            if (this.menuItems[i].children) {
+                for (let j = 0; j < this.menuItems[i].children.length; j++) {
+                    this.menuItems[i].children[j].title = this.translate.instant(this.menuItems[i].children[j].title);
+                }
+            }
         }
 
         this.selectMenuAndNotify();
