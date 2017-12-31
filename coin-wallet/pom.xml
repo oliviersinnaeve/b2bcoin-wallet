@@ -74,7 +74,7 @@
 
                                 <configuration>
                                     <generateDiskImageFile>true</generateDiskImageFile>
-                                    <diskImageFile>target/b2bcoin-wallet-mac</diskImageFile>
+                                    <diskImageFile>target/b2bcoin-wallet-mac-v${project.version}</diskImageFile>
                                     <iconFile>src/main/resources/my-logo.icns</iconFile>
                                     <includeApplicationsSymlink>true</includeApplicationsSymlink>
                                     <version>1.0</version>
