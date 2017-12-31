@@ -1,8 +1,8 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
+import com.b2beyond.wallet.rpc.model.Status;
+import com.b2beyond.wallet.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;

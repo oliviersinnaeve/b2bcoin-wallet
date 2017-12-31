@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * Created by oliviersinnaeve on 24/09/17.
@@ -40,6 +43,18 @@ public class FileResourceExtractor {
         }
         fos.close();
         ddlStream.close();
+    }
+
+    public static void copyFromURL(String url, String location) {
+        try {
+            URL website = new URL(url);
+            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+            FileOutputStream fos = new FileOutputStream(location);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to download file from location : " + url);
+        }
     }
 
 }

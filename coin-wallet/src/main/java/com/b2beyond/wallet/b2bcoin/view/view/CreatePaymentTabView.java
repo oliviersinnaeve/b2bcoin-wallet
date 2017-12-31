@@ -1,9 +1,9 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.PaymentInput;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.Payment;
+import com.b2beyond.wallet.rpc.model.PaymentInput;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.util.ComponentFactory;
 import com.b2beyond.wallet.b2bcoin.view.controller.PaymentController;

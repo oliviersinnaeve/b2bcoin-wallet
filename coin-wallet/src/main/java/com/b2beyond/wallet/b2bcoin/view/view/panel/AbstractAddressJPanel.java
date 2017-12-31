@@ -1,6 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.view.view.panel;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

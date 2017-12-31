@@ -1,16 +1,17 @@
 package com.b2beyond.wallet.b2bcoin.controler;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.TransactionWrapper;
+import com.b2beyond.wallet.rpc.CoinController;
+import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.RpcPoller;
+import com.b2beyond.wallet.rpc.model.coin.BlockCount;
+import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
+import com.b2beyond.wallet.rpc.model.coin.TransactionWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CoinRpcController {
+public class CoinRpcController implements CoinController {
 
     private JsonRpcExecutor<BlockCount> blockCountExecutor;
     private JsonRpcExecutor<BlockWrapper> blockWrapperExecutor;
@@ -42,14 +43,17 @@ public class CoinRpcController {
         }
     }
 
+    @Override
     public JsonRpcExecutor<BlockCount> getBlockCountExecutor() {
         return blockCountExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<BlockWrapper> getBlockWrapperExecutor() {
         return blockWrapperExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<TransactionWrapper> getTransactionWrapperExecutor() {
         return transactionWrapperExecutor;
     }

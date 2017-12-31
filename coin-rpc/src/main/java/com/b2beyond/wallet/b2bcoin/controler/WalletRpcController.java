@@ -1,24 +1,25 @@
 package com.b2beyond.wallet.b2bcoin.controler;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Payment;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Success;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.ViewSecretKey;
+import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.RpcPoller;
+import com.b2beyond.wallet.rpc.model.Address;
+import com.b2beyond.wallet.rpc.model.AddressBalance;
+import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.Payment;
+import com.b2beyond.wallet.rpc.model.SingleTransactionItem;
+import com.b2beyond.wallet.rpc.model.SpendKeys;
+import com.b2beyond.wallet.rpc.model.Status;
+import com.b2beyond.wallet.rpc.model.Success;
+import com.b2beyond.wallet.rpc.model.TransactionItems;
+import com.b2beyond.wallet.rpc.model.UnconfirmedTransactionHashes;
+import com.b2beyond.wallet.rpc.model.ViewSecretKey;
+import com.b2beyond.wallet.rpc.WalletController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class WalletRpcController {
+public class WalletRpcController implements WalletController {
 
     private JsonRpcExecutor<ViewSecretKey> viewSecretKeyExecutor;
     private JsonRpcExecutor<SpendKeys> spendKeysExecutor;
@@ -71,54 +72,67 @@ public class WalletRpcController {
         }
     }
 
+    @Override
     public JsonRpcExecutor<ViewSecretKey> getViewSecretKeyExecutor() {
         return viewSecretKeyExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<SpendKeys> getSpendKeysExecutor() {
         return spendKeysExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Status> getStatusExecutor() {
         return statusExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Address> getCreateAddressExecutor() {
         return createAddressExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Success> getDeleteAddressExecutor() {
         return deleteAddressExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<AddressBalance> getBalanceExecutor() {
         return balanceExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Addresses> getAddressesExecutor() {
         return addressesExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Payment> getPaymentExecutor() {
         return paymentExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<TransactionItems> getTransactionsExecutor() {
         return transactionsExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<SingleTransactionItem> getTransactionExecutor() {
         return transactionExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<UnconfirmedTransactionHashes> getUnconfirmedTransactionHashesExecutor() {
         return unconfirmedTransactionHashesExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Void> getResetExecutor() {
         return resetExecutor;
     }
 
+    @Override
     public JsonRpcExecutor<Void> getSaveExecutor() {
         return saveExecutor;
     }

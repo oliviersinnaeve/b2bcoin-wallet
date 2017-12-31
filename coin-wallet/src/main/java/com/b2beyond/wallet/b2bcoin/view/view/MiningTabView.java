@@ -1,6 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.b2bcoin.view.controller.MiningController;
 import com.b2beyond.wallet.b2bcoin.view.model.JComboboxItem;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;

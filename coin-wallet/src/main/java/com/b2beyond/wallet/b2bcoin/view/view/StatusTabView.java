@@ -1,16 +1,16 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.AddressBalance;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SingleTransactionItem;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transaction;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItem;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.TransactionItems;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Transfer;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.UnconfirmedTransactionHashes;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockWrapper;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.model.AddressBalance;
+import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.SingleTransactionItem;
+import com.b2beyond.wallet.rpc.model.Status;
+import com.b2beyond.wallet.rpc.model.Transaction;
+import com.b2beyond.wallet.rpc.model.TransactionItem;
+import com.b2beyond.wallet.rpc.model.TransactionItems;
+import com.b2beyond.wallet.rpc.model.Transfer;
+import com.b2beyond.wallet.rpc.model.UnconfirmedTransactionHashes;
+import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;

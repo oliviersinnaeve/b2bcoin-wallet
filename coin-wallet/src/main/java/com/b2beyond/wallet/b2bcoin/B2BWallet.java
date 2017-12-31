@@ -5,14 +5,14 @@ import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.PropertiesLoader;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.b2bcoin.daemon.DaemonPortChecker;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.NoParamsRpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.RpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.SynchronizationRpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.TransactionItemsRpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.UnconfirmedTransactionHashesRpcPoller;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Status;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.coin.BlockCount;
+import com.b2beyond.wallet.rpc.NoParamsRpcPoller;
+import com.b2beyond.wallet.rpc.RpcPoller;
+import com.b2beyond.wallet.b2bcoin.rpc.SynchronizationRpcPoller;
+import com.b2beyond.wallet.b2bcoin.rpc.TransactionItemsRpcPoller;
+import com.b2beyond.wallet.b2bcoin.rpc.UnconfirmedTransactionHashesRpcPoller;
+import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.Status;
+import com.b2beyond.wallet.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
@@ -45,7 +45,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 
@@ -63,8 +62,6 @@ public class B2BWallet extends MainFrame {
     private static int loadingCounter = 1;
 
     public static void main(String[] args) {
-        //Locale.setDefault(Locale.GERMAN);
-
         try {
             for (UIManager.LookAndFeelInfo lnf :
                     UIManager.getInstalledLookAndFeels()) {

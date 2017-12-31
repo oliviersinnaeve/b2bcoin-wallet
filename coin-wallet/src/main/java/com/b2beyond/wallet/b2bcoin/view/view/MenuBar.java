@@ -1,10 +1,10 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Address;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.Addresses;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.SpendKeys;
-import com.b2beyond.wallet.b2bcoin.daemon.rpc.model.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.model.Address;
+import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.SpendKeys;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AboutPanel;
@@ -17,13 +17,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MenuBar extends JMenuBar {

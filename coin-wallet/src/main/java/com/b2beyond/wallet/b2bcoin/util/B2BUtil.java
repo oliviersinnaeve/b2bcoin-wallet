@@ -90,12 +90,24 @@ public final class B2BUtil {
         try {
             new File(getConfigRoot()).mkdirs();
 
-//            if (!Paths.get(getConfigRoot() + "coin.conf").toFile().exists()) {
-                LOGGER.trace("Exporting the coin daemon config");
-                FileResourceExtractor.extractFromJar(
-                        "configs/coin.conf",
-                        getConfigRoot() + "coin.conf");
-//            }
+            LOGGER.trace("Exporting the coin daemon config");
+            FileResourceExtractor.extractFromJar(
+                    "configs/application.config",
+                    getConfigRoot() + "application.config");
+
+            if (Paths.get(getUserHome() + "coin.conf").toFile().exists()) {
+                if (!Paths.get(getUserHome() + "coin.conf").toFile().delete()) {
+                    LOGGER.warn("File coin.conf could not be deleted");
+                }
+            }
+
+            PropertiesConfiguration applicationProperties = new PropertiesConfiguration(getConfigRoot() + "application.config");
+            String coinConfigUrl = applicationProperties.getString("coin-config");
+            LOGGER.trace("Exporting the coin daemon config");
+            FileResourceExtractor.copyFromURL(
+                    coinConfigUrl,
+                    getConfigRoot() + "coin.conf");
+
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
                 Paths.get(getUserHome() + "coin-wallet.conf").toFile().delete();
@@ -120,23 +132,6 @@ public final class B2BUtil {
                 LOGGER.debug("File coin-wallet.conf should be updated with new values");
             }
 
-            //if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
-                LOGGER.trace("Exporting the coin daemon config");
-                FileResourceExtractor.extractFromJar(
-                        "configs/application.config",
-                        getConfigRoot() + "application.config");
-//            } else {
-//                // Here we can set new properties on every restart !!!
-//                LOGGER.debug("Updating the coin-wallet file with pools");
-//                PropertiesConfiguration newFile = new PropertiesConfiguration(
-//                        B2BUtil.class.getClassLoader().getResource("configs/application.config"));
-//                PropertiesConfiguration currentFile= new PropertiesConfiguration(getConfigRoot() + "application.config");
-//
-//                currentFile.setProperty("pool-pools", null);
-//                currentFile.addProperty("pool-pools", newFile.getStringArray("pool-pools"));
-//                currentFile.save();
-//                LOGGER.debug("File coin-wallet.conf should be updated with new pools");
-//            }
         } catch (Exception e) {
             LOGGER.error("Failed to copy file", e);
         }
