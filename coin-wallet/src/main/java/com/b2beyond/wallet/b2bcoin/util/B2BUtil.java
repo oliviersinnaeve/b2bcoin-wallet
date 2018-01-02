@@ -13,6 +13,7 @@ import com.b2beyond.wallet.b2bcoin.view.view.SplashWindow;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -101,12 +102,18 @@ public final class B2BUtil {
                 }
             }
 
-            PropertiesConfiguration applicationProperties = new PropertiesConfiguration(getConfigRoot() + "application.config");
-            String coinConfigUrl = applicationProperties.getString("coin-config");
-            LOGGER.trace("Exporting the coin daemon config");
-            FileResourceExtractor.copyFromURL(
-                    coinConfigUrl,
-                    getConfigRoot() + "coin.conf");
+            try {
+                PropertiesConfiguration applicationProperties = new PropertiesConfiguration(getConfigRoot() + "application.config");
+                String coinConfigUrl = applicationProperties.getString("coin-config");
+                LOGGER.trace("Exporting the coin daemon config");
+                FileResourceExtractor.copyFromURL(
+                        coinConfigUrl,
+                        getConfigRoot() + "coin.conf");
+            } catch (ConfigurationException e) {
+                FileResourceExtractor.extractFromJar(
+                        "configs/application.config",
+                        getConfigRoot() + "application.config");
+            }
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
