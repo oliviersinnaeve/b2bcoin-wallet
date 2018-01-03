@@ -108,11 +108,11 @@ public final class B2BUtil {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.copyFromURL(
                         coinConfigUrl,
-                        getConfigRoot() + "coin.config");
+                        getConfigRoot() + "coin.conf");
             } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
                         "configs/coin.conf",
-                        getConfigRoot() + "coin.config");
+                        getConfigRoot() + "coin.conf");
             }
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
