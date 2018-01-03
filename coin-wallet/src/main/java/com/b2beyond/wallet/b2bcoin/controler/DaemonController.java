@@ -110,6 +110,31 @@ public class DaemonController {
         coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
     }
 
+    public void stopDaemon() {
+        coinDaemon.stop();
+        boolean daemonStopped = false;
+
+        LOGGER.debug(walletProperties.getInt("p2p-bind-port"));
+        int daemonPort = walletProperties.getInt("p2p-bind-port");
+        int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
+        int walletRpcPort = walletProperties.getInt("bind-port");
+
+        LOGGER.info("Checking ports : '" + walletRpcPort + "' : '" + daemonPort + "' : '" + daemonRpcPort + "'");
+
+        while (B2BUtil.availableForConnection(daemonPort)
+                || B2BUtil.availableForConnection(daemonRpcPort)) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void startDaemon() {
+        coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
+    }
+
     public void stop() {
         walletDaemon.stop();
         coinDaemon.stop();

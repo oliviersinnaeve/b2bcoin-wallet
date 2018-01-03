@@ -110,7 +110,9 @@ public class ActionController {
 
     public void resetWallet() {
         try {
+            controller.stopDaemon();
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+            controller.startDaemon();
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }
