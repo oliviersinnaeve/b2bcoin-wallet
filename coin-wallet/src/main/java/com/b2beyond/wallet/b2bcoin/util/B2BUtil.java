@@ -112,7 +112,7 @@ public final class B2BUtil {
             } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
-                        getConfigRoot() + "application.config");
+                        getConfigRoot() + "coin.config");
             }
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
