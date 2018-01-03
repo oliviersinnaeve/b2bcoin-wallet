@@ -112,17 +112,15 @@ public class DaemonController {
 
     public void stopDaemon() {
         coinDaemon.stop();
-        boolean daemonStopped = false;
 
         LOGGER.debug(walletProperties.getInt("p2p-bind-port"));
         int daemonPort = walletProperties.getInt("p2p-bind-port");
         int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
-        int walletRpcPort = walletProperties.getInt("bind-port");
 
-        LOGGER.info("Checking ports : '" + walletRpcPort + "' : '" + daemonPort + "' : '" + daemonRpcPort + "'");
+        LOGGER.info("Checking ports : '" + daemonPort + "' : '" + daemonRpcPort + "'");
 
-        while (B2BUtil.availableForConnection(daemonPort)
-                || B2BUtil.availableForConnection(daemonRpcPort)) {
+        while (!B2BUtil.availableForConnection(daemonPort)
+                || !B2BUtil.availableForConnection(daemonRpcPort)) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
