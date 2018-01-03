@@ -108,7 +108,7 @@ public final class B2BUtil {
                 LOGGER.trace("Exporting the coin daemon config");
                 FileResourceExtractor.copyFromURL(
                         coinConfigUrl,
-                        getConfigRoot() + "coin.conf");
+                        getConfigRoot() + "application.config");
             } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
