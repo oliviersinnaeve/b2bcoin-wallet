@@ -109,7 +109,7 @@ public final class B2BUtil {
                 FileResourceExtractor.copyFromURL(
                         coinConfigUrl,
                         getConfigRoot() + "coin.conf");
-            } catch (ConfigurationException e) {
+            } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
                         "configs/application.config",
                         getConfigRoot() + "application.config");
