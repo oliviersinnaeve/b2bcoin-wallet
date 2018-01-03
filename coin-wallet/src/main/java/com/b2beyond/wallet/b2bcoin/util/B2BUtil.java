@@ -111,7 +111,7 @@ public final class B2BUtil {
                         getConfigRoot() + "application.config");
             } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
-                        "configs/application.config",
+                        "configs/coin.conf",
                         getConfigRoot() + "coin.config");
             }
 
