@@ -63,12 +63,14 @@ public class DaemonController {
                 walletProperties.load(new FileInputStream(configLocation + "coin-wallet.conf"));
                 container = walletProperties.getString("container-file");
 
-                PasswordPanel passwordPanel = new PasswordPanel(container);
+                if (!StringUtils.isBlank(container) && new File(userHome + container).exists()) {
+                    PasswordPanel passwordPanel = new PasswordPanel(container);
 
-                JOptionPane.showMessageDialog(null, passwordPanel, "Enter wallet password",
-                        JOptionPane.INFORMATION_MESSAGE, B2BUtil.getIcon());
+                    JOptionPane.showMessageDialog(null, passwordPanel, "Enter wallet password",
+                            JOptionPane.INFORMATION_MESSAGE, B2BUtil.getIcon());
 
-                password = passwordPanel.getPasswordField().getText();
+                    password = passwordPanel.getPasswordField().getText();
+                }
             } catch (ConfigurationException | IOException e) {
                 LOGGER.info("No wallet has been loaded ever");
             }

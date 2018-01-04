@@ -6,6 +6,7 @@ import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressBalance;
+import com.b2beyond.wallet.rpc.model.AddressInput;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
 import com.b2beyond.wallet.rpc.model.Success;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
@@ -66,6 +67,15 @@ public class ActionController {
     public Address createAddress() {
         try {
             return walletRpcController.getCreateAddressExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Address importAddress(AddressInput input) {
+        try {
+            return walletRpcController.getCreateAddressExecutor().execute(input.getParams());
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }

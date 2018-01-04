@@ -1,7 +1,9 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
+import com.b2beyond.wallet.b2bcoin.view.view.panel.CreateAddressPanel;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.model.Address;
+import com.b2beyond.wallet.rpc.model.AddressInput;
 import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
@@ -59,6 +61,32 @@ public class MenuBar extends JMenuBar {
             }
         });
 
+        // Import address sub menu
+//        JMenuItem importAddressMenuItem = new JMenuItem("Import address", icon);
+//        importAddressMenuItem.setToolTipText("Import address");
+//        importAddressMenuItem.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent ev) {
+//                CreateAddressPanel createAddressPanel = new CreateAddressPanel();
+//                int response = JOptionPane.showConfirmDialog(null,
+//                        createAddressPanel,
+//                        "Import address",
+//                        JOptionPane.OK_CANCEL_OPTION,
+//                        JOptionPane.QUESTION_MESSAGE,
+//                        B2BUtil.getIcon());
+//
+//                if (response == 0) {
+//                    AddressInput addressInput = new AddressInput();
+//                    addressInput.setPublicSpendKey(createAddressPanel.getPublicKey().getText());
+//                    addressInput.setSecretSpendKey(createAddressPanel.getSecretKey().getText());
+//                    Address address = actionController.importAddress(addressInput);
+//                    JOptionPane.showMessageDialog(null,
+//                        address.getAddress(),
+//                        "Address imported - check address view",
+//                        JOptionPane.INFORMATION_MESSAGE);
+//                }
+//            }
+//        });
+
         // Reset wallet sub menu
         JMenuItem resetWalletMenuItem = new JMenuItem("Reset wallet", icon);
         resetWalletMenuItem.setToolTipText("Reset wallet");
@@ -77,6 +105,8 @@ public class MenuBar extends JMenuBar {
 
                 final JFileChooser fc = new JFileChooser();
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                fc.setDialogTitle("Backup wallet to directory");
+                fc.setApproveButtonText("Save");
                 int result = fc.showOpenDialog(mainFrame);
 
                 if (result == JFileChooser.APPROVE_OPTION) {
@@ -141,6 +171,7 @@ public class MenuBar extends JMenuBar {
         wallet.add(spendKeysMenuItem);
         wallet.add(resetWalletMenuItem);
         wallet.add(createNewAddressMenuItem);
+//        wallet.add(importAddressMenuItem);
 
         help.add(aboutMenuItem);
 
