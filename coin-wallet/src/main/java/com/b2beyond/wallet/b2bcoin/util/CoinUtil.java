@@ -15,10 +15,8 @@ public class CoinUtil {
 
     public static long getLongForText(String text) {
         text = text.replace(",", ".");
-        LOGGER.info("getLongForText : Converting " + text + " to long");
         BigDecimal decimal = new BigDecimal(text);
         decimal = decimal.multiply(DIVIDE_BY);
-        LOGGER.info("getLongForText : Converted " + text + " to long : " + decimal.longValue());
         return decimal.longValue();
     }
 
@@ -29,11 +27,9 @@ public class CoinUtil {
         amountFormat.setMaximumFractionDigits(12);
 
         String text = amount.toString().replace(",", ".");
-        LOGGER.info("getTextForLong : Converting " + text + " to long");
         BigDecimal decimal = new BigDecimal(amount.toString());
         decimal = decimal.setScale(12, RoundingMode.UP);
         decimal = decimal.divide(DIVIDE_BY, RoundingMode.UP);
-        LOGGER.info("getTextForLong : Converted " + text + " to long : " + decimal.toPlainString());
         return amountFormat.format(decimal.doubleValue());
     }
 

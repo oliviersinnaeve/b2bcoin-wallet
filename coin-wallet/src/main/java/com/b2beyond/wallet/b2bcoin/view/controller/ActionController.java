@@ -14,6 +14,8 @@ import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+
 
 public class ActionController {
 
@@ -30,20 +32,6 @@ public class ActionController {
         this.controller = controller;
         this.coinRpcController = coinRpcController;
         this.walletRpcController = walletRpcController;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                    if (B2BUtil.availableForConnection(controller.getDaemonPort())) {
-                        controller.restartDaemon();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     public void setMiningController(PoolMiningController miningController) {
@@ -86,7 +74,7 @@ public class ActionController {
         try {
             return coinRpcController.getBlockWrapperExecutor().execute("\"params\": {\"hash\": \"" + hash + "\"}");
         } catch (KnownJsonRpcException e) {
-            e.printStackTrace();
+            restartCoinDaemon();
         }
         return null;
     }
@@ -110,6 +98,14 @@ public class ActionController {
         controller.restartDaemon();
     }
 
+    public void startCoinDaemon() {
+        controller.startDaemon();
+    }
+
+    public void stopCoinDaemon() {
+        controller.stopDaemon();
+    }
+
     public CoinRpcController getCoinRpcController() {
         return coinRpcController;
     }
@@ -118,14 +114,45 @@ public class ActionController {
         return walletRpcController;
     }
 
+    public void startWallet() {
+        controller.startWallet();
+    }
+
     public void resetWallet() {
         try {
-            controller.stopDaemon();
+            //controller.stopDaemon();
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
-            controller.startDaemon();
+            //controller.startDaemon();
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }
+    }
+
+    public void resetBlockChain() {
+        LOGGER.info("Delete block chain");
+        LOGGER.debug("Command : " + B2BUtil.getDeleteBlockChainHomeCommand());
+
+        stopCoinDaemon();
+
+//        ProcessBuilder pb = new ProcessBuilder(B2BUtil.getDeleteBlockChainHomeCommand());
+
+        Process process;
+        try {
+//            process = pb.start();
+            process = Runtime.getRuntime().exec(B2BUtil.getDeleteBlockChainHomeCommand());
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            LOGGER.info("Windows sleep : 5 seconds");
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        stopCoinDaemon();
     }
 
     public SpendKeys getSpendKeys(String address) {

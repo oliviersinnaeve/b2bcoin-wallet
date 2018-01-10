@@ -45,8 +45,18 @@ public class MenuBar extends JMenuBar {
             }
         });
 
+        JMenu network = new JMenu("Network");
         JMenu wallet = new JMenu("Wallet");
         JMenu help = new JMenu("Help");
+
+        // Reset blockchain sub menu
+        JMenuItem resetBlockchainMenuItem = new JMenuItem("Reset blockchain", icon);
+        resetBlockchainMenuItem.setToolTipText("Reset blockchain data");
+        resetBlockchainMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                actionController.resetBlockChain();
+            }
+        });
 
         // New address sub menu
         JMenuItem createNewAddressMenuItem = new JMenuItem("Create new address", icon);
@@ -167,15 +177,18 @@ public class MenuBar extends JMenuBar {
 
         file.add(exitMenuItem);
 
+        network.add(resetBlockchainMenuItem);
+
         wallet.add(backupWalletMenuItem);
         wallet.add(spendKeysMenuItem);
         wallet.add(resetWalletMenuItem);
         wallet.add(createNewAddressMenuItem);
-//        wallet.add(importAddressMenuItem);
+        //wallet.add(importAddressMenuItem);
 
         help.add(aboutMenuItem);
 
         this.add(file);
+        this.add(network);
         this.add(wallet);
         this.add(help);
     }

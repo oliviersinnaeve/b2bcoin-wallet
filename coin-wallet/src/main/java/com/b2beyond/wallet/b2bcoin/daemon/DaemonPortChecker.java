@@ -23,25 +23,8 @@ public class DaemonPortChecker implements Runnable {
 
     @Override
     public void run() {
-        int walletTries = 10;
         int coinTries = 10;
-        while (B2BUtil.availableForConnection(walletRpcPort)) {
-            LOGGER.info("Still Loading the wallet daemon ...");
-            if (walletTries == 0) {
-                JOptionPane.showMessageDialog(null,
-                        "We tried to start the wallet rpc server on port " + walletRpcPort + ", it could not be started.\n" +
-                                "We will shutdown the application, it is not usable anyway.",
-                        "Fatal error",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
-            try {
-                Thread.sleep(2000);
-                walletTries -= 1;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+
         while (B2BUtil.availableForConnection(daemonPort)) {
             LOGGER.info("Still Loading the coin daemon ...");
             if (coinTries == 0) {

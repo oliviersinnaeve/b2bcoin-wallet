@@ -19,6 +19,7 @@ import java.net.URL;
 public class JsonRpcExecutor<T> {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
+    public static String CONNECTION_REFUSED = "CONNECTION_REFUSED";
 
     private String baseUrl;
     private String method;
@@ -90,13 +91,20 @@ public class JsonRpcExecutor<T> {
                 os.close();
                 httpConnection.disconnect();
             } catch (IOException e) {
-                LOGGER.error("JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
+                LOGGER.error("IO - JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
+
+                Error error = new Error();
+                error.setCode(CONNECTION_REFUSED);
+                throw new KnownJsonRpcException(error);
             }
         } catch (Exception e) {
-            LOGGER.error("JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
+            LOGGER.error("General - JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
             if (httpConnection != null) {
                 httpConnection.disconnect();
             }
+            Error error = new Error();
+            error.setCode(CONNECTION_REFUSED);
+            throw new KnownJsonRpcException(error);
         }
 
         return result;

@@ -203,6 +203,15 @@ public final class B2BUtil {
         return location;
     }
 
+    private static String getDefaultHome() {
+        String userHome = System.getProperty("user.home") + SEPARATOR;
+        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+            userHome = System.getProperty("user.home") + SEPARATOR;
+        }
+        LOGGER.info("Starting daemon for OS : '" + getOperatingSystem() + "' with user home : " + userHome);
+        return userHome;
+    }
+
     public static String getUserHome() {
         String userHome = System.getProperty("user.home") + SEPARATOR + System.getProperty("user.home.forknote") + SEPARATOR;
         if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
@@ -312,5 +321,21 @@ public final class B2BUtil {
         }
 
         throw new RuntimeException("icon not found");
+    }
+
+    public static String getDeleteBlockChainHomeCommand() {
+        String command = "";
+
+        String blockChainHome = getDefaultHome();
+        String windows = "AppData" + B2BUtil.SEPARATOR + "Roaming" + B2BUtil.SEPARATOR + "b2bcoin";
+        String unix = ".b2bcoin";
+
+        if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
+            command = "rmdir \\y " + blockChainHome + windows;
+        } else {
+            command = "rm -R " + blockChainHome + unix;
+        }
+
+        return command;
     }
 }

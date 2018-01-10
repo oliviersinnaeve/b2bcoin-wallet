@@ -19,8 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,13 +40,15 @@ public class DaemonController {
     private String password;
     private String container;
 
+    private boolean firstStartup;
+
 
     public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration walletProperties, String operatingSystem) {
         LOGGER.info("Loading Daemon controller");
         this.applicationProperties = applicationProperties;
         this.walletProperties = walletProperties;
         this.operatingSystem = operatingSystem;
-        boolean firstStartup = false;
+        firstStartup = false;
         URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
 
         String configLocation = B2BUtil.getConfigRoot();
@@ -99,13 +99,13 @@ public class DaemonController {
 
 
         coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
-        walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
+        //walletDaemon =  new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
     }
 
     public void restartDaemon() {
         coinDaemon.stop();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -113,26 +113,41 @@ public class DaemonController {
     }
 
     public void stopDaemon() {
-        coinDaemon.stop();
+        if (coinDaemon != null) {
+            coinDaemon.stop();
 
-        LOGGER.debug(walletProperties.getInt("p2p-bind-port"));
-        int daemonPort = walletProperties.getInt("p2p-bind-port");
-        int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
+            int daemonPort = getDaemonPort();
+            int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
 
-        LOGGER.info("Checking ports : '" + daemonPort + "' : '" + daemonRpcPort + "'");
+            LOGGER.info("Checking ports : '" + daemonPort + "' : '" + daemonRpcPort + "'");
 
-        while (!B2BUtil.availableForConnection(daemonPort)
-                || !B2BUtil.availableForConnection(daemonRpcPort)) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            while (!B2BUtil.availableForConnection(daemonPort)
+                    || !B2BUtil.availableForConnection(daemonRpcPort)) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+            coinDaemon = null;
         }
     }
 
     public void startDaemon() {
-        coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
+        int daemonPort = getDaemonPort();
+        int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
+
+        if (B2BUtil.availableForConnection(daemonPort)
+                || B2BUtil.availableForConnection(daemonRpcPort)) {
+            coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
+        }
+    }
+
+    public void startWallet() {
+        if (walletDaemon == null) {
+            walletDaemon = new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
+        }
     }
 
     public void stop() {
