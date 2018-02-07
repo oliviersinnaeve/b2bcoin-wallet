@@ -199,28 +199,9 @@ public class MainFrame extends JFrame implements Observer {
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
-            System.out.println(progressBar.getValue());
-            if (progressBar.getValue() == progressBar.getMaximum()) {
-                actionController.startWallet();
-            }
-            dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
             System.out.println(((Error) data).getCode());
-
-            if (((Error) data).getCode().equals(JsonRpcExecutor.CONNECTION_REFUSED)) {
-                if (!restarting) {
-                    restarting = true;
-                    actionController.startCoinDaemon();
-
-                    try {
-                        Thread.sleep(30000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    restarting = false;
-                }
-            }
         }
     }
 

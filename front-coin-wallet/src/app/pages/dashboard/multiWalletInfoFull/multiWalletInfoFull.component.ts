@@ -4,9 +4,6 @@ import { ModalDirective } from 'ngx-bootstrap';
 
 import { UserState } from '../../../user.state';
 import { WalletService } from '../../walletService.service';
-import { TransactionsService } from '../../transactions/transactions.service';
-
-import * as Chart from 'chart.js';
 
 import 'style-loader!./multiWalletInfoFull.scss';
 
@@ -29,11 +26,8 @@ export class MultiWalletInfoFull implements OnInit {
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
                  private walletService: WalletService,
-                 private transactionsService: TransactionsService,
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
-        //this.walletService.getAddresses();
     }
 
     public createNewAddress () {
@@ -63,7 +57,6 @@ export class MultiWalletInfoFull implements OnInit {
     }
 
     public createNewPayment() {
-        //this.walletService.selectedCoin = this.walletService.primaryCoin;
         this.router.navigateByUrl("/pages/payments/create");
     }
 

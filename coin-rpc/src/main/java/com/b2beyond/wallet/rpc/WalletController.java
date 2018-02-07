@@ -3,6 +3,8 @@ package com.b2beyond.wallet.rpc;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressBalance;
 import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.FusionEstimate;
+import com.b2beyond.wallet.rpc.model.FusionTransaction;
 import com.b2beyond.wallet.rpc.model.Payment;
 import com.b2beyond.wallet.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
@@ -36,6 +38,10 @@ public interface WalletController {
     JsonRpcExecutor<SingleTransactionItem> getTransactionExecutor();
 
     JsonRpcExecutor<UnconfirmedTransactionHashes> getUnconfirmedTransactionHashesExecutor();
+
+    JsonRpcExecutor<FusionEstimate> getFusionEstimateExecutor();
+
+    JsonRpcExecutor<FusionTransaction> getFusionTransactionExecutor();
 
     JsonRpcExecutor<Void> getResetExecutor();
 

@@ -93,6 +93,10 @@ public class JsonRpcExecutor<T> {
             } catch (IOException e) {
                 LOGGER.error("IO - JSon Rcp Executor failed : " + e.getMessage() + " on : " + baseUrl + " with method " + method);
 
+                if (httpConnection != null) {
+                    httpConnection.disconnect();
+                }
+
                 Error error = new Error();
                 error.setCode(CONNECTION_REFUSED);
                 throw new KnownJsonRpcException(error);
@@ -102,6 +106,7 @@ public class JsonRpcExecutor<T> {
             if (httpConnection != null) {
                 httpConnection.disconnect();
             }
+
             Error error = new Error();
             error.setCode(CONNECTION_REFUSED);
             throw new KnownJsonRpcException(error);

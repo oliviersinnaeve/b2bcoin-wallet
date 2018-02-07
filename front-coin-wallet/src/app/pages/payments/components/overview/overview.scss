@@ -69,7 +69,7 @@
   }
 
   .b2b-pagination-item--wide.first {
-    margin: 0 1em 0 0;
+    margin: 0 2em 0 0;
   }
 
   .b2b-pagination-item--wide.last {
@@ -102,12 +102,12 @@
   }
 
   .b2b-pagination-link--wide.first::before {
-    content: "\E765";
+    //content: "\E765";
     margin-right: 0.5em;
   }
 
   .b2b-pagination-link--wide.last::after {
-    content: "\E766";
+    //content: "\E766";
     margin-left: 0.5em;
   }
 

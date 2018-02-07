@@ -1,0 +1,141 @@
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'FAUCET' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="faucetHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div class="row col-md-12 margin-top-20">&nbsp;</div>
+
+<div id="faucetOverview">
+    <div class="col-md-12 col-xs-12">
+        <div class="card">
+            <div class="card-block">
+                <div class="card-title row">
+                    <div class="col-md-12">
+                        <span class="font-weight-100">{{'FAUCET_INFO' | translate}}</span>
+                    </div>
+                    <div class="col-md-12 center">
+                        <span class="circle">
+                            <img class="heading-logo center" src="{{walletService.primaryCoin.logo}}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-text row vertical-divider-white">
+                    <div class="col-md-12 heading-text row-spacer-15">
+                        <span class="font-size-36">{{walletService.primaryCoin.name}} {{'FAUCET' | translate}}</span>
+                    </div>
+
+                    <div class="col-md-12 row-spacer-25" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'FAUCET_NAME' | translate}}: </label>
+                        </div>
+                        <div class="col-md-7 row-spacer-10">
+                            <div *ngIf="!nameInEdit" class="font-weight-300">{{walletService.faucetAddress.name}}</div>
+                            <input type="text" *ngIf="nameInEdit" class="form-control font-weight-300" [(ngModel)]="walletService.faucetAddress.name">
+                        </div>
+                        <div class="col-md-2">
+                            <a *ngIf="!nameInEdit" class="btn btn-primary pull-right" (click)="nameInEdit = true"><i class="fa fa-pencil"></i></a>
+                            <a *ngIf="nameInEdit" class="btn btn-primary pull-right" (click)="walletService.updateFaucetAddress()"><i class="fa fa-save"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'FAUCET_URL' | translate}}: </label>
+                        </div>
+                        <div class="col-md-7 row-spacer-10">
+                            <a href="{{walletService.faucetAddress.faucetUrl}}" *ngIf="!faucetUrlInEdit" class="font-weight-300" target="_blank">{{walletService.faucetAddress.faucetUrl}}</a>
+                            <input type="text" *ngIf="faucetUrlInEdit" class="form-control font-weight-300" [(ngModel)]="walletService.faucetAddress.faucetUrl">
+                        </div>
+                        <div class="col-md-2">
+                            <a *ngIf="!faucetUrlInEdit" class="btn btn-primary pull-right" (click)="faucetUrlInEdit = true"><i class="fa fa-pencil"></i></a>
+                            <a *ngIf="faucetUrlInEdit" class="btn btn-primary pull-right" (click)="walletService.updateFaucetAddress()"><i class="fa fa-save"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'FAUCET_BALANCE' | translate}}: </label>
+                        </div>
+                        <div class="col-md-9 row-spacer-10">
+                            <div class="font-weight-300">{{getParsedAmount(walletService.faucetAddress.balance.availableBalance)}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'LOCKED_BALANCE' | translate}}: </label>
+                        </div>
+                        <div class="col-md-9 row-spacer-10">
+                            <div class="font-weight-300">{{getParsedAmount(walletService.faucetAddress.balance.lockedAmount)}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'ADDRESS' | translate}}: </label>
+                        </div>
+                        <div class="col-md-7 row-spacer-10">
+                            <div class="font-weight-300 ellipsis-div">{{walletService.faucetAddress.address}}</div>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-primary pull-right" (click)="copyToClipboard(walletService.faucetAddress.address, 'Address copied to clipboard')"><i class="fa fa-copy"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" *ngIf="walletService.hasFaucetAddress">
+                        <div class="col-md-3 row-spacer-10">
+                            <label class="font-weight-300">{{'PUBLIC_KEY' | translate}}: </label>
+                        </div>
+                        <div class="col-md-7 row-spacer-10">
+                            <div class="font-weight-300 ellipsis-div">{{walletService.faucetAddress.apiKeys.publicKey}}</div>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn btn-primary pull-right" (click)="copyToClipboard(walletService.faucetAddress.apiKeys.publicKey, 'Public key copied to clipboard')"><i class="fa fa-copy"></i></a>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!walletService.hasFaucetAddress" class="col-md-12">
+                        <div class="col-md-4 row-spacer-20">
+                            <label class="font-weight-300">{{'ADD_FAUCET' | translate}}: </label>
+                        </div>
+                        <div class="col-md-8 row-spacer-20">
+                            <a *ngIf="creatingWallet" class="btn btn-primary" tooltip="{{'CREATING_FAUCET' | translate}}"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                            <a *ngIf="!creatingWallet" class="btn btn-primary" (click)="createNewFaucetAddress(false)" tooltip="{{'ADD_FAUCET' | translate}}"><img src="/assets/img/add_address_2.svg"/></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-xs-12 margin-top-30" *ngIf="walletService.hasFaucetAddress">
+        <span class="location-1">{{'FAUCET_USERS_BALANCES_AND_PAYOUT' | translate}}</span>
+    </div>
+
+    <div id="faucetSpendAddresses" class="row col-md-12 horizontal-scroll margin-top-15" style="margin-left: 0;" *ngIf="walletService.hasFaucetAddress">
+        <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #faucetHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="faucetHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Faucet help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/faucet.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="faucetHelpModal.hide()">{{'CLOSE' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

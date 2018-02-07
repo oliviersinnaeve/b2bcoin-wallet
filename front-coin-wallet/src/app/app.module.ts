@@ -28,7 +28,6 @@ import { App } from './app.component';
 import { UserState } from './user.state';
 import { WalletService } from './pages/walletService.service';
 import { TransactionsService } from './pages/transactions/transactions.service';
-import { EscrowService } from './pages/escrow/escrow.service';
 import { AppState, InternalStateType } from './app.service';
 import { GlobalState } from './global.state';
 import { NgaModule } from './theme/nga.module';
@@ -45,11 +44,10 @@ const APP_PROVIDERS = [
     UserState,
     WalletService,
     TransactionsService,
-    EscrowService,
     GlobalState,
     user.UserApi,
     b2bcoin.WalletApi,
-    b2bcoin.EscrowApi,
+    b2bcoin.FaucetApi,
     PagerService
 ];
 

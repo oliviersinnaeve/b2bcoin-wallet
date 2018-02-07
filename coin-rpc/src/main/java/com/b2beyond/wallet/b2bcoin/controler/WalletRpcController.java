@@ -5,6 +5,8 @@ import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressBalance;
 import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.FusionEstimate;
+import com.b2beyond.wallet.rpc.model.FusionTransaction;
 import com.b2beyond.wallet.rpc.model.Payment;
 import com.b2beyond.wallet.rpc.model.SingleTransactionItem;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
@@ -33,6 +35,10 @@ public class WalletRpcController implements WalletController {
     private JsonRpcExecutor<SingleTransactionItem> transactionExecutor;
     private JsonRpcExecutor<UnconfirmedTransactionHashes> unconfirmedTransactionHashesExecutor;
 
+    private JsonRpcExecutor<FusionEstimate> fusionEstimateExecutor;
+    private JsonRpcExecutor<FusionTransaction> fusionTransactionExecutor;
+
+
     private JsonRpcExecutor<Void> resetExecutor;
     private JsonRpcExecutor<Void> saveExecutor;
 
@@ -50,6 +56,9 @@ public class WalletRpcController implements WalletController {
         transactionsExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getTransactions", TransactionItems.class);
         transactionExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getTransaction", SingleTransactionItem.class);
         unconfirmedTransactionHashesExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "getUnconfirmedTransactionHashes", UnconfirmedTransactionHashes.class);
+
+        fusionEstimateExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "estimateFusion", FusionEstimate.class);
+        fusionTransactionExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "sendFusionTransaction", FusionTransaction.class);
 
         resetExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "reset", Void.class);
         saveExecutor = new JsonRpcExecutor<>(baseUrl + "/json_rpc", "save", Void.class);
@@ -125,6 +134,16 @@ public class WalletRpcController implements WalletController {
     @Override
     public JsonRpcExecutor<UnconfirmedTransactionHashes> getUnconfirmedTransactionHashesExecutor() {
         return unconfirmedTransactionHashesExecutor;
+    }
+
+    @Override
+    public JsonRpcExecutor<FusionEstimate> getFusionEstimateExecutor() {
+        return fusionEstimateExecutor;
+    }
+
+    @Override
+    public JsonRpcExecutor<FusionTransaction> getFusionTransactionExecutor() {
+        return fusionTransactionExecutor;
     }
 
     @Override

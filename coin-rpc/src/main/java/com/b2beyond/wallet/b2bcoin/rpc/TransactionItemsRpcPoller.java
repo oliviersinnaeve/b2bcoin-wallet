@@ -59,35 +59,24 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-            if (knowBlockCount != status.getKnownBlockCount()) {
-                knowBlockCount = status.getKnownBlockCount();
-                setExecuted(false);
+            if (knowBlockCount != status.getBlockCount()) {
+                knowBlockCount = status.getBlockCount();
             }
         }
     }
 
+    @Override
+    public boolean isExecuted() {
+        return false;
+    }
 
     @Override
     public boolean isActive() {
-//        return true;
-        return firstBlockCount < knowBlockCount - 1;
-    }
-
-    public void reset() {
-        firstBlockCount = 1;
+        return true;
     }
 
     @Override
     public void updateOnSucceed(TransactionItems data) {
-//        if (data.getItems().get(data.getItems().size() - 1).getTransactions().size() > 1) {
-//            for (Transaction item : data.getItems().get(data.getItems().size() - 1).getTransactions()) {
-//                if (item.getBlockIndex() > firstBlockCount) {
-//                    firstBlockCount = item.getBlockIndex();
-//                }
-//            }
-//        } else {
-//            firstBlockCount = data.getItems().get(data.getItems().size() - 1).getTransactions().get(0).getBlockIndex();
-//        }
         firstBlockCount = knowBlockCount;
     }
 }

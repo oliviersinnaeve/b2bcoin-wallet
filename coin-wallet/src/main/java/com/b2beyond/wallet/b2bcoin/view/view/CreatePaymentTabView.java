@@ -1,5 +1,6 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
+import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.Payment;
 import com.b2beyond.wallet.rpc.model.PaymentInput;
@@ -68,7 +69,7 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
         mixinCount = new JComboBox<>();
         paymentId = new JTextField();
 
-        for (int i = 1; i < 10; i++) {
+        for (int i = 0; i <= 10; i++) {
             JComboboxItem item = new JComboboxItem(i, i);
             mixinCount.addItem(item);
         }
@@ -187,6 +188,11 @@ public class CreatePaymentTabView extends AbstractAddressJPanel implements Actio
                     LOGGER.info("Converting amount text to long : " + tmpTransfer.getAmount().getText());
                     long amount = CoinUtil.getLongForText(tmpTransfer.getAmount().getText());
                     LOGGER.info("Adding amount : " + amount);
+
+                    if (transferList.get(tmpTransfer.getAddress().getText()) != null) {
+                        amount += transferList.get(tmpTransfer.getAddress().getText());
+                    }
+
                     transferList.put(tmpTransfer.getAddress().getText(), amount);
                 }
             }

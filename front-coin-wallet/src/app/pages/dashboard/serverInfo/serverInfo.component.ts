@@ -6,8 +6,6 @@ import { UserState } from '../../../user.state';
 import { WalletService } from '../../walletService.service';
 import { TransactionsService } from '../../transactions/transactions.service';
 
-
-
 import 'style-loader!./serverInfo.scss';
 
 import * as b2bcoinModels from '../../../services/com.b2beyond.api.b2bcoin/model/models';
@@ -22,13 +20,6 @@ export class ServerInfo {
 
     @Input('coin')
     public coin : b2bcoinModels.WalletCoin;
-
-    //public lastBlockHash: string;
-    //public numberOfCoinsInNetwork: number = 0;
-    //public difficulty: number = 0;
-    //public currentBlockReward: number = 0;
-    //public currentBlockHeight: number = 0;
-
 
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
@@ -87,25 +78,5 @@ export class ServerInfo {
             this.transactionsService.triggerSearch();
         }
     }
-
-    //public ngOnInit (): void {
-    //    if (this.coin && this.coin.name) {
-    //        console.log("Initialize ServerInfo - serverInfo", this.coin.name);
-    //        this.walletService.getLastBlockObservable(this.coin.name).subscribe(result => {
-    //                console.log("Result fetched", result);
-    //                this.lastBlockHash = result.block.hash;
-    //                this.numberOfCoinsInNetwork = result.block.alreadyGeneratedCoins;
-    //                this.difficulty = result.block.difficulty;
-    //                this.currentBlockReward = result.block.baseReward;
-    //                this.currentBlockHeight = result.block.height;
-    //            },
-    //            (error) => {
-    //                console.log("Error fetched", error);
-    //                if (error.status === 401) {
-    //                    this.userState.handleError(error, this.ngOnInit, this);
-    //                }
-    //            });
-    //    }
-    //}
 
 }

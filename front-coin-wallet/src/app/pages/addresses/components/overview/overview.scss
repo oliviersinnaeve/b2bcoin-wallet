@@ -27,55 +27,62 @@
     margin: 0 10px 0 10px;
   }
 
-}
-
-@media screen and (min-width: 320px) and (max-width: 699px) {
-  #addressOverview {
-
-    td.columnAddress {
-      max-width: 50px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+  td.columnAddress {
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
+
 }
 
-@media screen and (min-width: 700px) and (max-width: 1023px) {
-  #addressOverview {
-
-    td.columnAddress {
-      max-width: 250px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-}
-
-@media screen and (min-width: 1024px) and (max-width: 1389px) {
-  #addressOverview {
-
-    td.columnAddress {
-      max-width: 524px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-  }
-}
-
-@media screen and (min-width: 1390px) {
-  #addressOverview {
-
-    td.columnAddress {
-      width: 100%;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-  }
-}
+//@media screen and (min-width: 320px) and (max-width: 699px) {
+//  #addressOverview {
+//
+//    td.columnAddress {
+//      max-width: 50px;
+//      overflow: hidden;
+//      text-overflow: ellipsis;
+//      white-space: nowrap;
+//    }
+//  }
+//}
+//
+//@media screen and (min-width: 700px) and (max-width: 1023px) {
+//  #addressOverview {
+//
+//    td.columnAddress {
+//      max-width: 250px;
+//      overflow: hidden;
+//      text-overflow: ellipsis;
+//      white-space: nowrap;
+//    }
+//  }
+//}
+//
+//@media screen and (min-width: 1024px) and (max-width: 1389px) {
+//  #addressOverview {
+//
+//    td.columnAddress {
+//      max-width: 524px;
+//      text-overflow: ellipsis;
+//      white-space: nowrap;
+//      overflow: hidden;
+//    }
+//  }
+//}
+//
+//@media screen and (min-width: 1390px) {
+//  #addressOverview {
+//
+//    td.columnAddress {
+//      width: 100%;
+//      text-overflow: ellipsis;
+//      white-space: nowrap;
+//      overflow: hidden;
+//    }
+//  }
+//}
 //
 //.table-text-wrapper {
 //  max-width: 1024px;

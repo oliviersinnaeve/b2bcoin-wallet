@@ -4,8 +4,6 @@ import { ModalDirective } from 'ngx-bootstrap';
 
 import { UserState } from '../../../user.state';
 import { WalletService } from '../../walletService.service';
-import { TransactionsService } from '../../transactions/transactions.service';
-
 
 import 'style-loader!./walletInfoFull.scss';
 
@@ -21,24 +19,15 @@ export class WalletInfoFull {
 
     @ViewChild('createAddressModal') createAddressModal: ModalDirective;
 
-    // Wallet info
-    public numberOfAddresses: number;
-    public balance: number = 0;
-    public lockedBalance: number = 0;
-    public creatingWallet = false;
 
-    // Server info
-    public difficulty: number = 0;
+    public creatingWallet = false;
 
 
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
                  private walletService: WalletService,
-                 private transactionsService: TransactionsService,
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
-        this.walletService.getAddresses(false);
     }
 
     public createNewAddress () {

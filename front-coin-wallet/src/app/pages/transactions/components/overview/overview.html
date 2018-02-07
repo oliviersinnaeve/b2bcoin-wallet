@@ -1,4 +1,4 @@
-<div id="transactionsOverview" *ngIf="transactions != undefined && transactions.length > 0">
+<div id="transactionsOverview" *ngIf="pagedItems?.length > 0">
 
     <div class="col-md-12 col-xs-12 center row-spacer-25">
         <span class="location-1">{{'TRANSACTIONS' | translate}}</span>
@@ -9,14 +9,15 @@
             <thead>
             <tr class="black-muted-bg white-text">
                 <th class="action-icons">{{'HASH' | translate}}</th>
-                <th class="align-right">{{'FEE' | translate}}</th>
+                <th class="align-right">{{'DATE' | translate}}</th>
                 <th class="align-right">{{'AMOUNT' | translate}}</th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let transactionWrapper of pagedItems" class="no-top-border">
-                <td class="table-text-wrapper"><a class="table-text-wrapper" (click)="gotoBlock(transactionWrapper.blockHash)">{{ transactionWrapper.blockHash }}</a></td>
-                <td class="align-right">{{getFee(transactionWrapper)}}</td>
+                <td class="columnAddress"><a class="table-text-wrapper" (click)="gotoBlock(transactionWrapper.hash)">{{ transactionWrapper.hash }}</a></td>
+                <td class="align-right">{{getDate(transactionWrapper)}}</td>
+                <!--<td class="align-right">{{getFee(transactionWrapper)}}</td>-->
                 <td class="align-right">{{getAmount(transactionWrapper)}}</td>
             </tr>
             </tbody>
@@ -27,9 +28,18 @@
         <div class="b2b-pagination-container wow zoomIn mar-b-1x" data-wow-duration="0.5s">
 
             <ul class="b2b-pagination">
-                <li class="b2b-pagination-item--wide first" [ngClass]="{disabled:pager.currentPage === 1}"> <a class="b2b-pagination-link--wide first" (click)="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a> </li>
+                <li class="b2b-pagination-item--wide first" [ngClass]="{disabled:pager.currentPage === 1}">
+                    <a class="b2b-pagination-link--wide first" (click)="setPage(1)"><i class="fa fa-fast-backward" aria-hidden="true"></i></a>
+                    <a class="b2b-pagination-link--wide first" (click)="setPage(pager.currentPage - 1)"><i class="fa fa-step-backward" aria-hidden="true"></i></a>
+                </li>
                 <li class="b2b-pagination-item" [ngClass]="{'is-active':pager.currentPage === page}" *ngFor="let page of pager.pages"><a  class="b2b-pagination-link" (click)="setPage(page)">{{page}}</a></li>
-                <li class="b2b-pagination-item--wide last"> <a class="b2b-pagination-link--wide last" (click)="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a> </li>
+                <li class="b2b-pagination-item--wide last" [ngClass]="{disabled:pager.currentPage === pager.pages.length}">
+                    <a class="b2b-pagination-link--wide last" (click)="setPage(pager.currentPage + 1)"><i class="fa fa-step-forward" aria-hidden="true"></i></a>
+                    <a class="b2b-pagination-link--wide last" (click)="setPage(pager.totalPages)"><i class="fa fa-fast-forward" aria-hidden="true"></i></a>
+                </li>
+                <!--<li class="b2b-pagination-item&#45;&#45;wide first" [ngClass]="{disabled:pager.currentPage === 1}"> <a class="b2b-pagination-link&#45;&#45;wide first" (click)="setPage(pager.currentPage - 1)">{{'PREVIOUS' | translate}}</a> </li>-->
+                <!--<li class="b2b-pagination-item" [ngClass]="{'is-active':pager.currentPage === page}" *ngFor="let page of pager.pages"><a  class="b2b-pagination-link" (click)="setPage(page)">{{page}}</a></li>-->
+                <!--<li class="b2b-pagination-item&#45;&#45;wide last"> <a class="b2b-pagination-link&#45;&#45;wide last" (click)="setPage(pager.currentPage + 1)">{{'NEXT' | translate}}</a> </li>-->
             </ul>
         </div>
     </div>

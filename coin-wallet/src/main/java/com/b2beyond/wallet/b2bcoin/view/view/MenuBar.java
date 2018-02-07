@@ -1,10 +1,15 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
+import com.b2beyond.wallet.b2bcoin.view.view.panel.ChooseAddressPanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.CreateAddressPanel;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressInput;
 import com.b2beyond.wallet.rpc.model.Addresses;
+import com.b2beyond.wallet.rpc.model.FusionEstimate;
+import com.b2beyond.wallet.rpc.model.FusionEstimateInput;
+import com.b2beyond.wallet.rpc.model.FusionTransaction;
+import com.b2beyond.wallet.rpc.model.FusionTransactionInput;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
@@ -97,6 +102,56 @@ public class MenuBar extends JMenuBar {
 //            }
 //        });
 
+        // Import address sub menu
+        JMenuItem createFusionTransactionsMenuItem = new JMenuItem("Fusion address", icon);
+        createFusionTransactionsMenuItem.setToolTipText("Execute fusion transations on your address");
+        createFusionTransactionsMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                ChooseAddressPanel chooseAddressPanel = new ChooseAddressPanel(actionController);
+                int response = JOptionPane.showConfirmDialog(null,
+                        chooseAddressPanel,
+                        "Choose address to execute fusion transactions on",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        B2BUtil.getIcon());
+
+                if (response == 0) {
+                    FusionEstimateInput input = new FusionEstimateInput();
+                    input.setThreshold(1000000000000l);
+                    input.setAddress(chooseAddressPanel.getAddress());
+
+                    try {
+                        actionController.getWalletRpcController().getPaymentExecutor().setReadTimeout(300000);
+                        FusionEstimate estimate = actionController.getWalletRpcController().getFusionEstimateExecutor().execute(input.getParams());
+
+                        if (estimate.getFusionReadyCount() > 0) {
+                            FusionTransactionInput transactionInput = new FusionTransactionInput();
+                            transactionInput.setAddress(chooseAddressPanel.getAddress());
+                            transactionInput.setThreshold(1000000000000l);
+                            transactionInput.setAnonymity(0);
+
+                            FusionTransaction transaction = actionController.getWalletRpcController().getFusionTransactionExecutor().execute(transactionInput.getParams());
+
+                            JOptionPane.showMessageDialog(null,
+                                    "Fusion transaction hash : " + transaction.getTransactionHash(),
+                                    "Fusion succeeded",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "No fusion transactions possible on address",
+                                    "Fusion transactions not possible",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
+                    } catch (KnownJsonRpcException e) {
+                        JOptionPane.showMessageDialog(null,
+                                "Fusion failed : " + e.getError().getMessage(),
+                                "Fusion transactions failed",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
         // Reset wallet sub menu
         JMenuItem resetWalletMenuItem = new JMenuItem("Reset wallet", icon);
         resetWalletMenuItem.setToolTipText("Reset wallet");
@@ -184,6 +239,8 @@ public class MenuBar extends JMenuBar {
         wallet.add(resetWalletMenuItem);
         wallet.add(createNewAddressMenuItem);
         //wallet.add(importAddressMenuItem);
+        wallet.add(createFusionTransactionsMenuItem);
+
 
         help.add(aboutMenuItem);
 

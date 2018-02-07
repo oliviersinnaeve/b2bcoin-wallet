@@ -1,0 +1,102 @@
+@import '../../../../theme/sass/conf/conf';
+
+#faucetOverview {
+
+  table {
+    width: 100%;
+  }
+
+  tr:nth-child(even) {
+    color: #528ea6;
+    background-color: #d9ebf2;
+  }
+
+  tr:nth-child(odd) {
+    color: #528ea6;
+    background-color: #ffffff;
+  }
+
+  .heading-logo {
+    text-align: center;
+    width: auto !important;
+    height: auto !important;
+    margin-top: 15px;
+  }
+
+  .heading-text {
+    width:100%;
+    text-align: center;
+    font-size: 18px;
+    height: 32px;
+  }
+
+  .vertical-line {
+    border-left: 1px solid #086788;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0 10px 0 10px;
+  }
+
+  .ellipsis-div {
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .align-left {
+    text-align: left;
+  }
+
+  .align-right {
+    text-align: right;
+  }
+
+}
+
+.location-1 {
+  color: #086788;
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.location-2 {
+  color: #086788;
+  font-size: 20px;
+  font-weight: 300;
+  margin-left: 10px;
+}
+
+.circle {
+  background: #fff;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.vertical-line {
+  border-left: 2px solid #086788;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+.row.vertical-divider-white {
+  overflow: hidden;
+}
+
+.row.vertical-divider-white>div[class^="col-"] {
+  font-size: 18px;
+  color: white;
+  /*height: 320px;*/
+  border-left: 1px solid #fff;
+
+}
+
+.row.vertical-divider-white div[class^="col-"]:first-child {
+  border-left: none;
+}
+
+.row.vertical-divider-white div[class^="col-"]:last-child {
+  border-right: none;
+}

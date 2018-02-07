@@ -49,56 +49,35 @@ export class PaymentOverview implements OnInit {
                  private http: Http,
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
-        this.getTransactions();
     }
 
 
+    public ngOnInit(): void {
+        if (this.walletService.getPaymentsForCoin(this.coin).length > 0 && !this.walletService.transactionsBusy) {
+            this.getTransactions(this.walletService.getPaymentsForCoin(this.coin));
+        } else {
+            this.walletService.paymentsFetchedEmitter
+                .subscribe(item => this.getTransactions(item));
+        }
+    }
+
     public getDate(transactionWrapper: any): string {
         //console.log("Using trasnaxcitonWrapper", transactionWrapper);
-        let date = new Date(transactionWrapper.transactions[0].timestamp * 1000);
+        let date = new Date(transactionWrapper.date * 1000);
         let minutes = (date.getMinutes() < 10)? "0" + date.getMinutes(): date.getMinutes();
         let hours = (date.getHours() < 10)? "0" + date.getHours(): date.getHours();
-        let month = (date.getMonth() < 10)? "0" + date.getMonth(): date.getMonth();
+        let month = (date.getMonth() < 9)? "0" + (date.getMonth() + 1): (date.getMonth() + 1);
         let day = (date.getDate() < 10)? "0" + date.getDate(): date.getDate();
         return day + "-" + month + "-" + date.getFullYear() + " " + hours + ":" + minutes;
     }
 
-    public getFee(transactionWrapper: any): string {
-        //console.log("Using trasnaxcitonWrapper", transactionWrapper);
-        return (transactionWrapper.transactions[0].fee / this.coin.convertAmount).toFixed(this.coin.fractionDigits) + " " + this.coin.name;
-    }
-
     public getAmount(transactionWrapper: any): string {
-        return (transactionWrapper.transactions[0].amount / this.coin.convertAmount).toFixed(this.coin.fractionDigits) + " " + this.coin.name;
+        return (transactionWrapper.amount / this.coin.convertAmount).toFixed(this.coin.fractionDigits) + " " + this.coin.name;
     }
 
-    public getTransactions() {
-        let t = this;
-        let interval = setInterval(function() {
-            if (!t.walletService.transactionsBusy && t.walletService.getPaymentsForCoin(t.coin) != undefined) {
-                let transactionsAddresses = t.walletService.getPaymentsForCoin(t.coin);
-
-                //console.log("Setting transactions", transactionsAddresses);
-
-                let transactions = [];
-                for (let i = 0; i < transactionsAddresses.length; i++) {
-                    for (let j = transactionsAddresses[i].transactions.length; j > 0; j--) {
-                        if (transactionsAddresses[i].transactions[j] != undefined) {
-                            transactions.push(transactionsAddresses[i].transactions[j]);
-                        }
-                    }
-                }
-
-                t.transactions = transactions;
-                t.setPage(1);
-                clearInterval(interval);
-            }
-        }, 250);
-    }
-
-    public ngOnInit(): void {
-        this.getTransactions();
+    public getTransactions(coin: b2bcoinModels.WalletCoin) {
+        this.transactions = this.walletService.getPaymentsForCoin(coin);
+        this.setPage(1);
     }
 
     setPage(page: number) {
