@@ -52,6 +52,10 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         return params;
     }
 
+    public void reset() {
+        this.firstBlockCount = 0;
+    }
+
     @Override
     public void update(Observable o, Object data) {
         if (data instanceof Addresses) {
