@@ -199,6 +199,7 @@ public class MainFrame extends JFrame implements Observer {
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
+            dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
             System.out.println(((Error) data).getCode());

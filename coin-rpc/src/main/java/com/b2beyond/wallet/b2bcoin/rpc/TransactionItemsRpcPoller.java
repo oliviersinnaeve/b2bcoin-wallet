@@ -45,7 +45,6 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
                 index++;
             }
             params += "    ]}";
-
         } else {
             params = JsonRpcExecutor.EMPTY_PARAMS;
         }
@@ -61,7 +60,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         if (data instanceof Status) {
             Status status = (Status)data;
             knowBlockCount = status.getBlockCount();
-            if (knowBlockCount != status.getKnownBlockCount() - 1) {
+            if (firstBlockCount != knowBlockCount - 1) {
                setExecuted(false);
             }
         }
@@ -70,7 +69,8 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 
     @Override
     public boolean isActive() {
-        return firstBlockCount < knowBlockCount;
+        return true;
+//        return firstBlockCount < knowBlockCount;
     }
 
     public void reset() {

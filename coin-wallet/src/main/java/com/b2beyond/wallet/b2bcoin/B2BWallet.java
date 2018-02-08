@@ -150,12 +150,12 @@ public class B2BWallet extends MainFrame {
             }
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                actionController.exit();
-            }
-        });
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            @Override
+//            public void run() {
+//                actionController.exit();
+//            }
+//        });
 
         new Thread(new DaemonPortChecker(walletDaemonProperties)).start();
 

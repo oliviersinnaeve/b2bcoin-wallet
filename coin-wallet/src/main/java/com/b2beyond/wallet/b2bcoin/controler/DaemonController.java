@@ -55,7 +55,7 @@ public class DaemonController {
 
         // start the daemon already !!
         // We use remote dameon now ...
-        //coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
+        coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
 
         String configLocation = B2BUtil.getConfigRoot();
         userHome = B2BUtil.getUserHome();

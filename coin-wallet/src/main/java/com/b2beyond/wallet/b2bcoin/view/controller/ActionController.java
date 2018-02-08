@@ -89,9 +89,6 @@ public class ActionController {
 
     public void exit() {
         LOGGER.info("ActionController.exit was called");
-        miningController.stopMining();
-        soloMiningController.stopMining();
-        coinRpcController.stop();
         // Save the wallet
         try {
             walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
@@ -110,9 +107,9 @@ public class ActionController {
         controller.restartDaemon();
     }
 
-    public void startCoinDaemon() {
-        controller.startDaemon();
-    }
+//    public void startCoinDaemon() {
+//        controller.startDaemon();
+//    }
 
     public void stopCoinDaemon() {
         controller.stopDaemon();
