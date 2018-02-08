@@ -3,11 +3,18 @@ package com.b2beyond.wallet.b2bcoin.view.controller;
 import com.b2beyond.wallet.b2bcoin.controler.CoinRpcController;
 import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
+import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
+import com.b2beyond.wallet.b2bcoin.rpc.TransactionItemsRpcPoller;
+import com.b2beyond.wallet.b2bcoin.rpc.UnconfirmedTransactionHashesRpcPoller;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.NoParamsRpcPoller;
+import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressBalance;
 import com.b2beyond.wallet.rpc.model.AddressInput;
+import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
+import com.b2beyond.wallet.rpc.model.Status;
 import com.b2beyond.wallet.rpc.model.Success;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
@@ -15,6 +22,7 @@ import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class ActionController {
@@ -26,6 +34,8 @@ public class ActionController {
     private WalletRpcController walletRpcController;
     private PoolMiningController miningController;
     private SoloMiningController soloMiningController;
+
+    private List<RpcPoller> walletRpcPollers;
 
 
     public ActionController(final DaemonController controller, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
@@ -80,16 +90,16 @@ public class ActionController {
     }
 
     public void exit() {
-        LOGGER.info("ActionController.exit was called");
-        miningController.stopMining();
-        soloMiningController.stopMining();
-        coinRpcController.stop();
         // Save the wallet
         try {
             walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }
+        LOGGER.info("ActionController.exit was called");
+        miningController.stopMining();
+        soloMiningController.stopMining();
+        coinRpcController.stop();
         walletRpcController.stop();
         controller.stop();
     }
@@ -115,13 +125,34 @@ public class ActionController {
     }
 
     public void startWallet() {
+        this.walletRpcPollers = walletRpcPollers;
         controller.startWallet();
+
+//        while (!controller.isWalletStarted()) {
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        // Add pollers if wallet rpc port is available
+//        for (RpcPoller poller : walletRpcPollers) {
+//            getCoinRpcController().addPollers(poller);
+//        }
     }
 
     public void resetWallet() {
         try {
             //controller.stopDaemon();
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+
+//            for (RpcPoller poller : walletRpcPollers) {
+//                if (poller instanceof TransactionItemsRpcPoller) {
+//                    ((TransactionItemsRpcPoller) poller).reset();
+//                }
+//            }
+
             //controller.startDaemon();
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();

@@ -83,7 +83,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
             Status viewData = (Status) data;
-            if (!viewData.getLastBlockHash().equals(lastBlockHash)) {
+            //if (!viewData.getLastBlockHash().equals(lastBlockHash)) {
                 lastBlockHash = viewData.getLastBlockHash();
                 BlockWrapper blockWrapper = actionController.getBlockWrapper(lastBlockHash);
 
@@ -95,7 +95,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
                     serverPanel.getBaseReward().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getBaseReward()));
                     serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
                 }
-            }
+            //}
         }
         if (data instanceof Addresses) {
             Addresses addresses = (Addresses) data;

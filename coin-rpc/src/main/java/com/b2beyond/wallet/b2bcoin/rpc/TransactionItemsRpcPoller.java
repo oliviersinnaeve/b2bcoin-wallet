@@ -3,6 +3,7 @@ package com.b2beyond.wallet.b2bcoin.rpc;
 
 import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.Status;
+import com.b2beyond.wallet.rpc.model.Transaction;
 import com.b2beyond.wallet.rpc.model.TransactionItems;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.RpcPoller;
@@ -45,6 +46,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
                 index++;
             }
             params += "    ]}";
+
         } else {
             params = JsonRpcExecutor.EMPTY_PARAMS;
         }
@@ -59,9 +61,9 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
         }
         if (data instanceof Status) {
             Status status = (Status)data;
-            if (knowBlockCount != status.getKnownBlockCount()) {
-                knowBlockCount = status.getKnownBlockCount();
-                setExecuted(false);
+            knowBlockCount = status.getBlockCount();
+            if (knowBlockCount != status.getKnownBlockCount() - 1) {
+               setExecuted(false);
             }
         }
     }
@@ -69,8 +71,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 
     @Override
     public boolean isActive() {
-//        return true;
-        return firstBlockCount < knowBlockCount - 1;
+        return firstBlockCount < knowBlockCount;
     }
 
     public void reset() {
@@ -86,7 +87,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 //                }
 //            }
 //        } else {
-//            firstBlockCount = data.getItems().get(data.getItems().size() - 1).getTransactions().get(0).getBlockIndex();
+//          firstBlockCount += data.getItems().size();
 //        }
         firstBlockCount = knowBlockCount;
     }

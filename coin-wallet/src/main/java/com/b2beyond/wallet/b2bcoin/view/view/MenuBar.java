@@ -41,6 +41,7 @@ public class MenuBar extends JMenuBar {
         exitMenuItem.setToolTipText("Exit application");
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
+                actionController.exit();
                 System.exit(0);
             }
         });
@@ -145,9 +146,9 @@ public class MenuBar extends JMenuBar {
 
                         html += "<h3>" + address + "</h3>";
                         html += "<textarea rows='2' cols='75'  style='overflow:auto'>" +
-                                "Spend public key : " + keys.getSpendPublicKey() +
+                                "View key (public) : " + keys.getSpendPublicKey() +
                                 "&#13;&#10;" +
-                                "Spend secret key : " + keys.getSpendSecretKey() +
+                                "Spend key (private) : " + keys.getSpendSecretKey() +
                                 "</textarea>";
                     }
                     html += "</body></html>";
@@ -168,10 +169,10 @@ public class MenuBar extends JMenuBar {
         aboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 JOptionPane.showMessageDialog(null,
-                    new AboutPanel(),
-                    "About B2B Coin wallet",
-                    JOptionPane.INFORMATION_MESSAGE,
-                    B2BUtil.getIcon());
+                        new AboutPanel(),
+                        "About B2B Coin wallet",
+                        JOptionPane.INFORMATION_MESSAGE,
+                        B2BUtil.getIcon());
             }
         });
 
