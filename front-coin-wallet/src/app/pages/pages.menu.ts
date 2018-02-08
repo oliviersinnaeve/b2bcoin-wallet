@@ -38,78 +38,12 @@ export const PAGES_MENU = [
                     }
                 }
             },
-            //    children: [
-            //        {
-            //            path: 'result',
-            //            data: {
-            //                menu: {
-            //                    title: 'Explorer',
-            //                }
-            //            }
-            //        }
-            //    ]
-            //}
-            //,
-            //{
-            //    path: 'payments',
-            //    data: {
-            //        menu: {
-            //            title: 'Payments',
-            //            icon: 'ion-cash',
-            //            selected: false,
-            //            expanded: false,
-            //            order: 250,
-            //        }
-            //    },
-            //    children: [
-            //        {
-            //            path: 'overview',
-            //            data: {
-            //                menu: {
-            //                    title: 'Overview',
-            //                }
-            //            }
-            //        },
-            //        {
-            //            path: 'create',
-            //            data: {
-            //                menu: {
-            //                    title: 'Create payment',
-            //                }
-            //            }
-            //        }
-            //    ]
-            //}
-            //,
-            //{
-            //    path: 'transactions',
-            //    data: {
-            //        menu: {
-            //            title: 'Transactions',
-            //            icon: 'ion-network',
-            //            selected: false,
-            //            expanded: false,
-            //            order: 250,
-            //        }
-            //    },
-            //    children: [
-            //        {
-            //            path: 'overview',
-            //            data: {
-            //                menu: {
-            //                    title: 'Overview',
-            //                }
-            //            }
-            //        }
-            //    ]
-            //}
-            //,
             {
-                path: 'escrow',
+                path: 'faucet',
                 data: {
                     menu: {
-                        title: "PAGES_MENU.ESCROW",
-                        icon: 'ion-shuffle',
+                        title: "PAGES_MENU.FAUCET",
+                        icon: 'ion-funnel',
                         selected: false,
                         expanded: false,
                         order: 250,
@@ -126,10 +60,19 @@ export const PAGES_MENU = [
                     }
                     ,
                     {
-                        path: 'create',
+                        path: 'user',
                         data: {
                             menu: {
-                                title: "PAGES_MENU.CREATE_TRANSACTION",
+                                title: "PAGES_MENU.FAUCET_USER",
+                            }
+                        }
+                    }
+                    ,
+                    {
+                        path: 'owner',
+                        data: {
+                            menu: {
+                                title: "PAGES_MENU.FAUCET_OWNER",
                             }
                         }
                     }

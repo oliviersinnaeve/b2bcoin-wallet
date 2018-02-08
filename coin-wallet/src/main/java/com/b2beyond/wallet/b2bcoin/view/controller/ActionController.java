@@ -12,9 +12,7 @@ import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.model.Address;
 import com.b2beyond.wallet.rpc.model.AddressBalance;
 import com.b2beyond.wallet.rpc.model.AddressInput;
-import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.SpendKeys;
-import com.b2beyond.wallet.rpc.model.Status;
 import com.b2beyond.wallet.rpc.model.Success;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
@@ -90,6 +88,10 @@ public class ActionController {
     }
 
     public void exit() {
+        LOGGER.info("ActionController.exit was called");
+        miningController.stopMining();
+        soloMiningController.stopMining();
+        coinRpcController.stop();
         // Save the wallet
         try {
             walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
@@ -124,22 +126,21 @@ public class ActionController {
         return walletRpcController;
     }
 
-    public void startWallet() {
-        this.walletRpcPollers = walletRpcPollers;
+    public void startWallet(List<RpcPoller> walletRpcPollers) {
         controller.startWallet();
 
-//        while (!controller.isWalletStarted()) {
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        while (!controller.isWalletStarted()) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Add pollers if wallet rpc port is available
-//        for (RpcPoller poller : walletRpcPollers) {
-//            getCoinRpcController().addPollers(poller);
-//        }
+        for (RpcPoller poller : walletRpcPollers) {
+            getCoinRpcController().addPollers(poller);
+        }
     }
 
     public void resetWallet() {
@@ -147,11 +148,11 @@ public class ActionController {
             //controller.stopDaemon();
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
 
-//            for (RpcPoller poller : walletRpcPollers) {
-//                if (poller instanceof TransactionItemsRpcPoller) {
-//                    ((TransactionItemsRpcPoller) poller).reset();
-//                }
-//            }
+            for (RpcPoller poller : walletRpcPollers) {
+                if (poller instanceof TransactionItemsRpcPoller) {
+                    ((TransactionItemsRpcPoller) poller).reset();
+                }
+            }
 
             //controller.startDaemon();
         } catch (KnownJsonRpcException e) {

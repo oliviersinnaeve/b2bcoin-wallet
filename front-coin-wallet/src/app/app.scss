@@ -21,6 +21,18 @@ html,body { height:100%; }
   font-size: 1.5em;
 }
 
+#faucetSpendAddresses table.ng2-smart-table > tbody > tr > td:first-child {
+  text-align: left !important;
+  max-width: 650px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ng2-smart-pagination-nav {
+  text-align: center;
+  background-color: #086788;
+}
+
 // notification plugin
 markdown {
   // TODO - Make it look like https://dimpu.github.io/angular2-markdown/

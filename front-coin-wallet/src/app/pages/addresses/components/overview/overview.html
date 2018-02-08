@@ -19,13 +19,47 @@
                 <td ngClass="columnAmount align-right">{{walletService.getBalanceForAddress(coin, item)}}</td>
                 <td ngClass="columnLocked align-right">{{walletService.getLockedBalanceForAddress(coin, item)}}</td>
                 <td class="columnActions align-right">
+                    <i class="fa fa-eye" (click)="showViewKeys(item)" style="cursor: pointer"></i>
+                    <span class="vertical-line"></span>
                     <i class="fa fa-copy" (click)="copyAddressToClipboard(item)" style="cursor: pointer"></i>
                     <span class="vertical-line"></span>
-                    <i class="fa fa-trash-o" (click)="setDeleteAddress(item)" style="cursor: pointer"></i>
+                    <i *ngIf="!item.faucetUser" class="fa fa-trash-o" (click)="setDeleteAddress(item)" style="cursor: pointer"></i>
+                    <a routerLink="/pages/faucet/user" routerLinkActive="active" tooltip="{{'FAUCET_ADDRESS' | translate}}"><i *ngIf="item.faucetUser" class="fa fa-filter" aria-hidden="true"></i></a>
                 </td>
             </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #viewKeysModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="viewKeysModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{'VIEW_KEYS_TITLE' | translate}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{'VIEW_KEY' | translate}} :
+                        <br/>
+                        {{keys.spendPublicKey}}
+                        <br/>
+                        <br/>
+                        {{'SPEND_KEY' | translate}} :
+                        <br/>
+                        {{keys.spendSecretKey}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="viewKeysModal.hide()">{{'OK' | translate}}</button>
+            </div>
+        </div>
     </div>
 </div>
 

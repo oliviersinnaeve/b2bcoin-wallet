@@ -185,12 +185,28 @@ export class WalletApi {
     }
 
     /**
+     * Get the spendKeys for a userAddress
+     * Returns the public view key and the private spend key
+     * @param body 
+     */
+    public getSpendKeys(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.SpendKeys> {
+        return this.getSpendKeysWithHttpInfo(body, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * Find the transactions for the address
      * Find the transactions for the address.
      * @param coinType 
      * @param body 
      */
-    public getTransactionsForAddress(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.TransactionItems> {
+    public getTransactionsForAddress(coinType: string, body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.TransactionsResponse> {
         return this.getTransactionsForAddressWithHttpInfo(coinType, body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -527,6 +543,43 @@ export class WalletApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
+            search: queryParameters
+        });
+
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Get the spendKeys for a userAddress
+     * Returns the public view key and the private spend key
+     * @param body 
+     */
+    public getSpendKeysWithHttpInfo(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + `/wallet/getSpendKeys`;
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: body == null ? '' : JSON.stringify(body), // https://github.com/angular/angular/issues/10612
             search: queryParameters
         });
 

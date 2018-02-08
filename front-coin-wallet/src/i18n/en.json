@@ -3,6 +3,9 @@
     "DASHBOARD": "Dashboard",
     "COIN_OVERVIEW": "Coins Overview",
     "BLOCKCHAIN": "Blockchain",
+    "FAUCET": "Faucet",
+    "FAUCET_USER": "User",
+    "FAUCET_OWNER": "Owner",
     "ESCROW": "Escrow",
     "OVERVIEW": "Overview",
     "CREATE_TRANSACTION": "Create Transaction"
@@ -46,6 +49,10 @@
   "NETWORK_DIFFICULTY": "Network difficulty",
   "CURRENT_BLOCK_REWARD": "Current block reward",
   "CURRENT_BLOCK_HEIGHT": "Current block height",
+
+  "VIEW_KEYS_TITLE": "View and spend keys",
+  "VIEW_KEY": "View key",
+  "SPEND_KEY": "Spend key",
 
   "COIN": "Coin",
   "ADDRESS": "Address",
@@ -108,6 +115,23 @@
   "PAYMENTS": "PAYMENTS",
   "TRANSACTIONS": "TRANSACTIONS",
   "DATE": "Date",
+
+  "FAUCET": "Faucet",
+  "FAUCET_NAME": "Name",
+  "FAUCET_URL": "Url",
+  "FAUCET_LIST": "Overview of all Faucets linked to B2B Web Wallet",
+  "FAUCET_ADDRESS": "Faucet address",
+  "FAUCET_INFO": "FAUCET INFO",
+  "FAUCET_BALANCE": "Faucet balance",
+  "FAUCET_PAID_BALANCE": "Total paid",
+  "CREATING_FAUCET": "Creatig Faucet ...",
+  "ADD_FAUCET": "Add faucet",
+
+  "PUBLIC_KEY": "Public key (use in faucet admin section)",
+  "ADD_FAUCET_USER_ADDRESS": "Create address to use in faucets",
+  "FAUCET_USERS_BALANCES_AND_PAYOUT": "Balances and payouts of addresses using your faucet",
+  "FAUCET_USER_BALANCES_AND_PAYOUT": "Balance of your faucet address",
+  "PAYED_OUT": "Paid",
 
   "PREVIOUS": "Previous",
   "NEXT": "Next",

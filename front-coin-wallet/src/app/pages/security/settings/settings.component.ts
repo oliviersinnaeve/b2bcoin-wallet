@@ -62,7 +62,9 @@ export class Settings implements OnInit {
                     this.userState.getUser().secretKey = result.secretKey;
                 },
                 error => {
-                    console.log("The qr error", error);
+                    if (error.status === 401) {
+                        this.userState.handleError(error, this.checkbox2faClicked, this);
+                    }
                 }
             );
 
@@ -77,12 +79,13 @@ export class Settings implements OnInit {
                 result => {
                     this.failed = false;
                     this.error = undefined;
-                    //console.log("The qr response", result);
-
                     this.enable2FAModal.hide();
                     this.twoFASuccessModal.show();
             },
                 error => {
+                    if (error.status === 401) {
+                        this.userState.handleError(error, this.enable2FA, this);
+                    }
                     if (error.status == 412) {
                         this.failed = true;
                         this.error = JSON.parse(error._body).error;
@@ -100,8 +103,11 @@ export class Settings implements OnInit {
                     this.disableTwoFASuccessModal.show();
             },
                 error => {
-                console.log("The qr error", error);
-            }
+                    if (error.status === 401) {
+                        this.userState.handleError(error, this.disable2FA, this);
+                    }
+                    console.log("The qr error", error);
+                }
         );
     }
 

@@ -3,10 +3,12 @@
     "DASHBOARD": "Мониторинг",
     "COIN_OVERVIEW": "Обзор монет",
     "BLOCKCHAIN": "Блокчейн",
+    "FAUCET": "Faucet",
     "ESCROW": "Эскроу",
     "OVERVIEW": "Обзор",
     "CREATE_TRANSACTION": "Создать перевод"
   },
+
   "SIGN_IN": "Войти",
   "NEW_SIGN_UP": "Зарегистрироваться",
   "EMAIL": "Эл. почта",
@@ -22,6 +24,7 @@
   "PASSWORDS_DONT_MATCH": "Пароли не совпадают",
   "RESET_YOUR_PASSWORD": "Сброс пароля",
   "RESET_YOUR_PASSWORD_SUCCESS": "Пароль успешно изменен - нажмите сюда для входа",
+
   "DASHBOARD": "DASHBOARD",
   "MAIN_WALLET_LOWER": "Основной кошелек",
   "MULTI_WALLET_LOWER": "Мультивалютный кошелек",
@@ -37,24 +40,34 @@
   "ADD_NEW_PAYMENT": "Добавить новый платеж",
   "ADDRESS_CREATION_TITLE": "Создание адреса кошелька",
   "ADDRESS_CREATED": "Адрес создан.",
+
   "SERVER_INFO": "SERVER INFO",
   "LAST_BLOCK_HASH": "Хэш последнего блока",
   "COINS_IN_NETWORK": "Монет в сети",
   "NETWORK_DIFFICULTY": "Сложность сети",
   "CURRENT_BLOCK_REWARD": "Текущая награда за блок",
   "CURRENT_BLOCK_HEIGHT": "Номер текущего блока",
+
+  "VIEW_KEYS_TITLE": "View and spend keys",
+  "VIEW_KEY": "View key",
+  "SPEND_KEY": "Spend key",
+
   "COIN": "Монета",
   "ADDRESS": "Адрес",
   "BALANCE": "Баланс",
   "ACTIONS": "Действия",
+
   "COIN_OVERVIEW": "Обзор монет",
   "ADD_COIN": "Добавить монету",
   "ADD_COIN_TITLE": "Добавление монет",
   "ADD_COIN_TEXT": "Адрес был создан и кошелек был добавлен в Мультивалютный кошелек",
+
   "GOTO_COIN_OVERVIEW": "Перейти к обзору монет",
   "BLOCKCHAIN_INFO": "Информация о блокчейне",
   "SERVER_ERROR_TEXT": "Ой... Кажется сервер упал, или есть небольшие проблемы. Скоро все починим.",
+
   "BLOCK_EXPLORER": "BLOCK EXPLORER",
+
   "BLOCK_INFO_HEIGHT": "Номер",
   "BLOCK_INFO_TIMESTAMP": "Время",
   "BLOCK_INFO_DIFF": "Сложность",
@@ -69,6 +82,7 @@
   "BLOCK_INFO_BASE_REWARD": "Базовая награда",
   "BLOCK_INFO_TRANSACTION_FEE": "Комиссия транзакции",
   "BLOCK_INFO_REWARD": "Награда",
+
   "HASH": "Хэш",
   "FEE": "Комиссия",
   "TOTAL_AMOUNT": "Общее количество",
@@ -82,6 +96,7 @@
   "IMAGE": "Изображение",
   "OUTPUTS": "Выводы",
   "KEY": "Ключ",
+
   "PAYMENT": "Платеж",
   "CREATE_PAYMENT": "Создать платеж",
   "CREATE_PAYMENT_TITLE": "Создание {{name}} платежа",
@@ -94,14 +109,32 @@
   "PAYMENT_SUCCESS": "Платеж успешно проведен",
   "PAYMENT_FAILED": "Платеж отклонен",
   "PAYMENT_EXECUTED": "Платеж выполнен: (Есть вероятность, что хэш не найден. Подождите, пока он будет обработан.",
+
   "PAYMENTS": "PAYMENTS",
   "TRANSACTIONS": "TRANSACTIONS",
   "DATE": "Дата",
+
+  "FAUCET": "Faucet",
+  "FAUCET_ADDRESS": "Faucet address",
+  "FAUCET_INFO": "FAUCET INFO",
+  "FAUCET_BALANCE": "Faucet balance",
+  "FAUCET_PAID_BALANCE": "Total paid",
+  "CREATING_FAUCET": "Creatig Faucet ...",
+  "ADD_FAUCET": "Add faucet",
+
+  "PUBLIC_KEY": "Public key (use in faucet admin section)",
+  "ADD_FAUCET_USER_ADDRESS": "Create address to use in faucets",
+  "FAUCET_USERS_BALANCES_AND_PAYOUT": "Balances and payouts of addresses using you faucet",
+  "FAUCET_USER_BALANCES_AND_PAYOUT": "Balance of your faucet address",
+  "PAYED_OUT": "Paid",
+
   "PREVIOUS": "Предыдущий",
   "NEXT": "Следующий",
+
   "DELETE_ADDRESS_TITLE": "Удалить адрес кошелька",
   "DELETE_ADDRESS_CONFIRM": "Вы уверены? Операцию нельзя будет отменить.",
   "DELETE_ADDRESS_SUCCESS": "Адрес успешно удален.",
+
   "OK": "Ok",
   "CANCEL": "Отмена",
   "CLOSE": "Закрыть"

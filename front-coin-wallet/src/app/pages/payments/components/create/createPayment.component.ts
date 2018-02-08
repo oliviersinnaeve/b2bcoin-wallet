@@ -25,6 +25,8 @@ export class CreatePayment implements OnInit {
 
     public selectedAddress: b2bcoinModels.AddressBalance = {};
     public fee: number = 0.000001;
+    public mixin: number = 0;
+    public mixins: Array<number> = [0,1,2,3,4,5,6,7,8,9,10];
 
     public submitting: boolean = false;
 
@@ -82,6 +84,7 @@ export class CreatePayment implements OnInit {
         }
 
         this.payment.fee = this.fee * this.walletService.selectedCoin.convertAmount;
+        this.payment.anonymity = this.mixin;
         this.payment.addresses = [];
         let address: b2bcoinModels.Address = {};
         address.address = this.selectedAddress.address;

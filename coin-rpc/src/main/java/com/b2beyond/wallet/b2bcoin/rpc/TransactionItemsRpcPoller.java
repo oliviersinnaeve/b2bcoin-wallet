@@ -3,7 +3,6 @@ package com.b2beyond.wallet.b2bcoin.rpc;
 
 import com.b2beyond.wallet.rpc.model.Addresses;
 import com.b2beyond.wallet.rpc.model.Status;
-import com.b2beyond.wallet.rpc.model.Transaction;
 import com.b2beyond.wallet.rpc.model.TransactionItems;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.RpcPoller;
@@ -87,7 +86,7 @@ public class TransactionItemsRpcPoller extends RpcPoller<TransactionItems> imple
 //                }
 //            }
 //        } else {
-//          firstBlockCount += data.getItems().size();
+//            firstBlockCount = data.getItems().get(data.getItems().size() - 1).getTransactions().get(0).getBlockIndex();
 //        }
         firstBlockCount = knowBlockCount;
     }

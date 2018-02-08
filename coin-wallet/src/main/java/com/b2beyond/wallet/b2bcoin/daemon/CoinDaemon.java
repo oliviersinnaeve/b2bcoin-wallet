@@ -62,26 +62,35 @@ public class CoinDaemon implements Daemon {
                         InputStream inputStream = process.getInputStream();
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
                         String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            LOGGER.info(line);
+                        while (true) {
+
+                            if ((line = bufferedReader.readLine()) != null) {
+                                LOGGER.info(line);
+                            }
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        inputStream.close();
-                        bufferedReader.close();
+                        //inputStream.close();
+
+                        //bufferedReader.close();
 
 
-                        InputStream errorStream = process.getErrorStream();
-                        BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
-                        String outLine;
-                        while ((outLine = outBufferedReader.readLine()) != null) {
-                            LOGGER.info(outLine);
-//                            try {
-//                                Thread.sleep(5000);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-                        }
-                        errorStream.close();
-                        outBufferedReader.close();
+//                        InputStream errorStream = process.getErrorStream();
+//                        BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
+//                        String outLine;
+//                        while ((outLine = outBufferedReader.readLine()) != null) {
+//                            LOGGER.info(outLine);
+////                            try {
+////                                Thread.sleep(5000);
+////                            } catch (InterruptedException e) {
+////                                e.printStackTrace();
+////                            }
+//                        }
+//                        errorStream.close();
+//                        outBufferedReader.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

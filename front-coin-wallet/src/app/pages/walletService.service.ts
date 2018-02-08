@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from "@angular/router";
 
@@ -6,6 +6,9 @@ import { UserState } from '../user.state';
 
 import * as b2bcoinModels from '../services/com.b2beyond.api.b2bcoin/model/models';
 import { WalletApi } from '../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { FaucetApi } from '../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
+
+import { websiteId } from '../environment';
 
 @Injectable()
 export class WalletService {
@@ -15,6 +18,10 @@ export class WalletService {
     public primaryCoin: b2bcoinModels.WalletCoin = {name: ""} ;
     public selectedCoin: b2bcoinModels.WalletCoin = {name: ""} ;
 
+    public faucetAddress: b2bcoinModels.UserAddress = {};
+    public faucetAddressPayments: Array<b2bcoinModels.FaucetAddressPayment> = [];
+    public hasFaucetAddress: boolean = false;
+
     public serverInfos = {};
 
     public balancesBusy: boolean = false;
@@ -23,28 +30,50 @@ export class WalletService {
     public addressTransactions = {};
     public addressPayments = {};
 
+    @Output()
+    public addressFetchedEmitter = new EventEmitter<b2bcoinModels.UserAddress>();
+
+    @Output()
+    public faucetAddressUpdateEmitter = new EventEmitter<b2bcoinModels.UserAddress>();
+
+    @Output()
+    public faucetAddressPaymentsFetchedEmitter = new EventEmitter<Array<b2bcoinModels.FaucetAddressPayment>>();
+
+    @Output()
+    public transactionsFetchedEmitter = new EventEmitter<b2bcoinModels.WalletCoin>();
+
+    @Output()
+    public paymentsFetchedEmitter = new EventEmitter<b2bcoinModels.WalletCoin>();
+
 
     constructor (private userState: UserState,
                  private walletApi: WalletApi,
+                 private faucetApi: FaucetApi,
                  private router: Router) {
 
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
+        this.faucetApi.defaultHeaders = userState.getExtraHeaders();
 
         this.getCoinTypes();
 
         let t = this;
         let interval = setInterval(function() {
-            t.getServerInfo();
-            t.getAddresses(true);
-        }, 45000);
+            t.getCoinTypes();
+        }, 120000);
     }
 
     public getCoinTypes () {
         if (this.coins == undefined || this.coins.length == 0) {
             this.walletApi.getCoinTypes().subscribe(result => {
                     this.coins = result;
+
+                    this.getAddresses(true);
+
                     this.setPrimaryCoin();
+                    this.getFaucetAddress();
                     this.getServerInfo();
+
+                    this.addressFetchedEmitter.emit(this.primaryCoin);
             },
             (error) => {
                 if (error.status === 401) {
@@ -183,52 +212,30 @@ export class WalletService {
         let count = this.addresses.length;
 
         for (var i = 0; i < this.addresses.length; i++) {
+            if (!this.addressTransactions[this.addresses[i].currency.name]) {
+                this.addressTransactions[this.addresses[i].currency.name] = [];
+                this.addressPayments[this.addresses[i].currency.name] = [];
+            }
+        }
+
+        for (var i = 0; i < this.addresses.length; i++) {
             this.walletApi.getTransactionsForAddress(this.addresses[i].currency.name, this.addresses[i]).subscribe(result => {
-                    //console.log("Transactions result", result);
+                    console.log("Transactions result", result);
 
-                    let found: boolean = false;
-                    if (this.addressTransactions[result.currencyName]) {
-                        for (var j = 0; j < this.addressTransactions[result.currencyName].length; j++) {
-                            if (result.address == this.addressTransactions[result.currencyName][j].address
-                                || result.address == this.addressPayments[result.currencyName][j].address) {
-                                found = true;
-                            }
-                        }
-                    }
-
-                    let newTransactions = {
-                        address: result.address,
-                        transactions: []
-                    };
-                    let newTransactionsPayments = {
-                        address: result.address,
-                        transactions: []
-                    };
-
-                    for (let i = 0; i < result.items.length; i++) {
-                        if (result.items[i].transactions.length > 0 && result.items[i].transactions[0].amount < 0) {
-                            newTransactionsPayments.transactions.push(result.items[i]);
+                    result.transactionResponses.forEach(function(element) {
+                        if (element.amount > 0) {
+                            this.addressTransactions[result.currencyName].push(element);
                         } else {
-                            newTransactions.transactions.push(result.items[i]);
+                            this.addressPayments[result.currencyName].push(element);
                         }
-                    }
-
-                    if (!found) {
-                        if (!this.addressTransactions[result.currencyName]) {
-                            this.addressTransactions[result.currencyName] = [];
-                        }
-                        this.addressTransactions[result.currencyName].push(newTransactions);
-
-                        if (!this.addressPayments[result.currencyName]) {
-                            this.addressPayments[result.currencyName] = [];
-                        }
-                        this.addressPayments[result.currencyName].push(newTransactionsPayments);
-                    }
+                    }, this);
 
                     count -= 1;
                     if (count == 0) {
                         //console.log("Setting transactions busy on false !!!!");
                         this.transactionsBusy = false;
+                        this.paymentsFetchedEmitter.emit(this.getCoinForName(result.currencyName));
+                        this.transactionsFetchedEmitter.emit(this.getCoinForName(result.currencyName));
                     }
             },
             (error) => {
@@ -242,12 +249,23 @@ export class WalletService {
     }
 
     public getTransactionsForCoin(coin) {
-        return this.addressTransactions[coin.name];
+        let result = this.addressTransactions[coin.name];
+        return (result != null && result != undefined)? result: [];
     }
 
     public getPaymentsForCoin(coin) {
-        return this.addressPayments[coin.name];
+        let result = this.addressPayments[coin.name];
+        return (result != null && result != undefined)? result: [];
     }
+
+    public getConvertedAmount (coin, amount): string {
+        if (amount) {
+            return (amount / coin.convertAmount).toFixed(coin.fractionDigits);
+        } else {
+            return (0 / coin.convertAmount).toFixed(coin.fractionDigits);
+        }
+    }
+
 
     public getBalance (coin): string {
         if (this.addressBalances[coin.name]) {
@@ -260,6 +278,13 @@ export class WalletService {
             return (0 / coin.convertAmount).toFixed(coin.fractionDigits);
             //return "0.000000000000";
         }
+    }
+
+    public getSpendKeysObservable(coin, address: string) {
+        let userAddress : b2bcoinModels.UserAddress = {};
+        userAddress.address = address;
+        userAddress.currency = coin;
+        return this.walletApi.getSpendKeys(userAddress);
     }
 
     public getLockedBalance (coin): string {
@@ -318,14 +343,84 @@ export class WalletService {
         return this.walletApi.getLastBlock(coinType);
     }
 
-    public getAmount (amount: number, coinType): string {
-        if (amount !== undefined) {
-            if (coinType && coinType.toUpperCase() == "BTC") {
-                return (amount).toFixed(8) + " " + coinType.toUpperCase();
-            } else if (coinType) {
-                return (amount).toFixed(12) + " " + coinType.toUpperCase();
+    //public getAmount (amount: number, coinType): string {
+    //    if (amount !== undefined) {
+    //        if (coinType && coinType.toUpperCase() == "BTC") {
+    //            return (amount).toFixed(8) + " " + coinType.toUpperCase();
+    //        } else if (coinType) {
+    //            return (amount).toFixed(12) + " " + coinType.toUpperCase();
+    //        }
+    //    }
+    //}
+
+    public getFaucetAddress() {
+        console.log("Fetching faucet");
+        let faucetAddressRequest = {
+            websiteId: websiteId,
+            coin: this.primaryCoin
+        };
+
+        return this.faucetApi.getFaucetAddress(false, faucetAddressRequest).subscribe(
+            (result) => {
+                console.log("Faucet address received", result);
+                if (result) {
+                    this.faucetAddress = result;
+                    this.hasFaucetAddress = true;
+
+                    this.getFaucetAddressPayments(this.faucetAddress);
+                }
+            },
+            (error) => {
+                if (error.status === 401) {
+                    this.userState.handleError(error, this.getFaucetAddress, this);
+                }
+            }
+        );
+    }
+
+    public updateFaucetAddress() {
+        console.log("Update faucet");
+
+        return this.faucetApi.updateFaucetAddress(this.faucetAddress).subscribe(
+            (result) => {
+                console.log("Faucet address updated", result);
+                if (result) {
+                    this.faucetAddressUpdateEmitter.emit(this.faucetAddress);
+                }
+            },
+            (error) => {
+                if (error.status === 401) {
+                    this.userState.handleError(error, this.updateFaucetAddress, this);
+                }
+            }
+        );
+    }
+
+    public getFaucetAddressPayments(address) {
+        return this.faucetApi.getFaucetPayments(address).subscribe(
+            (result) => {
+                console.log("Faucet address payments received", result);
+                if (result) {
+                    this.faucetAddressPayments = result;
+                    this.faucetAddressPaymentsFetchedEmitter.emit(this.faucetAddressPayments);
+                }
+            },
+            (error) => {
+                if (error.status === 401) {
+                    this.userState.handleError(error, this.getFaucetAddressPayments, this);
+                }
+            }
+        );
+    }
+
+    private getCoinForName(coinName): b2bcoinModels.WalletCoin {
+        for (let i = 0; i < this.coins.length; i++) {
+            if (this.coins[i].name == coinName) {
+                return this.coins[i];
             }
         }
+
+        return undefined;
     }
 
     // NAVIGATIONS

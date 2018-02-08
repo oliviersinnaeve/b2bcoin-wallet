@@ -1,5 +1,5 @@
-export * from './EscrowApi';
-import { EscrowApi }  from './EscrowApi';
+export * from './FaucetApi';
+import { FaucetApi }  from './FaucetApi';
 export * from './WalletApi';
 import { WalletApi }  from './WalletApi';
-export const APIS = [ EscrowApi, WalletApi, ];
+export const APIS = [ FaucetApi, WalletApi, ];

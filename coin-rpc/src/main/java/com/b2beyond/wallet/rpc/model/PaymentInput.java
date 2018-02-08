@@ -88,60 +88,31 @@ public class PaymentInput {
             params += "    \"paymentId\":\"" + getPaymentId() + "\",\n";
         }
 
+        params += "    \"addresses\":[\"" + address + "\"";
+        params += "    ],\n";
+
+
         int index = 0;
-//        if(getAddresses() != null && !getAddresses().isEmpty()) {
-            params += "    \"addresses\":[\"" + address + "\"";
-
-//            for (Address key : getAddresses()) {
-//                String address = key.getAddress();
-//                params += "        \"" + address + "\"\n";
-//
-//                if (index < getAddresses().size() - 1) {
-//                    params += ",";
-//                }
-//                index += 1;
-//            }
-
-//                "        \"27eJo2S9eVo5N2G9zyjkqNBZPR6d2qvVD122vQMGAhcrjZjLu8nsMqk3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFX4qWNh\",\n" +
-//                "        \"24JtjYsLdSJKNNDCPGdMco5NbMBLqVWZ5ZiW5vzjXQUrLpMs1MRnfTQ3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFXHARwn\",\n" +
-//                "        \"21fYPCpaM3ochSSyLnhDAhgw1yV5WPb5c1BfyX5eidbMGyEPgnbSgJW3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFX8VQMv\"\n" +
-            params += "    ],\n";
-//        }
+        int totalAmountOfTransfers = 0;
 
         params += "    \"transfers\":[\n";
-
-        index = 0;
         for (String key : getTransfers().keySet()) {
             Long amount = getTransfers().get(key);
-//            if (index == 0) {
-//                amount += this.getFee();
-//            }
             params += "        {\n" +
                     "            \"amount\":" + amount + ",\n" +
                     "            \"address\":\"" + key + "\"\n" +
                     "        }\n";
-
-            if (index < getTransfers().size() - 1) {
-                params += ",";
-            }
-            index += 1;
         }
 
-//                "        {\n" +
-//                "            \"amount\":123456,\n" +
-//                "            \"address\":\"27eJo2S9eVo5N2G9zyjkqNBZPR6d2qvVD122vQMGAhcrjZjLu8nsMqk3c4KQ9iMJ4AV4fpBMccmjfJ4cu7uprKLNFX4qWNh\"\n" +
-//                "        },\n" +
-//                "        {\n" +
-//                "            \"amount\":234567,\n" +
-//                "            \"address\":\"278g3wNw5W48DeGbjwxkW3XauBip64uYKS9eFveUHBfdRAG3dYHPZvqXy5BWbfuKEtWZ86PJZdRacAgr1x3gtP5nLyGcVt8\"\n" +
-//                "        },\n" +
-//                "        {\n" +
-//                "            \"amount\":345678,\n" +
-//                "            \"address\":\"2AtjUXGmhP6CmbRxCtBESR4MjSGiWCQUTPCdsDpw72Co2pwzZT7rjnaBNRCSFCEygjNo5oe8mHyXU4Eip8szu4ZnAFyPW1a\"\n" +
-//                "        }\n" +
+        if (index < totalAmountOfTransfers - 1) {
+            params += ",";
+        }
+        index += 1;
+
+
         params += "    ],\n" +
-                "    \"changeAddress\":\"" + getAddress() +"\"\n" +
-                "}";
+            "    \"changeAddress\":\"" + getAddress() +"\"\n" +
+            "}";
 
         return params;
     }

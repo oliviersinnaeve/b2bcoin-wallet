@@ -10,7 +10,7 @@
         <div class="col-md-4">&nbsp;</div>
         <div class="col-md-8 row-spacer-25">
             <div class="login-title">B2B Coin Multi - Wallet</div>
-            <div class="login-sign-in row-spacer-10">{{'SIGN_UP' | translate}}.</div>
+            <div class="login-sign-in row-spacer-10">{{'NEW_SIGN_UP' | translate}}.</div>
         </div>
 
         <div class="col-md-12">
@@ -28,62 +28,64 @@
             </div>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
-            <div class="form-group row"
-                 [ngClass]="{'has-error': (!name.valid && name.touched), 'has-success': (name.valid && name.touched)}">
-                <div class="col-md-4">
-                    <label for="inputName3" class="control-label pull-right">{{'NAME' | translate}}</label>
-                </div>
+        <div class="col-md-12">
+            <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+                <div class="form-group row"
+                     [ngClass]="{'has-error': (!name.valid && name.touched), 'has-success': (name.valid && name.touched)}">
+                    <div class="col-md-4">
+                        <label for="inputName3" class="control-label pull-right">{{'NAME' | translate}}</label>
+                    </div>
 
-                <div class="col-sm-8">
-                    <input [formControl]="name" type="text" class="form-control" id="inputName3"
-                           placeholder="{{'NAME' | translate}}">
+                    <div class="col-sm-8">
+                        <input [formControl]="name" type="text" class="form-control" id="inputName3"
+                               placeholder="{{'NAME' | translate}}">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row"
-                 [ngClass]="{'has-error': (!email.valid && email.touched), 'has-success': (email.valid && email.touched)}">
-                <div class="col-md-4">
-                    <label for="inputEmail3" class="control-label pull-right">{{'EMAIL' | translate}}</label>
-                </div>
+                <div class="form-group row"
+                     [ngClass]="{'has-error': (!email.valid && email.touched), 'has-success': (email.valid && email.touched)}">
+                    <div class="col-md-4">
+                        <label for="inputEmail3" class="control-label pull-right">{{'EMAIL' | translate}}</label>
+                    </div>
 
-                <div class="col-sm-8">
-                    <input [formControl]="email" type="email" class="form-control" id="inputEmail3" placeholder="{{'EMAIL' | translate}}">
+                    <div class="col-sm-8">
+                        <input [formControl]="email" type="email" class="form-control" id="inputEmail3" placeholder="{{'EMAIL' | translate}}">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row"
-                 [ngClass]="{'has-error': (!password.valid && password.touched), 'has-success': (password.valid && password.touched)}">
-                <div class="col-md-4">
-                    <label for="inputPassword3" class="control-label pull-right">{{'PASSWORD' | translate}}</label>
-                </div>
+                <div class="form-group row"
+                     [ngClass]="{'has-error': (!password.valid && password.touched), 'has-success': (password.valid && password.touched)}">
+                    <div class="col-md-4">
+                        <label for="inputPassword3" class="control-label pull-right">{{'PASSWORD' | translate}}</label>
+                    </div>
 
-                <div class="col-sm-8">
-                    <input [formControl]="password" type="password" class="form-control" id="inputPassword3"
-                           placeholder="{{'PASSWORD' | translate}}">
+                    <div class="col-sm-8">
+                        <input [formControl]="password" type="password" class="form-control" id="inputPassword3"
+                               placeholder="{{'PASSWORD' | translate}}">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row"
-                 [ngClass]="{'has-error': (!repeatPassword.valid && repeatPassword.touched), 'has-success': (repeatPassword.valid && repeatPassword.touched)}">
-                <div class="col-md-4">
-                    <label for="inputPassword4" class="control-label pull-right">{{'REPEAT_PASSWORD' | translate}}</label>
-                </div>
+                <div class="form-group row"
+                     [ngClass]="{'has-error': (!repeatPassword.valid && repeatPassword.touched), 'has-success': (repeatPassword.valid && repeatPassword.touched)}">
+                    <div class="col-md-4">
+                        <label for="inputPassword4" class="control-label pull-right">{{'REPEAT_PASSWORD' | translate}}</label>
+                    </div>
 
-                <div class="col-sm-8">
-                    <input [formControl]="repeatPassword" type="password" class="form-control" id="inputPassword4"
-                           placeholder="Repeat">
-                    <span *ngIf="!passwords.valid && (password.touched || repeatPassword.touched)"
-                          class="help-block sub-little-text">{{'PASSWORDS_DONT_MATCH' | translate}}.</span>
+                    <div class="col-sm-8">
+                        <input [formControl]="repeatPassword" type="password" class="form-control" id="inputPassword4"
+                               placeholder="Repeat">
+                        <span *ngIf="!passwords.valid && (password.touched || repeatPassword.touched)"
+                              class="help-block sub-little-text">{{'PASSWORDS_DONT_MATCH' | translate}}.</span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="offset-sm-2 col-sm-10">
-                    <button *ngIf="!submitted" [disabled]="!form.valid" type="submit" style="width:75px" class="btn btn-default btn-auth pull-right">Sign up</button>
-                    <button *ngIf="submitted" style="width:75px" class="btn btn-default btn-auth pull-right"><img style="width:16px" src="/assets/img/button-loading.svg"/></button>
+                <div class="form-group row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <button *ngIf="!submitted" [disabled]="!form.valid" type="submit" style="width:75px" class="btn btn-default btn-auth pull-right">Sign up</button>
+                        <button *ngIf="submitted" style="width:75px" class="btn btn-default btn-auth pull-right"><img style="width:16px" src="/assets/img/button-loading.svg"/></button>
 
-                    <!--<button [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth pull-right">Sign up</button>-->
-                    <a routerLink="/forgotPassword" class="btn btn-default btn-auth pull-right">{{'FORGOT_PASSWORD' | translate}}?</a>
+                        <!--<button [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth pull-right">Sign up</button>-->
+                        <a routerLink="/forgotPassword" class="btn btn-default btn-auth pull-right">{{'FORGOT_PASSWORD' | translate}}?</a>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 

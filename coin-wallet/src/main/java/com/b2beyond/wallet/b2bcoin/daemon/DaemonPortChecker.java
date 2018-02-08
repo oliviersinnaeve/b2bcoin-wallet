@@ -23,25 +23,25 @@ public class DaemonPortChecker implements Runnable {
 
     @Override
     public void run() {
-        int coinTries = 10;
-
-        while (B2BUtil.availableForConnection(daemonPort)) {
-            LOGGER.info("Still Loading the coin daemon ...");
-            if (coinTries == 0) {
-                JOptionPane.showMessageDialog(null,
-                        "We tried to start the coin daemon on port " + daemonPort + ", it could not be started.\n" +
-                                "We will shutdown the application, it is not usable anyway.",
-                        "Fatal error",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
-            try {
-                Thread.sleep(2000);
-                coinTries -= 1;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        int coinTries = 10;
+//
+//        while (B2BUtil.availableForConnection(daemonPort)) {
+//            LOGGER.info("Still Loading the coin daemon ...");
+//            if (coinTries == 0) {
+//                JOptionPane.showMessageDialog(null,
+//                        "We tried to start the coin daemon on port " + daemonPort + ", it could not be started.\n" +
+//                                "We will shutdown the application, it is not usable anyway.",
+//                        "Fatal error",
+//                        JOptionPane.ERROR_MESSAGE);
+//                System.exit(1);
+//            }
+//            try {
+//                Thread.sleep(2000);
+//                coinTries -= 1;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 }

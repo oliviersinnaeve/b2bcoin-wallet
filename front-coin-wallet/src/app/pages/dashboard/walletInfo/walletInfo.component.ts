@@ -46,7 +46,7 @@ export class WalletInfo implements OnInit {
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
-        this.walletService.getAddresses(false);
+        //this.walletService.getAddresses(false);
     }
 
     public getNumberOfCoinsInNetwork(): string {

@@ -211,24 +211,26 @@ public class B2BWallet extends MainFrame {
         }
         // Start polling and updating the views
         LOGGER.info("Starting the rpc pollers ...");
-        final RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getStatusExecutor(), 10000);
-        final SynchronizationRpcPoller<BlockCount> syncPoller = new SynchronizationRpcPoller<>(actionController.getCoinRpcController().getBlockCountExecutor(), 10000);
-
-        actionController.getCoinRpcController().addPollers(syncPoller);
-        actionController.getWalletRpcController().addPollers(statusPoller);
+        final RpcPoller<Status> statusPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getStatusExecutor(), 30000);
+        final SynchronizationRpcPoller<BlockCount> syncPoller = new SynchronizationRpcPoller<>(actionController.getCoinRpcController().getBlockCountExecutor(), 30000);
 
         statusPoller.addObserver(syncPoller);
         statusPoller.addObserver(this);
         syncPoller.addObserver(this);
         loadWindow.setProgress(loadingCounter++);
 
-        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 60000);
+        RpcPoller<Addresses> addressesPoller = new NoParamsRpcPoller<>(actionController.getWalletRpcController().getAddressesExecutor(), 30000);
         TransactionItemsRpcPoller transactionsPoller = new TransactionItemsRpcPoller(actionController.getWalletRpcController().getTransactionsExecutor(), 10000);
-        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 60000);
+        UnconfirmedTransactionHashesRpcPoller unconfirmedTransactionHashesPoller = new UnconfirmedTransactionHashesRpcPoller(actionController.getWalletRpcController().getUnconfirmedTransactionHashesExecutor(), 10000);
+        actionController.getCoinRpcController().addPollers(syncPoller);
 
-        actionController.getWalletRpcController().addPollers(addressesPoller);
-        actionController.getWalletRpcController().addPollers(transactionsPoller);
-        actionController.getWalletRpcController().addPollers(unconfirmedTransactionHashesPoller);
+        List<RpcPoller> walletRpcPollers = new ArrayList<>();
+        walletRpcPollers.add(statusPoller);
+        walletRpcPollers.add(addressesPoller);
+        walletRpcPollers.add(transactionsPoller);
+        walletRpcPollers.add(unconfirmedTransactionHashesPoller);
+
+        actionController.startWallet(walletRpcPollers);
 
         // Add observers
         transactionsPoller.addObserver(transactionsTabView);

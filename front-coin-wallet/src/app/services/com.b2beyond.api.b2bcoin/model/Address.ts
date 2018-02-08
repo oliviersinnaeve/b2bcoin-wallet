@@ -15,4 +15,8 @@ import * as models from './models';
 export interface Address {
     address?: string;
 
+    standardAddress?: string;
+
+    paymentId?: string;
+
 }

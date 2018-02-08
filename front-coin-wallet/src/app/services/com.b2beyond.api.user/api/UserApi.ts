@@ -78,7 +78,7 @@ export class UserApi {
      * Returns the new copied fragments
      * @param body 
      */
-    public copyProperties(body?: models.LoginPropertiesCopy, extraHttpRequestParams?: any): Observable<Array<models.LoginProperties>> {
+    public copyProperties(body?: any, extraHttpRequestParams?: any): Observable<Array<models.LoginProperties>> {
         return this.copyPropertiesWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -204,7 +204,7 @@ export class UserApi {
      * Get the login properties for a site and returns it if all went ok, else 500 is thrown
      * @param body 
      */
-    public getProperties(body?: models.LoginProperties, extraHttpRequestParams?: any): Observable<models.LoginProperties> {
+    public getProperties(body?: any, extraHttpRequestParams?: any): Observable<models.LoginProperties> {
         return this.getPropertiesWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -310,8 +310,8 @@ export class UserApi {
     }
 
     /**
-     * Activate the user
-     * Activate the user and returns it if all went ok, else 500 is thrown
+     * Reset password
+     * Reset password and returns the user if all went ok, else 500 is thrown
      * @param websiteId 
      * @param passwordResetToken 
      * @param body 
@@ -332,7 +332,7 @@ export class UserApi {
      * Save the login properties and returns it if all went ok, else 500 is thrown
      * @param body 
      */
-    public saveProperties(body?: models.LoginProperties, extraHttpRequestParams?: any): Observable<models.LoginProperties> {
+    public saveProperties(body?: any, extraHttpRequestParams?: any): Observable<models.LoginProperties> {
         return this.savePropertiesWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
@@ -493,7 +493,7 @@ export class UserApi {
      * Returns the new copied fragments
      * @param body 
      */
-    public copyPropertiesWithHttpInfo(body?: models.LoginPropertiesCopy, extraHttpRequestParams?: any): Observable<Response> {
+    public copyPropertiesWithHttpInfo(body?: any, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user/copy`;
 
         let queryParameters = new URLSearchParams();
@@ -779,7 +779,7 @@ export class UserApi {
      * Get the login properties for a site and returns it if all went ok, else 500 is thrown
      * @param body 
      */
-    public getPropertiesWithHttpInfo(body?: models.LoginProperties, extraHttpRequestParams?: any): Observable<Response> {
+    public getPropertiesWithHttpInfo(body?: any, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user/getProperties`;
 
         let queryParameters = new URLSearchParams();
@@ -1022,8 +1022,8 @@ export class UserApi {
     }
 
     /**
-     * Activate the user
-     * Activate the user and returns it if all went ok, else 500 is thrown
+     * Reset password
+     * Reset password and returns the user if all went ok, else 500 is thrown
      * @param websiteId 
      * @param passwordResetToken 
      * @param body 
@@ -1073,7 +1073,7 @@ export class UserApi {
      * Save the login properties and returns it if all went ok, else 500 is thrown
      * @param body 
      */
-    public savePropertiesWithHttpInfo(body?: models.LoginProperties, extraHttpRequestParams?: any): Observable<Response> {
+    public savePropertiesWithHttpInfo(body?: any, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/user/saveProperties`;
 
         let queryParameters = new URLSearchParams();

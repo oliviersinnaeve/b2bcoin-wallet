@@ -1,0 +1,70 @@
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'FAUCET' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="faucetHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div class="row col-md-12 margin-top-20">&nbsp;</div>
+
+<div id="faucetOverview">
+    <div class="col-md-12 col-xs-12">
+        <div class="card">
+            <div class="card-block">
+                <div class="card-title row">
+                    <div class="col-md-12">
+                        <span class="font-weight-100">{{'FAUCET_INFO' | translate}}</span>
+                    </div>
+                    <div class="col-md-12 center">
+                        <span class="circle">
+                            <img class="heading-logo center" src="{{walletService.primaryCoin.logo}}">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-xs-12 margin-top-30" *ngIf="walletService.hasFaucetAddress">
+        <span class="location-1">{{'FAUCET_LIST' | translate}}</span>
+    </div>
+
+    <div class="row col-md-12 horizontal-scroll margin-top-15" style="margin-left: 0;" *ngIf="walletService.hasFaucetAddress">
+        <table class="table table-hover address_table">
+            <thead>
+            <tr class="black-muted-bg white-text">
+                <th class="align-left">{{'FAUCET_URL' | translate}}</th>
+                <th class="align-right">{{'BALANCE' | translate}}</th>
+                <!--<th class="align-right">{{'' | translate}}</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of faucets" class="no-top-border">
+                <td class="align-left"><a href="{{item.faucetUrl}}" target="_blank">{{item.faucetUrl}}</a></td>
+                <td ngClass="columnAmount align-right">{{walletService.getConvertedAmount(walletService.primaryCoin, item.balance.availableBalance)}}</td>
+                <!--<td ngClass="columnAmount align-right">{{walletService.getConvertedAmount(walletService.primaryCoin, item.paid)}}</td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #faucetHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="faucetHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Faucet help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/faucet.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="faucetHelpModal.hide()">{{'CLOSE' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class WalletRpcController implements WalletController {
+public class WalletRpcController {
+//        implements WalletController {
 
     private JsonRpcExecutor<ViewSecretKey> viewSecretKeyExecutor;
     private JsonRpcExecutor<SpendKeys> spendKeysExecutor;

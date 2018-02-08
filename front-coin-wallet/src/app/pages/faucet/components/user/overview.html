@@ -1,0 +1,95 @@
+<div class="col-md-12 col-xs-12 margin-top-30">
+    <span class="location-1">{{'FAUCET' | translate}}</span>
+    <div style="cursor: pointer;" class="btn btn-primary btn-circle" (click)="faucetHelpModal.show()"><i
+            class="ion-help"></i></div>
+</div>
+
+<div class="row col-md-12 margin-top-20">&nbsp;</div>
+
+<div id="faucetOverview">
+    <div class="col-md-12 col-xs-12">
+        <div class="card">
+            <div class="card-block">
+                <div class="card-title row">
+                    <div class="col-md-12">
+                        <span class="font-weight-100">{{'FAUCET_INFO' | translate}}</span>
+                    </div>
+                    <div class="col-md-12 center">
+                        <span class="circle">
+                            <img class="heading-logo center" src="{{walletService.primaryCoin.logo}}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-text row vertical-divider-white">
+                    <div class="col-md-12 heading-text row-spacer-15">
+                        <span class="font-size-36">{{walletService.primaryCoin.name}} {{'FAUCET' | translate}}</span>
+                    </div>
+
+                    <div *ngIf="!hasFaucetUserAddress" class="col-md-12">
+                        <div class="col-md-4 row-spacer-20">
+                            <label class="font-weight-300">{{'ADD_FAUCET_USER_ADDRESS' | translate}}: </label>
+                        </div>
+                        <div class="col-md-8 row-spacer-20 pull">
+                            <a *ngIf="creatingWallet" class="btn btn-primary" tooltip="{{'CREATING_FAUCET_USER_ADDRESS' | translate}}"><img style="width:16px" src="/assets/img/button-loading.svg"/></a>
+                            <a *ngIf="!creatingWallet" class="btn btn-primary" (click)="createNewFaucetAddress(true)" tooltip="{{'ADD_FAUCET_USER_ADDRESS' | translate}}">
+                                <i class="fa fa-filter" aria-hidden="true"></i>
+                                <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="hasFaucetUserAddress" class="col-md-12 col-xs-12 margin-top-30">
+        <span class="location-1">{{'FAUCET_USER_BALANCES_AND_PAYOUT' | translate}}</span>
+    </div>
+
+    <div *ngIf="hasFaucetUserAddress" class="row col-md-12 horizontal-scroll margin-top-15" style="margin-left: 0;">
+        <table class="table table-hover address_table">
+            <thead>
+            <tr class="black-muted-bg white-text">
+                <th class="align-left">{{'ADDRESS' | translate}}</th>
+                <th class="align-right">{{'BALANCE' | translate}}</th>
+                <th class="align-right">{{'PAYED_OUT' | translate}}</th>
+                <th class="align-right">{{'ACTIONS' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="no-top-border">
+                <td class="ellipsis-div">{{faucetUserAddress.address}}</td>
+                <td ngClass="columnAmount align-right">{{getConvertedAmount()}}</td>
+                <td ngClass="columnAmount align-right">{{getConvertedUserAmount()}}</td>
+                <td class="columnActions align-right">
+                    <i class="fa fa-copy" (click)="copyToClipboard(faucetUserAddress.address, 'Address copied to clipboard')" style="cursor: pointer"></i>
+                    <span class="vertical-line"></span>
+                    <i class="fa fa-dollar" (click)="payout(faucetUserAddress)" style="cursor: pointer"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Static modal -->
+<div class="modal fade" bsModal #faucetHelpModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+     role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" (click)="faucetHelpModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Faucet help</h4>
+            </div>
+            <div class="modal-body">
+                <markdown class="markdown" [path]="'assets/docs/faucet.md'"></markdown>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary confirm-btn" (click)="faucetHelpModal.hide()">{{'CLOSE' | translate}}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,6 +27,8 @@ export interface WalletCoin {
 
     primaryCoin?: boolean;
 
+    monero?: boolean;
+
     feeActiveForExchangeMembers?: boolean;
 
     minTransactionsForNoFee?: number;
@@ -35,8 +37,8 @@ export interface WalletCoin {
 
     logo?: string;
 
-    coinBaseUrl?: string;
-
     walletBaseUrl?: string;
+
+    coinBaseUrl?: string;
 
 }

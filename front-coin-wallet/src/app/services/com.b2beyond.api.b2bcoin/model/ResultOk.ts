@@ -15,4 +15,6 @@ import * as models from './models';
 export interface ResultOk {
     ok?: boolean;
 
+    message?: string;
+
 }

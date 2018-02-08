@@ -11,8 +11,11 @@ import { WalletService } from '../../walletService.service';
 })
 export class MultiWallet {
 
-    constructor (private walletService: WalletService) {
-        //this.walletService.getAddresses(this.ngOnInit, this);
-    }
+    /**
+     * Do not remove the walletService, it is used in the multiWallet.html
+     *
+     * @param walletService used in html
+     */
+    constructor (private walletService: WalletService) { }
 
 }

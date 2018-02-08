@@ -30,6 +30,8 @@ public class WalletDaemon implements Daemon {
     private Process process;
     private int processPid;
 
+    private boolean started;
+
     public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, final PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
         this.operatingSystem = operatingSystem;
@@ -80,7 +82,6 @@ public class WalletDaemon implements Daemon {
                 LOGGER.info("First wallet startup - Exit value : " + process.exitValue());
 
                 try {
-                    LOGGER.info("Windows sleep : 5 seconds ??");
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -108,26 +109,17 @@ public class WalletDaemon implements Daemon {
                         InputStream inputStream = process.getInputStream();
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
                         String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            LOGGER.info(line);
+                        while (true) {
+                            if ((line = bufferedReader.readLine()) != null) {
+                                LOGGER.info("First wallet startup - WALLET creation output : " + line);
+                            } else {
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                        inputStream.close();
-                        bufferedReader.close();
-
-
-                        InputStream errorStream = process.getErrorStream();
-                        BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
-                        String outLine;
-                        while ((outLine = outBufferedReader.readLine()) != null) {
-                            LOGGER.info(outLine);
-//                            try {
-//                                Thread.sleep(5000);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-                        }
-                        errorStream.close();
-                        outBufferedReader.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -142,6 +134,7 @@ public class WalletDaemon implements Daemon {
                         LOGGER.info("Reset password");
                         walletProperties.setProperty("container-password", "");
                         saveProperties(walletProperties, configLocation);
+                        started = true;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -218,4 +211,7 @@ public class WalletDaemon implements Daemon {
         }
     }
 
+    public boolean isStarted() {
+        return started;
+    }
 }
