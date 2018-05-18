@@ -131,6 +131,7 @@ public class MenuBar extends JMenuBar {
                             transactionInput.setThreshold(1000000000000l);
                             transactionInput.setAnonymity(0);
 
+                            actionController.getWalletRpcController().getFusionTransactionExecutor().setReadTimeout(300000);
                             FusionTransaction transaction = actionController.getWalletRpcController().getFusionTransactionExecutor().execute(transactionInput.getParams());
 
                             JOptionPane.showMessageDialog(null,
