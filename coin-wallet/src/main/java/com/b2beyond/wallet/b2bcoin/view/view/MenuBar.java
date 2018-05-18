@@ -32,9 +32,9 @@ import java.io.File;
 
 public class MenuBar extends JMenuBar {
 
-    ActionController actionController;
+    private ActionController actionController;
 
-    public MenuBar(final JFrame mainFrame, final PropertiesConfiguration walletProperties, ActionController controller) {
+    public MenuBar(final JFrame mainFrame, final PropertiesConfiguration walletProperties, final String version, ActionController controller) {
         this.actionController = controller;
         ImageIcon icon = new ImageIcon("exit.png");
 
@@ -199,7 +199,7 @@ public class MenuBar extends JMenuBar {
                     for (String address: addresses.getAddresses()) {
                         SpendKeys keys = actionController.getSpendKeys(address);
 
-                        html += "<h3>" + address + "</h3>";
+                        html = "<h3>" + address + "</h3>";
                         html += "<textarea rows='2' cols='75'  style='overflow:auto'>" +
                                 "View key (public) : " + keys.getSpendPublicKey() +
                                 "&#13;&#10;" +
@@ -224,7 +224,7 @@ public class MenuBar extends JMenuBar {
         aboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 JOptionPane.showMessageDialog(null,
-                        new AboutPanel(),
+                        new AboutPanel(version),
                         "About B2B Coin wallet",
                         JOptionPane.INFORMATION_MESSAGE,
                         B2BUtil.getIcon());

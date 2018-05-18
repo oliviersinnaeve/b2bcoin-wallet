@@ -184,7 +184,7 @@ public class B2BWallet extends MainFrame {
         actionController.setMiningController(miningController);
         actionController.setSoloMiningController(soloMiningController);
 
-        MenuBar menuBar = new MenuBar(this, walletDaemonProperties, actionController);
+        MenuBar menuBar = new MenuBar(this, walletDaemonProperties, applicationProperties.getString("version"), actionController);
         setJMenuBar(menuBar);
         loadWindow.setProgress(loadingCounter++);
 

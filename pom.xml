@@ -2,11 +2,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <parent>
+        <groupId>com.b2beyond</groupId>
+        <artifactId>parent-pom</artifactId>
+        <version>1.0</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.b2beyond</groupId>
+
     <artifactId>parent</artifactId>
     <name>B2Beyond parent</name>
-    <version>2.0.1</version>
+    <version>2.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
 
@@ -14,15 +20,6 @@
         <parent.generated.typescript.output>front/src/app/services</parent.generated.typescript.output>
     </properties>
 
-    <developers>
-        <developer>
-            <id>1</id>
-            <name>Olivier Sinnaeve</name>
-            <email>info@java-developer.be</email>
-            <organization>Java-developer</organization>
-            <organizationUrl>http://www.java-developer.be</organizationUrl>
-        </developer>
-    </developers>
 
     <modules>
         <module>coin-rpc</module>

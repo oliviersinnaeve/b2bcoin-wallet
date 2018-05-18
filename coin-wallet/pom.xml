@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.b2beyond</groupId>
         <artifactId>parent</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -16,8 +16,8 @@
     <dependencies>
         <dependency>
             <groupId>com.b2beyond</groupId>
-            <artifactId>coin-rpc</artifactId>
-            <version>${project.version}</version>
+            <artifactId>library-coin-rpc</artifactId>
+            <version>2.0.2</version>
         </dependency>
 
         <dependency>

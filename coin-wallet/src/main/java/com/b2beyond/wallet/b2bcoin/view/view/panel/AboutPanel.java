@@ -26,7 +26,7 @@ public class AboutPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public AboutPanel() {
+    public AboutPanel(String version) {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(600, 250));
@@ -34,7 +34,7 @@ public class AboutPanel extends JPanel {
         //Create an array of the text and components to be displayed.
         String msgString1 =
                 "<html><body>" +
-                        "<h1>B2B Coin wallet</h1>"
+                        "<h1>B2B Coin wallet - " + version + "</h1>"
                         + "<br>"
                         + "B2B Coin wallet is designed by the B2beyond community working together to keep cryptonigh coins open, public and accessible to all."
                         + "<br><br>"
