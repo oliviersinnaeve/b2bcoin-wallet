@@ -1,5 +1,6 @@
 package com.b2beyond.wallet.rpc.model.coin;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  */
 public class Block {
 
-    private long alreadyGeneratedCoins;
+    private BigInteger alreadyGeneratedCoins;
     private long alreadyGeneratedTransactions;
     private long baseReward;
     private long blockSize;
@@ -29,11 +30,11 @@ public class Block {
     private long transactionsCumulativeSize;
 
 
-    public long getAlreadyGeneratedCoins() {
+    public BigInteger getAlreadyGeneratedCoins() {
         return alreadyGeneratedCoins;
     }
 
-    public void setAlreadyGeneratedCoins(long alreadyGeneratedCoins) {
+    public void setAlreadyGeneratedCoins(BigInteger alreadyGeneratedCoins) {
         this.alreadyGeneratedCoins = alreadyGeneratedCoins;
     }
 
