@@ -9,11 +9,7 @@ import com.b2beyond.wallet.b2bcoin.rpc.UnconfirmedTransactionHashesRpcPoller;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.NoParamsRpcPoller;
 import com.b2beyond.wallet.rpc.RpcPoller;
-import com.b2beyond.wallet.rpc.model.Address;
-import com.b2beyond.wallet.rpc.model.AddressBalance;
-import com.b2beyond.wallet.rpc.model.AddressInput;
-import com.b2beyond.wallet.rpc.model.SpendKeys;
-import com.b2beyond.wallet.rpc.model.Success;
+import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
@@ -187,6 +183,17 @@ public class ActionController {
     public SpendKeys getSpendKeys(String address) {
         try {
             return walletRpcController.getSpendKeysExecutor().execute("\"params\": {\"address\": \"" + address + "\"}");
+        } catch (KnownJsonRpcException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
+    public ViewSecretKey getPublicKey(String address) {
+        try {
+            return walletRpcController.getViewSecretKeyExecutor().execute("\"params\": {\"address\": \"" + address + "\"}");
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }

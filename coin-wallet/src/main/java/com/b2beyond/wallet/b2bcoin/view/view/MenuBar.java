@@ -3,14 +3,7 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.ChooseAddressPanel;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.CreateAddressPanel;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.rpc.model.Address;
-import com.b2beyond.wallet.rpc.model.AddressInput;
-import com.b2beyond.wallet.rpc.model.Addresses;
-import com.b2beyond.wallet.rpc.model.FusionEstimate;
-import com.b2beyond.wallet.rpc.model.FusionEstimateInput;
-import com.b2beyond.wallet.rpc.model.FusionTransaction;
-import com.b2beyond.wallet.rpc.model.FusionTransactionInput;
-import com.b2beyond.wallet.rpc.model.SpendKeys;
+import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
@@ -198,11 +191,14 @@ public class MenuBar extends JMenuBar {
 
                     String html = "<html><body>";
                     for (String address: addresses.getAddresses()) {
+                        ViewSecretKey publicKey = actionController.getPublicKey(address);
                         SpendKeys keys = actionController.getSpendKeys(address);
 
-                        html = "<h3>" + address + "</h3>";
-                        html += "<textarea rows='2' cols='75'  style='overflow:auto'>" +
-                                "View key (public) : " + keys.getSpendPublicKey() +
+                        html += "<h3>" + address + "</h3>";
+                        html += "<textarea rows='3' cols='75'  style='overflow:auto'>" +
+                                "View key (public) : " + publicKey.getViewSecretKey() +
+                                "&#13;&#10;" +
+                                "Spend key (public) : " + keys.getSpendPublicKey() +
                                 "&#13;&#10;" +
                                 "Spend key (private) : " + keys.getSpendSecretKey() +
                                 "</textarea>";
