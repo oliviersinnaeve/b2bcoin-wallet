@@ -22,7 +22,7 @@
 
 
     <modules>
-        <module>coin-rpc</module>
+        <module>library-coin-rpc-cryptonight</module>
         <module>coin-wallet</module>
     </modules>
 

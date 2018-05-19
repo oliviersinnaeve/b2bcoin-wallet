@@ -1,28 +1,15 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.rpc.model.AddressBalance;
-import com.b2beyond.wallet.rpc.model.Addresses;
-import com.b2beyond.wallet.rpc.model.SingleTransactionItem;
-import com.b2beyond.wallet.rpc.model.Status;
-import com.b2beyond.wallet.rpc.model.Transaction;
-import com.b2beyond.wallet.rpc.model.TransactionItem;
-import com.b2beyond.wallet.rpc.model.TransactionItems;
-import com.b2beyond.wallet.rpc.model.Transfer;
-import com.b2beyond.wallet.rpc.model.UnconfirmedTransactionHashes;
-import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
-import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.CoinUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.AbstractWhitePanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.BalancePanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.DonationPanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.PaymentsPanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.ServerPanel;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.*;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.model.*;
+import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -91,7 +78,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
                 serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
                 if (blockWrapper != null &&  blockWrapper.getBlock() != null) {
                     serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
-                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getAlreadyGeneratedCoins()));
+                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getAlreadyGeneratedCoins().longValue()));
                     serverPanel.getBaseReward().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getBaseReward()));
                     serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
                 }

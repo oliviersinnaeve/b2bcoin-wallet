@@ -13,9 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -30,20 +28,21 @@ public class NewWalletPanel extends JPanel {
 
     private JTextField walletNameField;
     private JTextField passwordField;
+    private JTextField passwordField2;
 
     /**
      * Create the panel.
      */
     public NewWalletPanel() {
         final String userHome = B2BUtil.getUserHome();
-        setBorder(new EmptyBorder(10,10,10,10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(600, 400));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[] { 1, 1, 1, 1, 1 };
-        gridBagLayout.rowHeights = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        gridBagLayout.columnWeights = new double[] { 0.01, 0.25, 0.2, 0.70, 0.01  };
-        gridBagLayout.rowWeights = new double[]{ 0.02, 0.25, 0.02, 0.15, 0.02, 0.10, 0.02, 0.10, 0.02, 0.10, 0.02};
+        gridBagLayout.columnWidths = new int[]{1, 1, 1, 1, 1};
+        gridBagLayout.rowHeights = new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        gridBagLayout.columnWeights = new double[]{0.01, 0.25, 0.2, 0.70, 0.01};
+        gridBagLayout.rowWeights = new double[]{0.02, 0.25, 0.02, 0.15, 0.02, 0.10, 0.02, 0.10, 0.02, 0.10, 0.02};
         setLayout(gridBagLayout);
 
         JRadioButton newWalletButton = new JRadioButton("New wallet");
@@ -66,12 +65,14 @@ public class NewWalletPanel extends JPanel {
 
         walletNameField = new JTextField(50);
         passwordField = new JPasswordField();
+        passwordField2 = new JPasswordField();
         final JButton button = new JButton("Select file ...");
         button.setEnabled(false);
         final JFileChooser fileChooser = new JFileChooser(new File(userHome));
         String msgString2 = "1. Wallet Name :";
         String msgString3 = "2. Select simple wallet : ";
         String msgString4 = "Password :";
+        String msgString5 = "Repeat Password :";
 
         JLabel helpMessageLabel = new JLabel(msgString1);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -110,6 +111,13 @@ public class NewWalletPanel extends JPanel {
         gbc.gridx = 3;
         gbc.gridy = 9;
         add(passwordField, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 11;
+        add(new JLabel(msgString5), gbc);
+        gbc.gridx = 3;
+        gbc.gridy = 11;
+        add(passwordField2, gbc);
 
         button.addActionListener(new ActionListener() {
             @Override
@@ -163,5 +171,16 @@ public class NewWalletPanel extends JPanel {
 
     public JTextField getPasswordField() {
         return passwordField;
+    }
+
+    public JTextField getPasswordField2() {
+        return passwordField2;
+    }
+
+    public void enablePasswordError(boolean b) {
+        if (b) {
+            passwordField.setBackground(Color.RED);
+            passwordField2.setBackground(Color.RED);
+        }
     }
 }

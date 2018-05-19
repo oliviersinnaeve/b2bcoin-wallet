@@ -94,7 +94,16 @@ public class DaemonController {
                         JOptionPane.INFORMATION_MESSAGE, new ImageIcon(splashScreenLocation));
 
                 newWalletPallet.getWalletNameField().setEnabled(true);
-                valid = StringUtils.isNotBlank(newWalletPallet.getWalletNameField().getText()) && StringUtils.isNotBlank(newWalletPallet.getPasswordField().getText());
+                valid = StringUtils.isNotBlank(newWalletPallet.getWalletNameField().getText())
+                        && StringUtils.isNotBlank(newWalletPallet.getPasswordField().getText())
+                        && StringUtils.isNotBlank(newWalletPallet.getPasswordField2().getText())
+                        && StringUtils.equals(
+                                newWalletPallet.getPasswordField().getText(),
+                                newWalletPallet.getPasswordField2().getText());
+
+                newWalletPallet.enablePasswordError(!StringUtils.equals(
+                        newWalletPallet.getPasswordField().getText(),
+                        newWalletPallet.getPasswordField2().getText()));
             }
 
             container = newWalletPallet.getWalletNameField().getText();
