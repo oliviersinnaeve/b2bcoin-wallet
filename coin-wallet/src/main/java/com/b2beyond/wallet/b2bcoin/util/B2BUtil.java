@@ -92,9 +92,11 @@ public final class B2BUtil {
             new File(getConfigRoot()).mkdirs();
 
             LOGGER.trace("Exporting the coin daemon config");
-            FileResourceExtractor.extractFromJar(
-                    "configs/application.config",
-                    getConfigRoot() + "application.config");
+            if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
+                FileResourceExtractor.extractFromJar(
+                        "configs/application.config",
+                        getConfigRoot() + "application.config");
+            }
 
             if (Paths.get(getUserHome() + "coin.conf").toFile().exists()) {
                 if (!Paths.get(getUserHome() + "coin.conf").toFile().delete()) {

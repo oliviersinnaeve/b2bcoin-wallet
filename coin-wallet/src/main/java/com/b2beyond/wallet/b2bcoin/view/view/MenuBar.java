@@ -1,33 +1,38 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
-import com.b2beyond.wallet.b2bcoin.view.view.panel.ChooseAddressPanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.CreateAddressPanel;
-import com.b2beyond.wallet.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.rpc.model.*;
-import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
+import com.b2beyond.wallet.b2bcoin.view.model.ChangeSize;
 import com.b2beyond.wallet.b2bcoin.view.view.panel.AboutPanel;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.ChangeViewSizePanel;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.ChooseAddressPanel;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.PanelObservable;
+import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.model.*;
+import java.util.Observable;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.StringUtils;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URL;
 
 
 public class MenuBar extends JMenuBar {
 
     private ActionController actionController;
 
-    public MenuBar(final JFrame mainFrame, final PropertiesConfiguration walletProperties, final String version, ActionController controller) {
+    public PanelObservable panelObservable = new PanelObservable();
+
+    public MenuBar(final JFrame mainFrame,
+                   final PropertiesConfiguration walletProperties,
+                   final PropertiesConfiguration applicationProperties,
+                   ActionController controller) {
         this.actionController = controller;
         ImageIcon icon = new ImageIcon("exit.png");
 
@@ -41,6 +46,45 @@ public class MenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent ev) {
                 actionController.exit();
                 System.exit(0);
+            }
+        });
+
+        JMenuItem changeSizeMenuItem = new JMenuItem("Change View Size", icon);
+        changeSizeMenuItem.setMnemonic(KeyEvent.VK_E);
+        changeSizeMenuItem.setToolTipText("Exit application");
+        changeSizeMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                final ChangeViewSizePanel changeViewSizePanel = new ChangeViewSizePanel(
+                        applicationProperties.getInt("min-width"),
+                        applicationProperties.getInt("min-height")
+                );
+                URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
+
+                boolean valid = false;
+                while (!valid) {
+                    JOptionPane.showMessageDialog(null, changeViewSizePanel, "Change minimum view size",
+                            JOptionPane.INFORMATION_MESSAGE, new ImageIcon(splashScreenLocation));
+
+                    valid = StringUtils.isNotBlank(changeViewSizePanel.getViewWidth().getText())
+                            && StringUtils.isNotBlank(changeViewSizePanel.getViewHeight().getText());
+
+                    try {
+                        int newWidth = Integer.parseInt(changeViewSizePanel.getViewWidth().getText());
+                        int newHeight = Integer.parseInt(changeViewSizePanel.getViewHeight().getText());
+
+                        applicationProperties.setProperty("min-width", newWidth);
+                        applicationProperties.setProperty("min-height", newHeight);
+                        applicationProperties.save(B2BUtil.getConfigRoot() + "application.config");
+
+                        ChangeSize newSize = new ChangeSize(newWidth, newHeight);
+                        panelObservable.setChanged();
+                        panelObservable.notifyObservers(newSize);
+                    } catch (NumberFormatException e) {
+                        valid = false;
+                    } catch (ConfigurationException ex) {
+                        valid = true;
+                    }
+                }
             }
         });
 
@@ -221,13 +265,14 @@ public class MenuBar extends JMenuBar {
         aboutMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 JOptionPane.showMessageDialog(null,
-                        new AboutPanel(version),
+                        new AboutPanel(applicationProperties.getString("version")),
                         "About B2B Coin wallet",
                         JOptionPane.INFORMATION_MESSAGE,
                         B2BUtil.getIcon());
             }
         });
 
+        file.add(changeSizeMenuItem);
         file.add(exitMenuItem);
 
         network.add(resetBlockchainMenuItem);

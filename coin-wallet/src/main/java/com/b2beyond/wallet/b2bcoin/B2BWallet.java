@@ -184,9 +184,10 @@ public class B2BWallet extends MainFrame {
         actionController.setMiningController(miningController);
         actionController.setSoloMiningController(soloMiningController);
 
-        MenuBar menuBar = new MenuBar(this, walletDaemonProperties, applicationProperties.getString("version"), actionController);
+        MenuBar menuBar = new MenuBar(this, walletDaemonProperties, applicationProperties, actionController);
         setJMenuBar(menuBar);
         loadWindow.setProgress(loadingCounter++);
+        menuBar.panelObservable.addObserver(this);
 
         List<TabContainer> containers = new ArrayList<>();
         URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("stats-icon.png");

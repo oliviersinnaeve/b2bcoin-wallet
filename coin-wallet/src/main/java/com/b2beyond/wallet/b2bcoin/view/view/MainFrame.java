@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.view.view;
 
 
+import com.b2beyond.wallet.b2bcoin.view.model.ChangeSize;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.Error;
@@ -203,6 +204,18 @@ public class MainFrame extends JFrame implements Observer {
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
             System.out.println(((Error) data).getCode());
+        }
+        if (data instanceof ChangeSize) {
+            // TODO -- this shit is not working at runtime, figure this out !!
+            ChangeSize newsize = (ChangeSize) data;
+            Dimension minimumSize = new Dimension(newsize.getWidth(), newsize.getHeight());
+            this.setMinimumSize(minimumSize);
+            this.setResizable(true);
+            this.setSize(minimumSize);
+            this.content.setMinimumSize(minimumSize);
+            this.content.setSize(minimumSize);
+            this.repaint();
+//            this.setPreferredSize(minimumSize);
         }
     }
 
