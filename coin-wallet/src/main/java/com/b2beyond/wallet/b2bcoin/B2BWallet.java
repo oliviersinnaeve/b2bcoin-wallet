@@ -54,9 +54,9 @@ public class B2BWallet extends MainFrame {
 
     private static ActionController actionController;
 
-    public static PropertiesConfiguration applicationProperties;
-    public static PropertiesConfiguration walletDaemonProperties;
-    public static PropertiesConfiguration coinDaemonProperties;
+    private static PropertiesConfiguration applicationProperties;
+    private static PropertiesConfiguration walletDaemonProperties;
+    private static PropertiesConfiguration coinDaemonProperties;
 
     private static SplashWindow loadWindow;
     private static int loadingCounter = 1;
@@ -137,7 +137,7 @@ public class B2BWallet extends MainFrame {
         new B2BWallet(applicationProperties, actionController);
     }
 
-    public B2BWallet(PropertiesConfiguration applicationProperties, final ActionController actionController) {
+    private B2BWallet(PropertiesConfiguration applicationProperties, final ActionController actionController) {
         super(applicationProperties, actionController);
 
         if (LOGGER.isDebugEnabled()) {

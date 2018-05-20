@@ -10,7 +10,6 @@ import com.b2beyond.wallet.b2bcoin.view.view.panel.PanelObservable;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.rpc.model.*;
-import java.util.Observable;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
