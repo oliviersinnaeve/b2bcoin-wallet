@@ -122,13 +122,6 @@ public class ActionController {
     public void startWallet(List<RpcPoller> walletRpcPollers) {
         controller.startWallet();
 
-        while (!controller.isWalletStarted()) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
         // Add pollers if wallet rpc port is available
         for (RpcPoller poller : walletRpcPollers) {

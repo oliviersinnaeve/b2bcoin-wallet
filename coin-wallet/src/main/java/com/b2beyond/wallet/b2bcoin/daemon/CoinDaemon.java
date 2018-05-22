@@ -62,13 +62,13 @@ public class CoinDaemon implements Daemon {
                         InputStream inputStream = process.getInputStream();
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
                         String line;
-                        while (true) {
+                        while (process.isAlive()) {
 
                             if ((line = bufferedReader.readLine()) != null) {
                                 LOGGER.info(line);
                             }
                             try {
-                                Thread.sleep(5000);
+                                Thread.sleep(600000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

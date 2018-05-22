@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>com.b2beyond</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>b2bcoin-parent</artifactId>
         <version>2.0.2-SNAPSHOT</version>
     </parent>
 
@@ -24,6 +24,12 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>1.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.7</version>
         </dependency>
 
         <!-- WINDOWS CRAP -->
@@ -238,7 +244,7 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.5.1</version>
+                        <version>1.7.1</version>
                         <executions>
                             <execution>
                                 <id>l4j-clui</id>
@@ -248,6 +254,10 @@
                                 </goals>
                                 <configuration>
                                     <headerType>gui</headerType>
+                                    <stayAlive>true</stayAlive>
+                                    <intialHeapSize>1024</intialHeapSize>
+                                    <runtimeBits>64</runtimeBits>
+                                    <bundleJre64Bit>true</bundleJre64Bit>
                                     <jar>
                                         ${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar
                                     </jar>
@@ -259,7 +269,7 @@
                                     </classPath>
                                     <icon>${project.basedir}/src/main/resources/my-logo.ico</icon>
                                     <jre>
-                                        <minVersion>1.7.0</minVersion>
+                                        <minVersion>1.8.0</minVersion>
                                         <jdkPreference>preferJre</jdkPreference>
                                     </jre>
                                     <versionInfo>
