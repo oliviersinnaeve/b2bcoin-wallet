@@ -37,8 +37,8 @@ export interface WalletCoin {
 
     logo?: string;
 
-    walletBaseUrl?: string;
-
     coinBaseUrl?: string;
+
+    walletBaseUrl?: string;
 
 }

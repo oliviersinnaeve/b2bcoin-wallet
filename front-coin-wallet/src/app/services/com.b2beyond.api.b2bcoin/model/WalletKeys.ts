@@ -12,9 +12,11 @@
 
 import * as models from './models';
 
-export interface SpendKeys {
-    spendSecretKey?: string;
+export interface WalletKeys {
+    publicViewKey?: string;
 
-    spendPublicKey?: string;
+    privateViewKey?: string;
+
+    privateSpendKey?: string;
 
 }

@@ -30,7 +30,7 @@ export class Overview {
     @ViewChild('deleteAddressModal') deleteAddressModal: ModalDirective;
     @ViewChild('viewKeysModal') viewKeysModal: ModalDirective;
 
-    public keys: b2bcoinModels.SpendKeys = {};
+    public keys: b2bcoinModels.WalletKeys = {};
 
     //public addresses: Array<b2bcoinModels.AddressBalance> = [];
     private addressToDelete : b2bcoinModels.AddressBalance;
@@ -81,8 +81,9 @@ export class Overview {
 
     public showViewKeys(item) {
         this.keys = {
-            spendPublicKey: "Loading ...",
-            spendSecretKey: "Loading ..."
+            publicViewKey: "Loading ...",
+            privateViewKey: "Loading ...",
+            privateSpendKey: "Loading ..."
         };
         this.walletService.getSpendKeysObservable(this.coin, item.address).subscribe(
             (success) => {

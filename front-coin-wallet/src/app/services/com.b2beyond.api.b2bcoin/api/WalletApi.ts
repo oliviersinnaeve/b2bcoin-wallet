@@ -189,7 +189,7 @@ export class WalletApi {
      * Returns the public view key and the private spend key
      * @param body 
      */
-    public getSpendKeys(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.SpendKeys> {
+    public getSpendKeys(body?: models.UserAddress, extraHttpRequestParams?: any): Observable<models.WalletKeys> {
         return this.getSpendKeysWithHttpInfo(body, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {

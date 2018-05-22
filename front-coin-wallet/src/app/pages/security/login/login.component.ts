@@ -1,3 +1,5 @@
+import {WalletService} from "../../walletService.service";
+
 declare var FB;
 
 var CryptoJS = require('crypto-js');
@@ -37,6 +39,7 @@ export class Login implements OnInit {
 
 
     constructor (private fb: FormBuilder,
+                 private walletService: WalletService,
                  private userState: UserState,
                  private userApi: UserApi,
                  private router: Router,
@@ -85,6 +88,7 @@ export class Login implements OnInit {
                         this.show2FA = true;
                         this.submitted = false;
                     } else {
+                        this.walletService.initializeWallet(this.userState);
                         this.router.navigateByUrl("dashboard");
                     }
                 },

@@ -51,13 +51,17 @@ export class WalletService {
                  private faucetApi: FaucetApi,
                  private router: Router) {
 
+        this.initializeWallet(userState);
+    }
+
+    public initializeWallet(userState: UserState) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
         this.faucetApi.defaultHeaders = userState.getExtraHeaders();
 
         this.getCoinTypes();
 
         let t = this;
-        let interval = setInterval(function() {
+        let interval = setInterval(function () {
             t.getCoinTypes();
         }, 120000);
     }

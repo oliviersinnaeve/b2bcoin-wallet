@@ -12,6 +12,3 @@ export * from './baFullCalendar';
 export * from './baPictureUploader';
 export * from './baCheckbox';
 export * from './baMultiCheckbox';
-export * from './ng2-monaco-editor';
-export * from './json-schema-form';
-export * from './json-editor';

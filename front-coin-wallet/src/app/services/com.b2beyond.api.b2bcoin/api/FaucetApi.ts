@@ -155,14 +155,14 @@ export class FaucetApi {
     /**
      * Send a payment from the faucet
      * Send a payment from the faucet
-     * @param body 
-     * @param body2 
-     * @param body3 
-     * @param body4 
-     * @param body5 
+     * @param apiKey 
+     * @param currency 
+     * @param to 
+     * @param amount 
+     * @param referral 
      */
-    public send(body?: string, body2?: string, body3?: string, body4?: number, body5?: boolean, extraHttpRequestParams?: any): Observable<models.FaucetPaymentRequest> {
-        return this.sendWithHttpInfo(body, body2, body3, body4, body5, extraHttpRequestParams)
+    public send(apiKey?: string, currency?: string, to?: string, amount?: number, referral?: boolean, extraHttpRequestParams?: any): Observable<models.FaucetPaymentRequest> {
+        return this.sendWithHttpInfo(apiKey, currency, to, amount, referral, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -457,20 +457,22 @@ export class FaucetApi {
     /**
      * Send a payment from the faucet
      * Send a payment from the faucet
-     * @param body 
-     * @param body2 
-     * @param body3 
-     * @param body4 
-     * @param body5 
+     * @param apiKey 
+     * @param currency 
+     * @param to 
+     * @param amount 
+     * @param referral 
      */
-    public sendWithHttpInfo(body?: string, body2?: string, body3?: string, body4?: number, body5?: boolean, extraHttpRequestParams?: any): Observable<Response> {
+    public sendWithHttpInfo(apiKey?: string, currency?: string, to?: string, amount?: number, referral?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + `/faucet/send`;
 
         let queryParameters = new URLSearchParams();
         let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        let formParams = new URLSearchParams();
+
         // to determine the Content-Type header
         let consumes: string[] = [
-            '*/*'
+            'application/x-www-form-urlencoded'
         ];
 
         // to determine the Accept header
@@ -478,12 +480,32 @@ export class FaucetApi {
             'application/json'
         ];
 
-        headers.set('Content-Type', 'application/json');
+        headers.set('Content-Type', 'application/x-www-form-urlencoded');
+
+        if (apiKey !== undefined) {
+            formParams.set('api_key', <any>apiKey);
+        }
+
+        if (currency !== undefined) {
+            formParams.set('currency', <any>currency);
+        }
+
+        if (to !== undefined) {
+            formParams.set('to', <any>to);
+        }
+
+        if (amount !== undefined) {
+            formParams.set('amount', <any>amount);
+        }
+
+        if (referral !== undefined) {
+            formParams.set('referral', <any>referral);
+        }
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Post,
             headers: headers,
-            body: body5 == null ? '' : JSON.stringify(body5), // https://github.com/angular/angular/issues/10612
+            body: formParams.toString(),
             search: queryParameters
         });
 
