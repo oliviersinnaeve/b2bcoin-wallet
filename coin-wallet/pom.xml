@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>com.b2beyond</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>b2bcoin-parent</artifactId>
         <version>2.0.2</version>
     </parent>
 
