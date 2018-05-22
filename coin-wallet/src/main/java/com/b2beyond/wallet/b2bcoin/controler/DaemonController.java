@@ -188,9 +188,9 @@ public class DaemonController {
         return walletProperties.getInt("bind-port");
     }
 
-    public boolean isWalletStarted() {
-        return walletDaemon.isStarted();
-    }
+//    public boolean isWalletStarted() {
+//        return walletDaemon.isStarted();
+//    }
 
     @Override
     protected void finalize() throws Throwable {

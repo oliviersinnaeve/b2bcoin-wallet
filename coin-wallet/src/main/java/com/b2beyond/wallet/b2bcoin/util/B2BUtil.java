@@ -89,6 +89,7 @@ public final class B2BUtil {
 
     public static void copyConfigsOnRun() {
         try {
+            new File(getUserHome() + "/logs").mkdirs();
             new File(getConfigRoot()).mkdirs();
 
             LOGGER.trace("Exporting the coin daemon config");
@@ -333,7 +334,7 @@ public final class B2BUtil {
         String unix = ".b2bcoin";
 
         if (getOperatingSystem().equalsIgnoreCase(WINDOWS)) {
-            command = "rmdir \\y " + blockChainHome + windows;
+            command = "cmd rmdir \\y " + blockChainHome + windows;
         } else {
             command = "rm -R " + blockChainHome + unix;
         }
