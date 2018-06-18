@@ -1,17 +1,17 @@
 import {Component} from '@angular/core';
-import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EmailValidator, EqualPasswordsValidator} from '../../../theme/validators';
 
-import { TranslateService } from 'ng2-translate';
+import {TranslateService} from 'ng2-translate';
 
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import {UserService} from '../../../services/com.b2beyond.api.user'
 
-import { websiteId } from '../../../environment';
+import {websiteId} from '../../../environment-config';
 
 import 'style-loader!./register.scss';
 
-var CryptoJS = require('crypto-js');
+// var CryptoJS = require('crypto-js');
 
 
 @Component({
@@ -33,7 +33,7 @@ export class Register {
     public submitted: boolean = false;
 
     constructor (private fb: FormBuilder,
-                 private userApi: UserApi,
+                 private UserService: UserService,
                  private translate: TranslateService) {
 
         this.form = fb.group({
@@ -66,13 +66,16 @@ export class Register {
         user.websiteId = websiteId;
         user.userDetails = {websiteId: websiteId, userId: values.email, name: values.name, email: values.email};
         user.userId = values.email;
-        user.password = values.passwords.password;
+
+        // TODO user/password request
+
+        // user.password = values.passwords.password;
         //user.password = CryptoJS.AES.encrypt(values.passwords.password, values.email).toString();
 
         //console.log(user);
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.register(user).subscribe(result => {
+            this.UserService.register(user).subscribe(result => {
                     //console.log(result);
                     this.messages.push("You have successfully registered, please check your mail and click the activation link");
                 },

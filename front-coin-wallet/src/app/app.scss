@@ -1,7 +1,12 @@
 @import "~normalize.css";
 @import "theme/theme";
 
+
 html,body { height:100%; }
+
+.control-label {
+  float: right;
+}
 
 .modal-body {
   a {

@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch'
 import { UserState } from '../../user.state';
 import * as b2bcoinModels from '../../services/com.b2beyond.api.b2bcoin/model/models';
 
-import { languages } from '../../environment';
+import { languages } from '../../environment-config';
 
 @Injectable()
 export class TransactionsService {

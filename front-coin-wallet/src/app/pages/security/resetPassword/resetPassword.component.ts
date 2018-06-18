@@ -6,7 +6,7 @@ import { EmailValidator, EqualPasswordsValidator } from '../../../theme/validato
 import { TranslateService } from 'ng2-translate';
 
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import { UserService } from '../../../services/com.b2beyond.api.user'
 
 import { UserState } from '../../../user.state';
 
@@ -32,7 +32,7 @@ export class ResetPassword {
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private UserService: UserService,
                  private router: Router,
                  private route: ActivatedRoute,
                  private translate: TranslateService) {
@@ -67,11 +67,14 @@ export class ResetPassword {
         //console.log("Submitting password forgot email", values);
         // this.messages = [];
         let user: userModels.User = {};
-        user.password = values.passwords.password;
+
+        // TODO set user password in request object
+
+        // user.password = values.passwords.password;
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.resetPassword(this.websiteId, this.resetToken, user).subscribe(result => {
+            this.UserService.resetPassword(this.websiteId, this.resetToken, user).subscribe(result => {
                     this.success = true;
                 },
                     error => {

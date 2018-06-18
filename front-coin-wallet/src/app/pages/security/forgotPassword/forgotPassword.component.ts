@@ -1,16 +1,14 @@
-import { Component } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator } from '../../../theme/validators';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmailValidator} from '../../../theme/validators';
 
-import { TranslateService } from 'ng2-translate';
+import {TranslateService} from 'ng2-translate';
+import {UserService} from '../../../services/com.b2beyond.api.user'
 
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import {UserState} from '../../../user.state';
 
-import { UserState } from '../../../user.state';
-
-import { websiteId } from '../../../environment';
+import {websiteId} from '../../../environment-config';
 
 import 'style-loader!./forgotPassword.scss';
 
@@ -30,7 +28,7 @@ export class ForgotPassword {
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private UserService: UserService,
                  private router: Router,
                  private translate: TranslateService) {
         this.form = fb.group({
@@ -56,7 +54,7 @@ export class ForgotPassword {
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.forgotPassword(values).subscribe(result => {
+            this.UserService.forgotPassword(values).subscribe(result => {
                     this.success = true;
                     this.messages.push("Reset password mail was send");
                     this.submitted = false;

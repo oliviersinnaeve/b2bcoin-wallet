@@ -1,40 +1,39 @@
-import { NgModule, ApplicationRef, ErrorHandler } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import { MarkdownModule } from 'angular2-markdown';
-import { TranslateModule } from 'ng2-translate';
+import {ApplicationRef, NgModule} from '@angular/core';
+import {CookieService} from 'angular2-cookie/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {createInputTransfer, createNewHosts, removeNgStyles} from '@angularclass/hmr';
+import {MarkdownModule} from 'angular2-markdown';
+import {TranslateModule} from 'ng2-translate';
 
-import { AdsenseModule } from 'ng2-adsense';
+import {AdsenseModule} from 'ng2-adsense';
 
-import { TooltipModule } from 'ngx-bootstrap';
+import {TooltipModule} from 'ngx-bootstrap';
+
 
 import * as user from './services/com.b2beyond.api.user';
+import {ApiModule} from './services/com.b2beyond.api.user';
 import * as b2bcoin from './services/com.b2beyond.api.b2bcoin';
-
-
+import {ApiModuleCoin} from './services/com.b2beyond.api.b2bcoin';
 /*
  * Platform and Environment providers/directives/pipes
  */
-import { ENV_PROVIDERS } from './environment';
-import { baseUrl } from './environment';
-import { routing } from './app.routing';
-
+import {baseUrl, ENV_PROVIDERS} from './environment-config';
+import {routing} from './app.routing';
 // App is our top level component
-import { App } from './app.component';
-import { UserState } from './user.state';
-import { WalletService } from './pages/walletService.service';
-import { TransactionsService } from './pages/transactions/transactions.service';
-import { AppState, InternalStateType } from './app.service';
-import { GlobalState } from './global.state';
-import { NgaModule } from './theme/nga.module';
-import { SimpleNotificationsModule } from 'angular2-notifications';
-import { PagesModule } from './pages/pages.module';
+import {App} from './app.component';
+import {UserState} from './user.state';
+import {WalletServiceStore} from './pages';
+import {TransactionsService} from './pages/transactions/transactions.service';
+import {AppState, InternalStateType} from './app.service';
+import {GlobalState} from './global.state';
+import {NgaModule} from './theme/nga.module';
+import {SimpleNotificationsModule} from 'angular2-notifications';
+import {PagesModule} from './pages/pages.module';
 
-import { PagerService } from './services/pager.service';
+import {PagerService} from './services/pager.service';
+import {HttpClientModule} from "@angular/common/http";
 
 
 // Application wide providers
@@ -42,12 +41,9 @@ const APP_PROVIDERS = [
     CookieService,
     AppState,
     UserState,
-    WalletService,
+    WalletServiceStore,
     TransactionsService,
     GlobalState,
-    user.UserApi,
-    b2bcoin.WalletApi,
-    b2bcoin.FaucetApi,
     PagerService
 ];
 
@@ -72,7 +68,7 @@ export type StoreType = {
             adClient: 'ca-pub-5721689054603180',
             adSlot: 6949772221,
         }),
-        HttpModule,
+        HttpClientModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
@@ -81,6 +77,8 @@ export type StoreType = {
         SimpleNotificationsModule.forRoot(),
         MarkdownModule.forRoot(),
         PagesModule,
+        ApiModule,
+        ApiModuleCoin,
         TranslateModule.forRoot(),
         routing
     ],

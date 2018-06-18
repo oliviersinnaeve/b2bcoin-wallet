@@ -1,5 +1,8 @@
 import {Component, ViewChild, HostListener, Input, ElementRef} from '@angular/core';
 
+import * as jQuery from 'jquery';
+
+
 @Component({
     selector: 'ba-back-top',
     styleUrls: ['./baBackTop.scss'],

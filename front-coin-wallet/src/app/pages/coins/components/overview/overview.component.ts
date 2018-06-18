@@ -1,12 +1,12 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import {Component, ViewChild, Input, OnInit} from '@angular/core';
 import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
 import { ModalDirective } from 'ngx-bootstrap';
 
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { WalletService } from '../../../../services/com.b2beyond.api.b2bcoin';
 
 import 'rxjs/Rx';
 
@@ -16,7 +16,7 @@ import 'rxjs/Rx';
     templateUrl: './overview.html'
 })
 
-export class CoinOverview {
+export class CoinOverview implements OnInit {
 
     @ViewChild('createAddressModal') createAddressModal: ModalDirective;
 
@@ -25,19 +25,21 @@ export class CoinOverview {
     public selectedCoin = {};
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
+    }
 
-        //this.walletService.getAddresses(false);
+
+    ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
     }
 
     public createAddress (coin) {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
             this.selectedCoin = coin;
-            this.walletApi.createAddress(coin.name).subscribe(
+            this.WalletService.createAddress(coin.name).subscribe(
                     result => {
                         this.creatingWallet = false;
                         this.walletService.addresses = [];

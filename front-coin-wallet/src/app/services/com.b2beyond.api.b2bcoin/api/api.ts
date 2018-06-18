@@ -1,5 +1,5 @@
-export * from './FaucetApi';
-import { FaucetApi }  from './FaucetApi';
-export * from './WalletApi';
-import { WalletApi }  from './WalletApi';
-export const APIS = [ FaucetApi, WalletApi, ];
+export * from './faucet.service';
+import { FaucetService } from './faucet.service';
+export * from './wallet.service';
+import { WalletService } from './wallet.service';
+export const APIS = [FaucetService, WalletService];

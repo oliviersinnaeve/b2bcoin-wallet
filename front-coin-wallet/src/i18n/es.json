@@ -51,6 +51,7 @@
   "VIEW_KEYS_TITLE": "View and spend keys",
   "VIEW_KEY": "View key",
   "SPEND_KEY": "Spend key",
+  "PRIVATE_SPEND_KEY": "Private view key",
 
   "COIN": "Moneda",
   "ADDRESS": "Direccion",

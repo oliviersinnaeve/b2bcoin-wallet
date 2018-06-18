@@ -1,5 +1,5 @@
-export * from './UserApi';
-import { UserApi }  from './UserApi';
-export * from './UserroleApi';
-import { UserroleApi }  from './UserroleApi';
-export const APIS = [ UserApi, UserroleApi, ];
+export * from './user.service';
+import { UserService } from './user.service';
+export * from './userrole.service';
+import { UserroleService } from './userrole.service';
+export const APIS = [UserService, UserroleService];

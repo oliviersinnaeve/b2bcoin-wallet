@@ -1,19 +1,20 @@
-import { NgModule, ErrorHandler } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AdsenseModule } from 'ng2-adsense';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { SimpleNotificationsModule } from 'angular2-notifications';
+import {SimpleNotificationsModule} from 'angular2-notifications';
 
-import { routing } from './pages.routing';
-import { NgaModule } from '../theme/nga.module';
+import {routing} from './pages.routing';
+import {NgaModule} from '../theme/nga.module';
 
-import { TranslateModule } from 'ng2-translate';
+import {TranslateModule} from 'ng2-translate';
 
-import { Pages } from './pages.component';
+import {Pages} from './pages.component';
 
-import { UserState } from '../user.state';
+import {FacebookModule, FacebookService} from 'ngx-facebook';
+import {Login} from "./security/login";
+import {LoginModule} from "./security/login/login.module";
 
-import { FacebookModule, FacebookService } from 'ngx-facebook';
+
 
 
 @NgModule({

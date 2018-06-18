@@ -5,10 +5,10 @@ import { UserState } from '../../../../user.state';
 
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { WalletService } from '../../../../services/com.b2beyond.api.b2bcoin';
 
 import { TransactionsService } from '../../../transactions/transactions.service';
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 
 
 @Component({
@@ -25,19 +25,18 @@ export class ExplorerResult implements OnInit {
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private WalletService: WalletService,
                  private transactionService: TransactionsService,
-                 private walletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private router: Router) {
-
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
         if (this.transactionService.coin == undefined) {
             this.transactionService.coin = this.walletService.primaryCoin;
         }
     }
 
     public ngOnInit() {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+
         if (this.transactionService.coin == undefined) {
             this.transactionService.coin = this.walletService.primaryCoin;
         }
@@ -60,7 +59,7 @@ export class ExplorerResult implements OnInit {
         if (this.transactionService.coin != undefined) {
             //console.log("In transaction service init with searchString", this.transactionService.searchString);
             //console.log("In transaction service init with coin", this.transactionService.coin);
-            this.walletApi.getBlockOrTransaction(this.transactionService.coin.name, {"hash": this.transactionService.searchString}).subscribe(result => {
+            this.WalletService.getBlockOrTransaction(this.transactionService.coin.name, {"hash": this.transactionService.searchString}).subscribe(result => {
                     console.log("Setting result", result);
                     this.result = result;
                     if (this.result.blockWrapper == undefined) {

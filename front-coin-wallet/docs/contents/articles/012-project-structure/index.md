@@ -34,11 +34,11 @@ ng2-admin/
    │   │
    │   ├──index.html             * application layout
    │   │
-   │   ├──main.browser.ts        * entry file for our browser environment
+   │   ├──main.ts        * entry file for our browser environment
    │   │
    │   ├──package.json           * electrons package.json
    │   │
-   │   ├──polyfills.browser.ts   * polyfills file
+   │   ├──polyfills.ts   * polyfills file
    │   │
    │   ├──vendor.browser.ts      * vendors file
    │   │
@@ -55,7 +55,7 @@ ng2-admin/
    │   │   │  
    │   │   ├──global.state.ts    * global application state for data exchange between components
    │   │   │
-   │   │   ├──environment.ts     * environment provider
+   │   │   ├──environment-config.ts     * environment provider
    │   │   │
    │   │   ├──app.scss           * application styles 
    │   │   │

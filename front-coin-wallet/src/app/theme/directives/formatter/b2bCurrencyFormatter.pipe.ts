@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import { WalletService } from '../../../pages/walletService.service';
+import { WalletServiceStore } from '../../../pages/walletService.service';
 
 @Pipe({ name: "b2bCurrency" })
 export class B2BCurrencyPipe implements PipeTransform {
@@ -9,7 +9,7 @@ export class B2BCurrencyPipe implements PipeTransform {
     private THOUSANDS_SEPARATOR: string;
 
     constructor(
-        private walletService: WalletService
+        private walletService: WalletServiceStore
     ) {
         // TODO comes from configuration settings
         this.DECIMAL_SEPARATOR = ".";

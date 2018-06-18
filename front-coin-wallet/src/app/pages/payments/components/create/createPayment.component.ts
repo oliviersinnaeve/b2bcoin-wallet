@@ -3,11 +3,11 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
 
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 import { TransactionsService } from '../../../transactions/transactions.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { WalletService } from '../../../../services/com.b2beyond.api.b2bcoin';
 
 
 //import { B2BCurrencyFormatterDirective } from "../../../../theme/directives/formatter/b2bCurrencyFormatter.directive";
@@ -49,16 +49,19 @@ export class CreatePayment implements OnInit {
     };
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private transactionsService: TransactionsService,
                  private router: Router) {
-
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
         if (this.walletService.selectedCoin.name == "") {
             this.router.navigateByUrl("pages/dashboard/mainWallet");
         }
+    }
+
+    public ngOnInit (): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+        this.addresses = this.walletService.getAddressesForCoin(this.walletService.selectedCoin);
     }
 
     public addTransaction() {
@@ -91,7 +94,7 @@ export class CreatePayment implements OnInit {
         this.payment.addresses.push(address);
         this.payment.address = this.selectedAddress.address;
 
-        this.walletApi.createPayment(this.walletService.selectedCoin.name, this.payment).subscribe(result => {
+        this.WalletService.createPayment(this.walletService.selectedCoin.name, this.payment).subscribe(result => {
                 this.transactionHash = result.transactionHash;
 
                 this.payment = {
@@ -111,7 +114,7 @@ export class CreatePayment implements OnInit {
                 }
 
                 if (error.status === 999) {
-                    let jsonError = JSON.parse(error._body);
+                    let jsonError = error.error;
                     this.payment.fee = 0.000001;
                     this.error = true;
                     this.message = jsonError.message;
@@ -145,10 +148,6 @@ export class CreatePayment implements OnInit {
     public onAmountChange(amount: string) {
         // explicitly update state (one way data flow)
         //console.log("New parsed amount", amount);
-    }
-
-    public ngOnInit (): void {
-        this.addresses = this.walletService.getAddressesForCoin(this.walletService.selectedCoin);
     }
 
 }

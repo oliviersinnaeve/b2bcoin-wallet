@@ -51,8 +51,9 @@
   "CURRENT_BLOCK_HEIGHT": "Current block height",
 
   "VIEW_KEYS_TITLE": "View and spend keys",
-  "VIEW_KEY": "View key",
-  "SPEND_KEY": "Spend key",
+  "VIEW_KEY": "Public View key",
+  "SPEND_KEY": "Private Spend key",
+  "PRIVATE_SPEND_KEY": "Private view key",
 
   "COIN": "Coin",
   "ADDRESS": "Address",

@@ -4,14 +4,14 @@ import { UserState } from '../../../../user.state';
 import { ModalDirective } from 'ngx-bootstrap';
 import { NotificationsService } from 'angular2-notifications';
 
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
+import { WalletService } from '../../../../services/com.b2beyond.api.b2bcoin';
+import { FaucetService } from '../../../../services/com.b2beyond.api.b2bcoin';
 
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
+import { websiteId } from '../../../../environment-config';
+import { baseUrl } from '../../../../environment-config';
 
 import 'rxjs/Rx';
 
@@ -30,19 +30,18 @@ export class FaucetOverview implements OnInit {
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private FaucetService: FaucetService,
+                 private walletService: WalletServiceStore,
                  private notificationsService: NotificationsService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
         this.walletService.addressFetchedEmitter
             .subscribe(item => this.initialize(item));
-
     }
 
     public ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+
         if (this.walletService.primaryCoin != undefined) {
             this.initialize(this.walletService.primaryCoin);
         } else {
@@ -54,7 +53,7 @@ export class FaucetOverview implements OnInit {
     private initialize(coin): void {
         console.log("Initialize faucetUserAddress !!!", coin);
 
-        this.faucetApi.getFaucetList().subscribe(
+        this.FaucetService.getFaucetList().subscribe(
             result => {
                 console.log("faucet list", result);
                 this.faucets = result.filter(value => value.balance.availableBalance > 0);

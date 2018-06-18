@@ -2,12 +2,14 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import { UserService } from '../../../services/com.b2beyond.api.user'
 
-import { websiteId } from '../../../environment';
+import { websiteId } from '../../../environment-config';
 import { UserState } from '../../../user.state';
 
 import 'style-loader!./settings.scss';
+import {Enable2FARequest} from "../../../services/com.b2beyond.api.user/model/enable2FARequest";
+import {Disable2FARequest} from "../../../services/com.b2beyond.api.user/model/disable2FARequest";
 
 
 @Component({
@@ -38,13 +40,13 @@ export class Settings implements OnInit {
     public submitted: boolean = false;
 
     constructor (
-        private userApi: UserApi,
+        private UserService: UserService,
         private userState: UserState) {
-
-        this.userApi.defaultHeaders = userState.getExtraHeaders();
     }
 
     public ngOnInit (): void {
+        this.UserService.defaultHeaders = this.userState.getExtraHeaders(this.UserService.defaultHeaders);
+
         this.user = this.userState.getUser();
 
         this.is2faEnabled = this.user.enabled2FA;
@@ -54,12 +56,12 @@ export class Settings implements OnInit {
         //console.log(event);
         if (this.is2faEnabled) {
 
-            this.userApi.requestEnable2FA({websiteId: websiteId}).subscribe(
+            this.UserService.requestEnable2FA({websiteId: websiteId}).subscribe(
                 result => {
                     //console.log("The qr response", result);
                     this.secretKeyUrl = result.qrImageUrl;
                     this.secretKey = result.secretKey;
-                    this.userState.getUser().secretKey = result.secretKey;
+                    // this.userState.getUser(). = result.secretKey;
                 },
                 error => {
                     if (error.status === 401) {
@@ -75,7 +77,11 @@ export class Settings implements OnInit {
     }
 
     public enable2FA() {
-        this.userApi.enable2FA({code2FA: this.codeToSubmit, websiteId: websiteId, userId: this.userState.getUser().userId, secretKey: this.userState.getUser().secretKey}).subscribe(
+        let request: Enable2FARequest = {};
+        request.user = {code2FA: this.codeToSubmit, websiteId: websiteId, userId: this.userState.getUser().userId};
+        request.secretKey = this.secretKey;
+
+        this.UserService.enable2FA(request).subscribe(
                 result => {
                     this.failed = false;
                     this.error = undefined;
@@ -96,7 +102,10 @@ export class Settings implements OnInit {
     }
 
     public disable2FA() {
-        this.userApi.disable2FA({websiteId: websiteId, userId: this.userState.getUser().userId, secretKey: this.userState.getUser().secretKey}).subscribe(
+        let request: Disable2FARequest = {};
+        request.user = {websiteId: websiteId, userId: this.userState.getUser().userId};
+        request.secretKey = this.secretKey;
+        this.UserService.disable2FA(request).subscribe(
                 result => {
                     this.userState.setUser(result);
                     this.disable2FAModal.hide();

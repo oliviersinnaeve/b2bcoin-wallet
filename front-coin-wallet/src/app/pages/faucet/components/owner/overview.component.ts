@@ -1,19 +1,17 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { Router } from "@angular/router";
-import { UserState } from '../../../../user.state';
-import { ModalDirective } from 'ngx-bootstrap';
-import { NotificationsService } from 'angular2-notifications';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {UserState} from '../../../../user.state';
+import {ModalDirective} from 'ngx-bootstrap';
+import {NotificationsService} from 'angular2-notifications';
 
-import { LocalDataSource } from 'ng2-smart-table';
+import {LocalDataSource} from 'ng2-smart-table';
 
-import { WalletService } from '../../../walletService.service';
+import {WalletServiceStore} from '../../../walletService.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
+import {FaucetService, WalletService} from '../../../../services/com.b2beyond.api.b2bcoin';
 
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
+import {baseUrl, websiteId} from '../../../../environment-config';
 
 
 import 'rxjs/Rx';
@@ -59,13 +57,11 @@ export class FaucetOwner implements OnInit {
     };
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private FaucetService: FaucetService,
+                 private walletService: WalletServiceStore,
                  private notificationsService: NotificationsService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
         this.walletService.faucetAddressUpdateEmitter
             .subscribe(item => this.faucetAddressUpdated(item));
 
@@ -74,6 +70,8 @@ export class FaucetOwner implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+
         if (this.walletService.primaryCoin != undefined) {
             this.faucetAddressUpdated(this.walletService.faucetAddress);
             this.setData(this.walletService.faucetAddressPayments);
@@ -107,7 +105,7 @@ export class FaucetOwner implements OnInit {
                 faucetUser: faucetUser
             };
 
-            this.faucetApi.createFaucetAddress(request).subscribe(
+            this.FaucetService.createFaucetAddress(request).subscribe(
                     result => {
                         this.creatingWallet = false;
                         //if (faucetUser) {

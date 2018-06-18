@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import { WalletService } from '../walletService.service';
+import { WalletServiceStore } from '../walletService.service';
 
 @Component({
     selector: 'addresses',
@@ -15,7 +15,7 @@ export class Addresses {
         lastOnBottom: false
     };
 
-    constructor (private walletService: WalletService) {
+    constructor (private walletService: WalletServiceStore) {
     }
 
 }

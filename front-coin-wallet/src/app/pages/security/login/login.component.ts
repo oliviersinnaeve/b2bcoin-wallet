@@ -1,30 +1,29 @@
-import {WalletService} from "../../walletService.service";
+import {WalletServiceStore} from "../../walletService.service";
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmailValidator} from '../../../theme/validators';
+
+import {TranslateService} from 'ng2-translate';
+
+import {FacebookService, LoginResponse} from 'ngx-facebook';
+
+import {User} from "../../../services/com.b2beyond.api.user/model/user";
+import {UserService} from '../../../services/com.b2beyond.api.user'
+import {UserState} from '../../../user.state';
+
+import {websiteId} from '../../../environment-config';
+
+import 'style-loader!./login.scss';
 
 declare var FB;
 
-var CryptoJS = require('crypto-js');
-
-import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator } from '../../../theme/validators';
-
-import { TranslateService } from 'ng2-translate';
-
-import { FacebookService, InitParams, LoginResponse } from 'ngx-facebook';
-
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
-
-import { UserState } from '../../../user.state';
-
-import { websiteId } from '../../../environment';
-
-import 'style-loader!./login.scss';
+let CryptoJS = require('crypto-js');
 
 @Component({
     selector: 'login',
     templateUrl: './login.html',
+    styleUrls: ['./login.scss']
 })
 export class Login implements OnInit {
 
@@ -39,9 +38,9 @@ export class Login implements OnInit {
 
 
     constructor (private fb: FormBuilder,
-                 private walletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private UserService: UserService,
                  private router: Router,
                  private facebookService: FacebookService,
                  private translate: TranslateService) {
@@ -76,13 +75,20 @@ export class Login implements OnInit {
     public onSubmit (values: any): void {
         this.messages = [];
 
-        values.websiteId = websiteId;
-        //values.password = CryptoJS.AES.encrypt(values.password, values.userId).toString();
+        // values.websiteId = websiteId;
+        // values.password = CryptoJS.AES.encrypt(values.password, values.userId).toString();
+
+        let user: User = {};
+        user.websiteId = websiteId;
+        user.userId = values.userId;
+        user.password = values.password;
+            // CryptoJS.AES.encrypt(values.password, values.userId).toString();
+
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.login(values).subscribe(result => {
-                    //console.log("Logged in redirecting to dashboard");
+            this.UserService.login(user).subscribe(result => {
+                    //console.log("Logged in redirecting to dashboarèd");
                     this.userState.setUser(result);
                     if (this.userState.getUser().enabled2FA && !this.userState.getUser().valid) {
                         this.show2FA = true;

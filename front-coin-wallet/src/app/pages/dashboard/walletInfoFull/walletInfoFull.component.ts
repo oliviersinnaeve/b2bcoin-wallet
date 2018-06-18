@@ -1,21 +1,19 @@
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {ModalDirective} from 'ngx-bootstrap';
 
-import { UserState } from '../../../user.state';
-import { WalletService } from '../../walletService.service';
+import {UserState} from '../../../user.state';
+import {WalletServiceStore} from '../../walletService.service';
 
 import 'style-loader!./walletInfoFull.scss';
-
-import * as b2bcoinModels from '../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import {WalletService} from '../../../services/com.b2beyond.api.b2bcoin';
 
 
 @Component({
     selector: 'wallet-info-full',
     templateUrl: './walletInfoFull.html'
 })
-export class WalletInfoFull {
+export class WalletInfoFull implements OnInit {
 
     @ViewChild('createAddressModal') createAddressModal: ModalDirective;
 
@@ -24,16 +22,19 @@ export class WalletInfoFull {
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
+    }
+
+    ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
     }
 
     public createNewAddress () {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
-            this.walletApi.createAddress(this.walletService.primaryCoin.name).subscribe(
+            this.WalletService.createAddress(this.walletService.primaryCoin.name).subscribe(
                     result => {
                         this.walletService.addresses = [];
                         this.walletService.addressBalances = {};

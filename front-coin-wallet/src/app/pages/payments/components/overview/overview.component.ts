@@ -8,13 +8,13 @@ import { LocalDataSource } from 'ng2-smart-table';
 
 import { UserState } from '../../../../user.state';
 
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 import { TransactionsService } from '../../../transactions/transactions.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { WalletService } from '../../../../services/com.b2beyond.api.b2bcoin';
 
-import { websiteId } from '../../../../environment';
+import { websiteId } from '../../../../environment-config';
 
 import { PagerService } from '../../../../services/pager.service'
 
@@ -42,17 +42,18 @@ export class PaymentOverview implements OnInit {
 
     constructor (private notificationsService: NotificationsService,
                  private userState: UserState,
-                 private walletApi: WalletApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private pagerService: PagerService,
                  private transactionsService: TransactionsService,
                  private http: Http,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
     }
 
 
     public ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+
         if (this.walletService.getPaymentsForCoin(this.coin).length > 0 && !this.walletService.transactionsBusy) {
             this.getTransactions(this.walletService.getPaymentsForCoin(this.coin));
         } else {

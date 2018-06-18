@@ -1,8 +1,6 @@
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap';
+import {Component} from '@angular/core';
 
-import { WalletService } from '../../walletService.service';
+import {WalletServiceStore} from '../../walletService.service';
 
 
 @Component({
@@ -16,6 +14,6 @@ export class MultiWallet {
      *
      * @param walletService used in html
      */
-    constructor (private walletService: WalletService) { }
+    constructor (private walletService: WalletServiceStore) { }
 
 }

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch'
 
 import { UserState } from '../../user.state';
 
-import { languages } from '../../environment';
+import { languages } from '../../environment-config';
 
 @Injectable()
 export class PaymentService {

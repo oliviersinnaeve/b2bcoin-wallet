@@ -1,13 +1,10 @@
 import {Component} from '@angular/core';
-import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {EmailValidator, EqualPasswordsValidator} from '../../../theme/validators';
+import {FormBuilder} from '@angular/forms';
 
 import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import {UserService} from '../../../services/com.b2beyond.api.user'
 
-import { websiteId } from '../../../environment';
-
-import { UserState } from '../../../user.state';
+import {UserState} from '../../../user.state';
 
 import 'style-loader!./profile.scss';
 
@@ -27,7 +24,7 @@ export class Profile {
     public submitted: boolean = false;
 
     constructor (private fb: FormBuilder,
-                 private userApi: UserApi,
+                 private UserService: UserService,
                  private userState: UserState) {
 
         this.initialize();

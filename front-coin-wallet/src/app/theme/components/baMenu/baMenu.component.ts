@@ -7,6 +7,8 @@ import { TranslateService } from 'ng2-translate';
 import { BaMenuService } from '../../services';
 import { GlobalState } from '../../../global.state';
 
+import * as jQuery from 'jquery';
+
 import 'style-loader!./baMenu.scss';
 
 @Component({

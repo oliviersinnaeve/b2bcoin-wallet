@@ -1,17 +1,15 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { Router } from "@angular/router";
-import { UserState } from '../../../../user.state';
-import { ModalDirective } from 'ngx-bootstrap';
-import { NotificationsService } from 'angular2-notifications';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {UserState} from '../../../../user.state';
+import {ModalDirective} from 'ngx-bootstrap';
+import {NotificationsService} from 'angular2-notifications';
 
-import { WalletService } from '../../../walletService.service';
+import {WalletServiceStore} from '../../../walletService.service';
 
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
+import {FaucetService, WalletService} from '../../../../services/com.b2beyond.api.b2bcoin';
 
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
+import {baseUrl, websiteId} from '../../../../environment-config';
 
 import 'rxjs/Rx';
 
@@ -34,19 +32,18 @@ export class FaucetUserOverview implements OnInit {
     public hasFaucetUserAddress: boolean = false;
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private FaucetService: FaucetService,
+                 private walletService: WalletServiceStore,
                  private notificationsService: NotificationsService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
-
         this.walletService.addressFetchedEmitter
             .subscribe(item => this.initialize(item));
-
     }
 
     public ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+
         if (this.walletService.primaryCoin != undefined) {
             this.initialize(this.walletService.primaryCoin);
         } else {
@@ -61,7 +58,7 @@ export class FaucetUserOverview implements OnInit {
         request.faucetUser = true;
         request.coin = coin;
 
-        this.faucetApi.getFaucetAddress(true, request).subscribe(
+        this.FaucetService.getFaucetAddress(true, request).subscribe(
             result => {
                 console.log("faucet user address", result);
                 if (result && result.address) {
@@ -104,7 +101,7 @@ export class FaucetUserOverview implements OnInit {
                 faucetUser: faucetUser
             };
 
-            this.faucetApi.createFaucetAddress(request).subscribe(
+            this.FaucetService.createFaucetAddress(request).subscribe(
                     result => {
                         this.creatingWallet = false;
                         if (faucetUser) {
@@ -127,7 +124,7 @@ export class FaucetUserOverview implements OnInit {
 
     public payout(address: b2bcoinModels.UserAddress) {
         this.creatingPayment = true;
-        this.faucetApi.payout(address).subscribe(
+        this.FaucetService.payout(address).subscribe(
             result => {
                 if (result.ok) {
                     this.initialize(this.walletService.primaryCoin);

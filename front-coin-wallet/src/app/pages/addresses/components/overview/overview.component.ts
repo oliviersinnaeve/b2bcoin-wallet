@@ -1,14 +1,14 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import {Component, ViewChild, Input, OnInit} from '@angular/core';
 import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { TranslateService } from 'ng2-translate';
-import { WalletService } from '../../../walletService.service';
+import { WalletServiceStore } from '../../../walletService.service';
 
 import { NotificationsService } from 'angular2-notifications';
 import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import {WalletService} from "../../../../services/com.b2beyond.api.b2bcoin";
 
 import 'rxjs/Rx';
 
@@ -18,7 +18,7 @@ import 'rxjs/Rx';
     templateUrl: './overview.html'
 })
 
-export class Overview {
+export class Overview implements OnInit {
 
     @Input('coin')
     public coin: b2bcoinModels.WalletCoin;
@@ -37,20 +37,22 @@ export class Overview {
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private walletService: WalletService,
+                 private WalletService: WalletService,
+                 private walletService: WalletServiceStore,
                  private notificationsService: NotificationsService,
                  private translate: TranslateService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
+    }
 
-        //this.walletService.getAddresses(false);
+
+    ngOnInit(): void {
+        this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
     }
 
     public deleteAddress () {
         this.confirmDeleteAddressModal.hide();
 
-        this.walletApi.deleteAddress(this.coin.name, { address: this.addressToDelete.address }).subscribe(
+        this.WalletService.deleteAddress(this.coin.name, { address: this.addressToDelete.address }).subscribe(
             result => {
 
                 this.addressToDelete = undefined;

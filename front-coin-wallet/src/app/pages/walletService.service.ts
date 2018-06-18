@@ -5,13 +5,13 @@ import { Router } from "@angular/router";
 import { UserState } from '../user.state';
 
 import * as b2bcoinModels from '../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
+import { WalletService } from '../services/com.b2beyond.api.b2bcoin';
+import { FaucetService } from '../services/com.b2beyond.api.b2bcoin';
 
-import { websiteId } from '../environment';
+import { websiteId } from '../environment-config';
 
 @Injectable()
-export class WalletService {
+export class WalletServiceStore {
 
     public addresses: Array<b2bcoinModels.UserAddress> = [];
     public coins: Array<b2bcoinModels.WalletCoin> = [];
@@ -47,16 +47,16 @@ export class WalletService {
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
+                 private WalletService: WalletService,
+                 private FaucetService: FaucetService,
                  private router: Router) {
 
         this.initializeWallet(userState);
     }
 
     public initializeWallet(userState: UserState) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
-        this.faucetApi.defaultHeaders = userState.getExtraHeaders();
+        this.WalletService.defaultHeaders = userState.getExtraHeaders(this.WalletService.defaultHeaders);
+        this.FaucetService.defaultHeaders = userState.getExtraHeaders(this.FaucetService.defaultHeaders);
 
         this.getCoinTypes();
 
@@ -68,7 +68,8 @@ export class WalletService {
 
     public getCoinTypes () {
         if (this.coins == undefined || this.coins.length == 0) {
-            this.walletApi.getCoinTypes().subscribe(result => {
+            this.WalletService.defaultHeaders = this.userState.getExtraHeaders(this.WalletService.defaultHeaders);
+            this.WalletService.getCoinTypes().subscribe(result => {
                     this.coins = result;
 
                     this.getAddresses(true);
@@ -117,7 +118,7 @@ export class WalletService {
 
     public getAddresses (force) {
         if (this.addresses.length == 0 || force) {
-            this.walletApi.getAddresses().subscribe(result => {
+            this.WalletService.getAddresses().subscribe(result => {
                 this.addresses = result;
                 if (!this.balancesBusy) {
                     this.balancesBusy = true;
@@ -223,7 +224,7 @@ export class WalletService {
         }
 
         for (var i = 0; i < this.addresses.length; i++) {
-            this.walletApi.getTransactionsForAddress(this.addresses[i].currency.name, this.addresses[i]).subscribe(result => {
+            this.WalletService.getTransactionsForAddress(this.addresses[i].currency.name, this.addresses[i]).subscribe(result => {
                     console.log("Transactions result", result);
 
                     result.transactionResponses.forEach(function(element) {
@@ -288,7 +289,7 @@ export class WalletService {
         let userAddress : b2bcoinModels.UserAddress = {};
         userAddress.address = address;
         userAddress.currency = coin;
-        return this.walletApi.getSpendKeys(userAddress);
+        return this.WalletService.getSpendKeys(userAddress);
     }
 
     public getLockedBalance (coin): string {
@@ -335,16 +336,16 @@ export class WalletService {
     }
 
     public getAddressesObservable (): Observable<Array<b2bcoinModels.Address>> {
-        return this.walletApi.getAddresses();
+        return this.WalletService.getAddresses();
     }
 
     public getBalanceObservable (userAddress: b2bcoinModels.UserAddress): Observable<b2bcoinModels.AddressBalance> {
-        return this.walletApi.getBalance(userAddress);
+        return this.WalletService.getBalance(userAddress);
     }
 
     public getLastBlockObservable (coinType: string): Observable<b2bcoinModels.BlockWrapper> {
         //console.log("Getting last block for coin", coinType);
-        return this.walletApi.getLastBlock(coinType);
+        return this.WalletService.getLastBlock(coinType);
     }
 
     //public getAmount (amount: number, coinType): string {
@@ -364,7 +365,7 @@ export class WalletService {
             coin: this.primaryCoin
         };
 
-        return this.faucetApi.getFaucetAddress(false, faucetAddressRequest).subscribe(
+        return this.FaucetService.getFaucetAddress(false, faucetAddressRequest).subscribe(
             (result) => {
                 console.log("Faucet address received", result);
                 if (result) {
@@ -385,7 +386,7 @@ export class WalletService {
     public updateFaucetAddress() {
         console.log("Update faucet");
 
-        return this.faucetApi.updateFaucetAddress(this.faucetAddress).subscribe(
+        return this.FaucetService.updateFaucetAddress(this.faucetAddress).subscribe(
             (result) => {
                 console.log("Faucet address updated", result);
                 if (result) {
@@ -401,7 +402,7 @@ export class WalletService {
     }
 
     public getFaucetAddressPayments(address) {
-        return this.faucetApi.getFaucetPayments(address).subscribe(
+        return this.FaucetService.getFaucetPayments(address).subscribe(
             (result) => {
                 console.log("Faucet address payments received", result);
                 if (result) {
