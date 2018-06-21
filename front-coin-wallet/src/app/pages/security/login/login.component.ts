@@ -75,15 +75,13 @@ export class Login implements OnInit {
     public onSubmit (values: any): void {
         this.messages = [];
 
-        // values.websiteId = websiteId;
-        // values.password = CryptoJS.AES.encrypt(values.password, values.userId).toString();
-
         let user: User = {};
         user.websiteId = websiteId;
         user.userId = values.userId;
         user.password = values.password;
-            // CryptoJS.AES.encrypt(values.password, values.userId).toString();
-
+        if (values.code2FA) {
+            user.code2FA = values.code2FA;
+        }
 
         this.submitted = true;
         if (this.form.valid) {
