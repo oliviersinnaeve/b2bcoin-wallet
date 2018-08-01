@@ -11,7 +11,7 @@ import {websiteId} from '../../../environment-config';
 
 import 'style-loader!./register.scss';
 
-// var CryptoJS = require('crypto-js');
+var CryptoJS = require('crypto-js');
 
 
 @Component({
@@ -54,7 +54,7 @@ export class Register {
         // this language will be used as a fallback when a translation isn't found in the current language
         translate.setDefaultLang('en');
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        let language = navigator.languages && navigator.languages[0].split("-")[0];
         console.log("Using language", language);
         translate.use(language);
     }
@@ -69,7 +69,7 @@ export class Register {
 
         // TODO user/password request
 
-        // user.password = values.passwords.password;
+        user.password = values.passwords.password;
         //user.password = CryptoJS.AES.encrypt(values.passwords.password, values.email).toString();
 
         //console.log(user);
