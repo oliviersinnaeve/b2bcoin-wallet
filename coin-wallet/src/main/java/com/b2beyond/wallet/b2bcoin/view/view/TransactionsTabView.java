@@ -165,7 +165,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                         }
                     }
 
-                    final Object[] data = {address, transaction.getTimestamp() * 1000, CoinUtil.getTextForLong(amount)};
+                    final Object[] data = {address, transaction.getTimestamp() * 1000, CoinUtil.getTextForNumber(amount)};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -182,7 +182,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                                 LOGGER.trace("Unlock time : " + transaction.getUnlockTime());
                             }
 
-                            final Object[] data = {transfer.getAddress(), transaction.getTimestamp() * 1000, CoinUtil.getTextForLong(transfer.getAmount())};
+                            final Object[] data = {transfer.getAddress(), transaction.getTimestamp() * 1000, CoinUtil.getTextForNumber(transfer.getAmount())};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -265,7 +265,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                                 }
                             }
 
-                            final Object[] data = {address, CoinUtil.getTextForLong(amount), lockedIcon};
+                            final Object[] data = {address, CoinUtil.getTextForNumber(amount), lockedIcon};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -276,7 +276,7 @@ public class TransactionsTabView extends AbstractAddressJPanel implements Observ
                             });
                             break;
                         } else {
-                            final Object[] data = {transfer.getAddress(), CoinUtil.getTextForLong(transfer.getAmount()), lockedIcon};
+                            final Object[] data = {transfer.getAddress(), CoinUtil.getTextForNumber(transfer.getAmount()), lockedIcon};
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {

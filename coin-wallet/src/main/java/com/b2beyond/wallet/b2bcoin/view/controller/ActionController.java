@@ -1,18 +1,16 @@
 package com.b2beyond.wallet.b2bcoin.view.controller;
 
+import com.b2beyond.wallet.b2bcoin.controler.CoinHttpController;
 import com.b2beyond.wallet.b2bcoin.controler.CoinRpcController;
 import com.b2beyond.wallet.b2bcoin.controler.DaemonController;
 import com.b2beyond.wallet.b2bcoin.controler.WalletRpcController;
-import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
 import com.b2beyond.wallet.b2bcoin.rpc.TransactionItemsRpcPoller;
-import com.b2beyond.wallet.b2bcoin.rpc.UnconfirmedTransactionHashesRpcPoller;
+import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
-import com.b2beyond.wallet.rpc.NoParamsRpcPoller;
 import com.b2beyond.wallet.rpc.RpcPoller;
+import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
-import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
-import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -25,25 +23,30 @@ public class ActionController {
 
     private DaemonController controller;
     private CoinRpcController coinRpcController;
+    private CoinHttpController coinHttpController;
     private WalletRpcController walletRpcController;
-    private PoolMiningController miningController;
-    private SoloMiningController soloMiningController;
 
     private List<RpcPoller> walletRpcPollers;
 
+    private boolean synced;
 
-    public ActionController(final DaemonController controller, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
+    public void setSynced(boolean synced) {
+        this.synced = synced;
+    }
+
+    public ActionController(final DaemonController controller, CoinHttpController coinHttpController, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
         this.controller = controller;
+        this.coinHttpController = coinHttpController;
         this.coinRpcController = coinRpcController;
         this.walletRpcController = walletRpcController;
     }
 
-    public void setMiningController(PoolMiningController miningController) {
-        this.miningController = miningController;
+    public void setWalletRpcPollers(List<RpcPoller> walletRpcPollers) {
+        this.walletRpcPollers = walletRpcPollers;
     }
 
-    public void setSoloMiningController(SoloMiningController soloMiningController) {
-        this.soloMiningController = soloMiningController;
+    public CoinHttpController getCoinHttpController() {
+        return coinHttpController;
     }
 
     public void stopBackgroundProcessesBeforeReset() {
@@ -86,17 +89,17 @@ public class ActionController {
     public void exit() {
         LOGGER.info("ActionController.exit was called");
         // Save the wallet
-        try {
-            walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
-        } catch (KnownJsonRpcException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            walletRpcController.getSaveExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+//        } catch (KnownJsonRpcException e) {
+//            e.printStackTrace();
+//        }
+
         LOGGER.info("ActionController.exit was called");
-        miningController.stopMining();
-        soloMiningController.stopMining();
         coinRpcController.stop();
         walletRpcController.stop();
-        controller.stop();
+        controller.stopWallet();
+        controller.stopDaemon();
     }
 
     public void restartCoinDaemon() {
@@ -119,14 +122,19 @@ public class ActionController {
         return walletRpcController;
     }
 
-    public void startWallet(List<RpcPoller> walletRpcPollers) {
-        controller.startWallet();
-
-
-        // Add pollers if wallet rpc port is available
-        for (RpcPoller poller : walletRpcPollers) {
-            getCoinRpcController().addPollers(poller);
+    public void startWallet() {
+        if (B2BUtil.availableForConnection(9090)) {
+            controller.startWallet();
+            // Add pollers if wallet rpc port is available
+            for (RpcPoller poller : walletRpcPollers) {
+                getCoinRpcController().addPollers(poller);
+            }
         }
+//        }
+    }
+
+    public void stopWallet() {
+        controller.stopWallet();
     }
 
     public void resetWallet() {
@@ -151,12 +159,8 @@ public class ActionController {
         LOGGER.debug("Command : " + B2BUtil.getDeleteBlockChainHomeCommand());
 
         stopCoinDaemon();
-
-//        ProcessBuilder pb = new ProcessBuilder(B2BUtil.getDeleteBlockChainHomeCommand());
-
         Process process;
         try {
-//            process = pb.start();
             process = Runtime.getRuntime().exec(B2BUtil.getDeleteBlockChainHomeCommand());
             process.waitFor();
         } catch (IOException | InterruptedException e) {
@@ -170,7 +174,15 @@ public class ActionController {
             e.printStackTrace();
         }
 
-        stopCoinDaemon();
+        restartCoinDaemon();
+
+        try {
+            LOGGER.info("Wait a minute before resetting the wallet ...");
+            Thread.sleep(60000);
+            resetWallet();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public SpendKeys getSpendKeys(String address) {
@@ -212,8 +224,8 @@ public class ActionController {
     public Success deleteAddress(String address) {
         try {
             return this.walletRpcController.getDeleteAddressExecutor().execute("\"params\": {" +
-                "\"address\": \"" + address + "\"" +
-            "}");
+                    "\"address\": \"" + address + "\"" +
+                    "}");
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
             return null;

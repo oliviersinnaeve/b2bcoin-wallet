@@ -78,8 +78,8 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
                 serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
                 if (blockWrapper != null &&  blockWrapper.getBlock() != null) {
                     serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
-                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getAlreadyGeneratedCoins().longValue()));
-                    serverPanel.getBaseReward().setText(CoinUtil.getTextForLong(blockWrapper.getBlock().getBaseReward()));
+                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getAlreadyGeneratedCoins().floatValue()));
+                    serverPanel.getBaseReward().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getBaseReward()));
                     serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
                 }
             //}
@@ -99,8 +99,8 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
                 }
             }
 
-            balancePanel.getAvailableBalance().setText(CoinUtil.getTextForLong(fullAmount));
-            balancePanel.getLockedBalance().setText(CoinUtil.getTextForLong(fullLockedAmount));
+            balancePanel.getAvailableBalance().setText(CoinUtil.getTextForNumber(fullAmount));
+            balancePanel.getLockedBalance().setText(CoinUtil.getTextForNumber(fullLockedAmount));
         }
         if (data instanceof TransactionItems) {
             TransactionItems transactionItems = (TransactionItems) data;
@@ -145,7 +145,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
             }
         }
 
-        paymentsPanel.getTotalPaymentsLockedAmount().setText(CoinUtil.getTextForLong(fullPayedUnconfirmedAmount));
+        paymentsPanel.getTotalPaymentsLockedAmount().setText(CoinUtil.getTextForNumber(fullPayedUnconfirmedAmount));
     }
 
     private void updateBalances(TransactionItems transactionItems) {
@@ -167,7 +167,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
         }
 
         paymentsPanel.getNumberOfPayments().setText("" + fullNumberOfPayments);
-        paymentsPanel.getTotalPaymentsAmount().setText(CoinUtil.getTextForLong(fullPayedAmount));
+        paymentsPanel.getTotalPaymentsAmount().setText(CoinUtil.getTextForNumber(fullPayedAmount));
     }
 
 }

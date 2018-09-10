@@ -9,11 +9,9 @@ package com.b2beyond.wallet.b2bcoin.util;
  * compare to http://svn.terracotta.org/svn/tc/dso/tags/2.6.4/code/base/common/src/com/tc/util/runtime/Os.java
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
-import com.b2beyond.wallet.b2bcoin.view.view.SplashWindow;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,7 +31,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public final class B2BUtil {
@@ -93,10 +90,10 @@ public final class B2BUtil {
             new File(getConfigRoot()).mkdirs();
 
             LOGGER.trace("Exporting the coin daemon config");
-            if (!Paths.get(getConfigRoot() + "application.config").toFile().exists()) {
+            if (!Paths.get(getConfigRoot() + "application.properties").toFile().exists()) {
                 FileResourceExtractor.extractFromJar(
-                        "configs/application.config",
-                        getConfigRoot() + "application.config");
+                        "configs/application.properties",
+                        getConfigRoot() + "application.properties");
             }
 
             if (Paths.get(getUserHome() + "coin.conf").toFile().exists()) {
@@ -105,18 +102,18 @@ public final class B2BUtil {
                 }
             }
 
-            try {
-                PropertiesConfiguration applicationProperties = new PropertiesConfiguration(getConfigRoot() + "application.config");
-                String coinConfigUrl = applicationProperties.getString("coin-config");
-                LOGGER.trace("Exporting the coin daemon config");
-                FileResourceExtractor.copyFromURL(
-                        coinConfigUrl,
-                        getConfigRoot() + "coin.conf");
-            } catch (Exception e) {
+//            try {
+//                PropertiesConfiguration applicationProperties = new PropertiesConfiguration(getConfigRoot() + "application.properties");
+//                String coinConfigUrl = applicationProperties.getString("coin-config");
+//                LOGGER.trace("Exporting the coin daemon config");
+//                FileResourceExtractor.copyFromURL(
+//                        coinConfigUrl,
+//                        getConfigRoot() + "coin.conf");
+//            } catch (Exception e) {
                 FileResourceExtractor.extractFromJar(
                         "configs/coin.conf",
                         getConfigRoot() + "coin.conf");
-            }
+//            }
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
@@ -225,17 +222,29 @@ public final class B2BUtil {
     }
 
     public static boolean availableForConnection(int port) {
-        try (Socket ignored = new Socket("localhost", port)) {
-            return false;
-        } catch (IOException ignored) {}
-        try (Socket ignored = new Socket("127.0.0.1", port)) {
-            return false;
-        } catch (IOException ignored) {}
-        try (Socket ignored = new Socket("0.0.0.0", port)) {
-            return false;
-        } catch (IOException ignored) {}
+        boolean result = true;
+        for (int i = 0; i < 5; i++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try (Socket ignored = new Socket("localhost", port)) {
+                result = false;
+            } catch (IOException ignored) {
+                try (Socket ignored2 = new Socket("127.0.0.1", port)) {
+                    result = false;
+                } catch (IOException ignored2) {
+                    try (Socket ignored3 = new Socket("0.0.0.0", port)) {
+                        result = false;
+                    } catch (IOException ignored3) {
+                        result = true;
+                    }
+                }
+            }
+        }
 
-        return true;
+        return result;
     }
 
     public static int getPid(Process process, String operatingSystem, boolean spawned) {

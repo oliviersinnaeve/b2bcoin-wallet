@@ -118,7 +118,7 @@ public class PaymentTabView extends AbstractAddressJPanel implements Observer {
                         }
                     }
 
-                    final Object[] data = {address, transaction.getTimestamp() * 1000, CoinUtil.getTextForLong(transaction.getAmount())};
+                    final Object[] data = {address, transaction.getTimestamp() * 1000, CoinUtil.getTextForNumber(transaction.getAmount())};
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {

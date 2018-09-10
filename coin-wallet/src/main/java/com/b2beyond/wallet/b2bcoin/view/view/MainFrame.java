@@ -3,12 +3,14 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 
 import com.b2beyond.wallet.b2bcoin.view.model.ChangeSize;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
+import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.Error;
 import com.b2beyond.wallet.rpc.model.coin.BlockCount;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.TabContainer;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
+import com.b2beyond.wallet.rpc.model.coin.BlockHeaderWrapper;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -57,6 +59,9 @@ public class MainFrame extends JFrame implements Observer {
     private long blockChucksFetched = 0;
     private boolean restarting;
 
+    private boolean canStopWalletIfNotSyncedYet = false;
+
+    protected List<RpcPoller> walletRpcPollers = new ArrayList<>();
 
     /**
      * Create the frame
@@ -194,13 +199,15 @@ public class MainFrame extends JFrame implements Observer {
 
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
-            Status viewData = (Status) data;
-            setProgressMax(viewData.getKnownBlockCount());
+            canStopWalletIfNotSyncedYet = true;
         }
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
+            if (progressBar.getValue() == progressBar.getMaximum() && progressBar.getMaximum() != 0 && progressBar.getMaximum() != 100) {
+                actionController.startWallet();
+            }
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
             System.out.println(((Error) data).getCode());
@@ -215,7 +222,19 @@ public class MainFrame extends JFrame implements Observer {
             this.content.setMinimumSize(minimumSize);
             this.content.setSize(minimumSize);
             this.repaint();
-//            this.setPreferredSize(minimumSize);
+        }
+        if (data instanceof BlockHeaderWrapper) {
+            dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
+        }
+        if (data instanceof Error) {
+            if (canStopWalletIfNotSyncedYet) {
+                actionController.stopWallet();
+                canStopWalletIfNotSyncedYet = false;
+            }
+        }
+
+        if (data instanceof String) {
+            setProgressMax(Integer.parseInt((String)data));
         }
     }
 

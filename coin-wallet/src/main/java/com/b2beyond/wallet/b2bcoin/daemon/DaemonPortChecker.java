@@ -1,6 +1,7 @@
 package com.b2beyond.wallet.b2bcoin.daemon;
 
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
+import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
@@ -13,35 +14,44 @@ public class DaemonPortChecker implements Runnable {
 
     private static Logger LOGGER = Logger.getLogger(DaemonPortChecker.class);
 
-    private int daemonPort;
-    private int walletRpcPort;
+    private ActionController actionController;
 
-    public DaemonPortChecker(PropertiesConfiguration walletDaemonProperties) {
+    private boolean firstStart = true;
+
+    private int daemonPort;
+    private int daemonRpcPort;
+
+    public DaemonPortChecker(ActionController actionController, PropertiesConfiguration walletDaemonProperties) {
+        this.actionController = actionController;
+
         this.daemonPort = walletDaemonProperties.getInt("p2p-bind-port");
-        this.walletRpcPort = walletDaemonProperties.getInt("bind-port");
+        this.daemonRpcPort = walletDaemonProperties.getInt("daemon-port");
     }
 
     @Override
     public void run() {
-//        int coinTries = 10;
-//
-//        while (B2BUtil.availableForConnection(daemonPort)) {
-//            LOGGER.info("Still Loading the coin daemon ...");
-//            if (coinTries == 0) {
-//                JOptionPane.showMessageDialog(null,
-//                        "We tried to start the coin daemon on port " + daemonPort + ", it could not be started.\n" +
-//                                "We will shutdown the application, it is not usable anyway.",
-//                        "Fatal error",
-//                        JOptionPane.ERROR_MESSAGE);
-//                System.exit(1);
-//            }
-//            try {
-//                Thread.sleep(2000);
-//                coinTries -= 1;
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        while (true) {
+            if (firstStart) {
+                LOGGER.info("Loading the coin daemon ...");
+                try {
+                    Thread.sleep(60000 * 2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                firstStart = false;
+            }
+
+            if (B2BUtil.availableForConnection(daemonPort) && B2BUtil.availableForConnection(daemonRpcPort)) {
+                if (B2BUtil.availableForConnection(daemonPort) && B2BUtil.availableForConnection(daemonRpcPort)) {
+                    actionController.restartCoinDaemon();
+                    try {
+                        Thread.sleep(60000 * 2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
 }

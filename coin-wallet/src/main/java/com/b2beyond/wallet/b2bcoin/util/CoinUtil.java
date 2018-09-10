@@ -20,7 +20,7 @@ public class CoinUtil {
         return decimal.longValue();
     }
 
-    public static String getTextForLong(Long amount) {
+    public static String getTextForNumber(Number amount) {
         NumberFormat amountFormat = NumberFormat.getNumberInstance();
         amountFormat.setGroupingUsed(false);
         amountFormat.setMinimumFractionDigits(12);

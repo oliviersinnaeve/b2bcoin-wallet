@@ -129,7 +129,7 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
 
                     Object[] rowData = {
                             address,
-                            CoinUtil.getTextForLong(addressBalance.getAvailableBalance()), CoinUtil.getTextForLong(addressBalance.getLockedAmount()),
+                            CoinUtil.getTextForNumber(addressBalance.getAvailableBalance()), CoinUtil.getTextForNumber(addressBalance.getLockedAmount()),
                             "Delete"
                     };
                     addressesTableModel.addRow(rowData);
@@ -138,19 +138,19 @@ public class AddressesTabView extends AbstractBorderlessJPanel implements Observ
                 }
             }
 
-            totalAmountLabel.setText(CoinUtil.getTextForLong(fullAmount));
-            totalAmountLockedLabel.setText(CoinUtil.getTextForLong(fullLockedAmount));
+            totalAmountLabel.setText(CoinUtil.getTextForNumber(fullAmount));
+            totalAmountLockedLabel.setText(CoinUtil.getTextForNumber(fullLockedAmount));
         }
     }
 
     public void setTotalBalance(long balance) {
         LOGGER.info("Updating total balance label");
-        totalAmountLabel.setText(CoinUtil.getTextForLong(balance));
+        totalAmountLabel.setText(CoinUtil.getTextForNumber(balance));
     }
 
     public void setTotalLockedBalance(long balance) {
         LOGGER.info("Updating total locked balance label");
-        totalAmountLockedLabel.setText(CoinUtil.getTextForLong(balance));
+        totalAmountLockedLabel.setText(CoinUtil.getTextForNumber(balance));
     }
 
 }

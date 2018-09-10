@@ -33,7 +33,7 @@ public class PaymentController {
 
         if (balance.getAvailableBalance() <= totalAMount) {
             JOptionPane.showMessageDialog(null,
-                "You can only send " + CoinUtil.getTextForLong(totalAMount - input.getFee()) + ". You must substract the fee from the final amount.",
+                "You can only send " + CoinUtil.getTextForNumber(totalAMount - input.getFee()) + ". You must substract the fee from the final amount.",
                 "Address deletion error",
                 JOptionPane.ERROR_MESSAGE);
 

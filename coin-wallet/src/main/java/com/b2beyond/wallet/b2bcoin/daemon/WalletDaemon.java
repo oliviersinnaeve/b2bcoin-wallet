@@ -20,17 +20,13 @@ import java.util.Set;
  *
  * Created by oliviersinnaeve on 09/03/17.
  */
-public class WalletDaemon implements Daemon {
+public class WalletDaemon extends AbstractDaemon {
 
     private static Logger LOGGER = Logger.getLogger(WalletDaemon.class);
 
-    private String operatingSystem;
     private PropertiesConfiguration walletProperties;
 
-    private Process process;
-    private int processPid;
-
-    public WalletDaemon(PropertiesConfiguration daemonProperties, String operatingSystem, final PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+    public WalletDaemon(PropertiesConfiguration applicationProperties, String operatingSystem, final PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
         this.operatingSystem = operatingSystem;
         this.walletProperties = walletProperties;
@@ -41,7 +37,7 @@ public class WalletDaemon implements Daemon {
         final String logLocation = B2BUtil.getLogRoot();
 
         try {
-            String daemonExecutable = daemonProperties.getString("wallet-daemon-" + operatingSystem);
+            String daemonExecutable = applicationProperties.getString("wallet-daemon-" + operatingSystem);
 
             LOGGER.debug("Wallet daemon userHome : " + userHome);
             LOGGER.debug("Wallet daemon binaries location : " + binariesLocation);
@@ -55,10 +51,10 @@ public class WalletDaemon implements Daemon {
             if (firstStartup) {
                 LOGGER.info("First wallet startup - create new wallet or import wallet");
                 LOGGER.debug("First wallet startup - Wallet daemon process argument: " + binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf" + " --generate-container " +
-                        "--log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " --server-root " + userHome);
+                        "--log-file " + logLocation + walletProperties.getString("log-file-wallet") + " --server-root " + userHome);
 
                 ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf", "--generate-container",
-                        "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
+                        "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome);
 
                 LOGGER.info("First wallet startup - start process");
                 Process process = pb.start();
@@ -93,13 +89,13 @@ public class WalletDaemon implements Daemon {
             }
 
             LOGGER.debug("Wallet daemon process argument: " + binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf " +
-                    "--log-file " + logLocation + daemonProperties.getString("log-file-wallet") + " -d");
+                    "--log-file " + logLocation + applicationProperties.getString("log-file-wallet") + " -d");
 
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-                    "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
+                    "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
                 pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-                        "--log-file", userHome + daemonProperties.getString("log-file-wallet"), "--server-root", userHome);
+                        "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome);
             }
 
             process = pb.start();
@@ -114,7 +110,7 @@ public class WalletDaemon implements Daemon {
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
                         String line;
                         while ((line = bufferedReader.readLine()) != null) {
-                            LOGGER.info(line);
+                            System.out.println(line);
                         }
                         inputStream.close();
                         bufferedReader.close();
@@ -124,7 +120,7 @@ public class WalletDaemon implements Daemon {
                         BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
                         String outLine;
                         while ((outLine = outBufferedReader.readLine()) != null) {
-                            LOGGER.info(outLine);
+                            System.out.println(outLine);
 //                            try {
 //                                Thread.sleep(5000);
 //                            } catch (InterruptedException e) {
@@ -183,43 +179,6 @@ public class WalletDaemon implements Daemon {
             }
         } catch (IOException e) {
             // do something
-        }
-    }
-
-    @Override
-    public void stop() {
-        ProcessBuilder pb = null;
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
-            pb = new ProcessBuilder("kill", "-9", "" + processPid);
-        }
-
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX)) {
-            pb = new ProcessBuilder("fuser", "-k", walletProperties.getInt("bind-port") + "/tcp");
-        }
-
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-            LOGGER.info("Windows destroy wallet process ...");
-            process.destroy();
-            try {
-                LOGGER.info("Windows destroy wallet process - wait for :" + process.waitFor());
-            } catch (InterruptedException e) {
-                // NOOP
-            }
-            LOGGER.info("Windows destroy wallet process - exit value :" + process.exitValue());
-        }
-
-        if (pb != null) {
-            try {
-                Process process = pb.start();
-                try {
-                    LOGGER.info("Wait for value : " + process.waitFor());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                LOGGER.info("Killing WALLET daemon exit value : " + process.exitValue());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

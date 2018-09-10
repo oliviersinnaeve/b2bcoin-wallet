@@ -6,7 +6,6 @@ import com.b2beyond.wallet.b2bcoin.daemon.CoinDaemon;
 import com.b2beyond.wallet.b2bcoin.daemon.Daemon;
 import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
-import com.b2beyond.wallet.rpc.RpcPoller;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 
 public class DaemonController {
@@ -35,6 +33,7 @@ public class DaemonController {
 
     private PropertiesConfiguration applicationProperties;
     private PropertiesConfiguration walletProperties;
+    private PropertiesConfiguration coinProperties;
 
     private String operatingSystem;
 
@@ -45,10 +44,11 @@ public class DaemonController {
     private boolean firstStartup;
 
 
-    public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration walletProperties, String operatingSystem) {
+    public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration coinProperties, PropertiesConfiguration walletProperties, String operatingSystem) {
         LOGGER.info("Loading Daemon controller");
         this.applicationProperties = applicationProperties;
         this.walletProperties = walletProperties;
+        this.coinProperties = coinProperties;
         this.operatingSystem = operatingSystem;
         firstStartup = false;
         URL splashScreenLocation = Thread.currentThread().getContextClassLoader().getResource("splash.png");
@@ -128,7 +128,7 @@ public class DaemonController {
             coinDaemon.stop();
 
             int daemonPort = getDaemonPort();
-            int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
+            int daemonRpcPort = coinProperties.getInt("rpc-bind-port");
 
             LOGGER.info("Checking ports : '" + daemonPort + "' : '" + daemonRpcPort + "'");
 
@@ -163,9 +163,11 @@ public class DaemonController {
         }
     }
 
-    public void stop() {
-        walletDaemon.stop();
-        //coinDaemon.stop();
+    public void stopWallet() {
+        if (walletDaemon != null) {
+            walletDaemon.stop();
+        }
+        coinDaemon.stop();
 
         String timestamp = new SimpleDateFormat("dd-MM-yyyy-hh-mm").format(new Date());
         LOGGER.info("Backing up for container : " + container + " : " + timestamp);

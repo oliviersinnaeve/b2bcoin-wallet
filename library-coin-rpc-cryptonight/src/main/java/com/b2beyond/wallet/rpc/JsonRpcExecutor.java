@@ -1,7 +1,7 @@
 package com.b2beyond.wallet.rpc;
 
-import com.b2beyond.wallet.rpc.model.Error;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
+import com.b2beyond.wallet.rpc.model.Error;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -64,7 +64,7 @@ public class JsonRpcExecutor<T> {
                 BufferedReader in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
                 StringBuilder builder = new StringBuilder();
                 String line;
-                while((line = in.readLine()) != null && !"".equalsIgnoreCase(line)) {
+                while ((line = in.readLine()) != null && !"".equalsIgnoreCase(line)) {
                     builder.append(line);
                 }
 

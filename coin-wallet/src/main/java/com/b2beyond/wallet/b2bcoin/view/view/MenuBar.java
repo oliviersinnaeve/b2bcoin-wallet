@@ -73,7 +73,7 @@ public class MenuBar extends JMenuBar {
 
                         applicationProperties.setProperty("min-width", newWidth);
                         applicationProperties.setProperty("min-height", newHeight);
-                        applicationProperties.save(B2BUtil.getConfigRoot() + "application.config");
+                        applicationProperties.save(B2BUtil.getConfigRoot() + "application.properties");
 
                         ChangeSize newSize = new ChangeSize(newWidth, newHeight);
                         panelObservable.setChanged();

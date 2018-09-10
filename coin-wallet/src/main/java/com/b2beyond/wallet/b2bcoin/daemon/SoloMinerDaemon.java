@@ -44,7 +44,7 @@ public class SoloMinerDaemon implements Daemon {
                 if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
                     pb = new ProcessBuilder(
                             location + "\\binaries\\" + daemonExecutable,
-                            "-config-file", userHome + "coin-wallet.conf",
+
                             "--wallet-file", container, "--wallet-password", password,
                             "--command", "start_mining", numberOfProcessors);
                 } else {
