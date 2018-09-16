@@ -4,29 +4,33 @@ import java.io.IOException;
 
 public class ProcessUtil {
 
-    public static void stop(String operatingSystem, int processPid, Process process) {
+    public static void stop(String operatingSystem, int processPid, Process process, int port) {
+
+        process.destroy();
+
         ProcessBuilder pb = null;
         if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
-            pb = new ProcessBuilder("kill", "-9", "" + processPid);
-        }
-
-//        if (operatingSystem.equalsIgnoreCase(B2BUtil.LINUX)) {
-//            pb = new ProcessBuilder("fuser", "-k", walletProperties.getInt("bind-port") + "/tcp");
-//        }
-
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
-//            LOGGER.info("Windows destroy wallet process ...");
-            process.destroy();
-            //                LOGGER.info("Windows destroy wallet process - wait for :" + process.waitFor());
-            //            LOGGER.info("Windows destroy wallet process - exit value :" + process.exitValue());
+            pb = new ProcessBuilder("kill", "-9", "$(lsof -t -i :" + port + ")");
         }
 
         if (pb != null) {
             try {
                 Process newProcess = pb.start();
-                //                    LOGGER.info("Wait for value : " + process.waitFor());
-                //                LOGGER.info("Killing B2BCoin daemon exit value : " + process.exitValue());
-            } catch (IOException e) {
+                newProcess.waitFor();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
+            pb = new ProcessBuilder("kill", "-9", "" + processPid);
+        }
+
+        if (pb != null) {
+            try {
+                Process newProcess = pb.start();
+                newProcess.waitFor();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -2,7 +2,6 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 
 
 import com.b2beyond.wallet.b2bcoin.view.model.ChangeSize;
-import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.Error;
@@ -205,8 +204,21 @@ public class MainFrame extends JFrame implements Observer {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
-            if (progressBar.getValue() == progressBar.getMaximum() && progressBar.getMaximum() != 0 && progressBar.getMaximum() != 100) {
-                actionController.startWallet();
+            if ((progressBar.getValue() == progressBar.getMaximum()
+                    && progressBar.getMaximum() != 0
+                    && progressBar.getMaximum() != 100) || actionController.isOldDaemonSynced(progressBar.getValue())) {
+                if (actionController.isOldDaemonSynced(progressBar.getValue())) {
+                    try {
+                        actionController.stopWalletd();
+                        actionController.startOldWallet();
+                        Thread.sleep(30000);
+                        actionController.resetWallet();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    actionController.startWallet();
+                }
             }
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
@@ -227,10 +239,10 @@ public class MainFrame extends JFrame implements Observer {
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
         }
         if (data instanceof Error) {
-            if (canStopWalletIfNotSyncedYet) {
-                actionController.stopWallet();
-                canStopWalletIfNotSyncedYet = false;
-            }
+//            if (canStopWalletIfNotSyncedYet) {
+//                actionController.stopWalletd();
+//                canStopWalletIfNotSyncedYet = false;
+//            }
         }
 
         if (data instanceof String) {

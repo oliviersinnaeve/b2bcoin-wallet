@@ -81,6 +81,13 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
                     serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getAlreadyGeneratedCoins().floatValue()));
                     serverPanel.getBaseReward().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getBaseReward()));
                     serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
+
+                    if (actionController.isOldWaletSynced(new Integer("" + (blockWrapper.getBlock().getHeight())))) {
+                        actionController.stopWalletd();
+                        actionController.startWallet();
+                        actionController.setOldBlockchainSynced();
+                        actionController.restartCoinDaemon();
+                    }
                 }
             //}
         }

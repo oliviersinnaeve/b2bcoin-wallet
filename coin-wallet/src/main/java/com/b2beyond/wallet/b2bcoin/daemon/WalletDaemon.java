@@ -26,7 +26,7 @@ public class WalletDaemon extends AbstractDaemon {
 
     private PropertiesConfiguration walletProperties;
 
-    public WalletDaemon(PropertiesConfiguration applicationProperties, String operatingSystem, final PropertiesConfiguration walletProperties, String container, String password, boolean firstStartup) {
+    public WalletDaemon(PropertiesConfiguration applicationProperties, String operatingSystem, final PropertiesConfiguration walletProperties, final PropertiesConfiguration oldWalletProperties, String container, String password, boolean firstStartup) {
         LOGGER.info("Starting WALLET daemon for OS : " + operatingSystem);
         this.operatingSystem = operatingSystem;
         this.walletProperties = walletProperties;
@@ -46,7 +46,10 @@ public class WalletDaemon extends AbstractDaemon {
             // Password needs to be set every time so it does not get remembered
             walletProperties.setProperty("container-password", password);
             walletProperties.setProperty("container-file", container);
-            saveProperties(walletProperties, configLocation);
+            oldWalletProperties.setProperty("container-password", password);
+            oldWalletProperties.setProperty("container-file", container);
+            saveProperties(walletProperties, configLocation, "coin-wallet.conf");
+            saveProperties(oldWalletProperties, configLocation, "coin-wallet-old.conf");
 
             if (firstStartup) {
                 LOGGER.info("First wallet startup - create new wallet or import wallet");
@@ -89,10 +92,10 @@ public class WalletDaemon extends AbstractDaemon {
             }
 
             LOGGER.debug("Wallet daemon process argument: " + binariesLocation + daemonExecutable + " --config " + configLocation + "coin-wallet.conf " +
-                    "--log-file " + logLocation + applicationProperties.getString("log-file-wallet") + " -d");
+                    "--log-file " + logLocation + applicationProperties.getString("log-file-wallet"));
 
             ProcessBuilder pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
-                    "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome, "-d");
+                    "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome);
             if (operatingSystem.equalsIgnoreCase(B2BUtil.WINDOWS)) {
                 pb = new ProcessBuilder(binariesLocation + daemonExecutable, "--config", configLocation + "coin-wallet.conf",
                         "--log-file", userHome + applicationProperties.getString("log-file-wallet"), "--server-root", userHome);
@@ -102,61 +105,62 @@ public class WalletDaemon extends AbstractDaemon {
             processPid = B2BUtil.getPid(process, operatingSystem, true);
             LOGGER.debug("Wallet Process id retrieved : " + processPid);
 
-            new Thread(new Runnable() {
+            Thread outputThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         InputStream inputStream = process.getInputStream();
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream), 1);
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            System.out.println(line);
-                        }
-                        inputStream.close();
-                        bufferedReader.close();
-
 
                         InputStream errorStream = process.getErrorStream();
                         BufferedReader outBufferedReader = new BufferedReader(new InputStreamReader(errorStream), 1);
-                        String outLine;
-                        while ((outLine = outBufferedReader.readLine()) != null) {
-                            System.out.println(outLine);
-//                            try {
-//                                Thread.sleep(5000);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
+
+                        String line;
+                        while (true) {
+
+                            while ((line = bufferedReader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                            while ((line = outBufferedReader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        errorStream.close();
-                        outBufferedReader.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+            });
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(15000);
-                        LOGGER.info("Reset password");
-                        walletProperties.setProperty("container-password", "");
-                        saveProperties(walletProperties, configLocation);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
+            outputThread.start();
+
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        Thread.sleep(15000);
+//                        LOGGER.info("Reset password");
+//                        walletProperties.setProperty("container-password", "");
+//                        saveProperties(walletProperties, configLocation, "coin-wallet.conf");
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }).start();
         } catch (Exception ex) {
             LOGGER.error("Wallet daemon failed : ", ex);
         }
 
     }
 
-    private void saveProperties(PropertiesConfiguration walletProperties, String configLocation) {
+    private void saveProperties(PropertiesConfiguration walletProperties, String configLocation, String filename) {
         try{
-            PrintWriter writer = new PrintWriter(configLocation + "coin-wallet.conf", "UTF-8");
+            PrintWriter writer = new PrintWriter(configLocation + filename, "UTF-8");
             Iterator<String> propertyNames = walletProperties.getKeys();
             while (propertyNames.hasNext()) {
                 String property = propertyNames.next();
@@ -180,6 +184,11 @@ public class WalletDaemon extends AbstractDaemon {
         } catch (IOException e) {
             // do something
         }
+    }
+
+    @Override
+    public int getPort() {
+        return 9090;
     }
 
 }

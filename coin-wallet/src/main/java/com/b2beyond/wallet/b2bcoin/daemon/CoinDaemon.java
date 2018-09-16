@@ -86,4 +86,8 @@ public class CoinDaemon extends AbstractDaemon {
         }
     }
 
+    @Override
+    public int getPort() {
+        return 39156;
+    }
 }

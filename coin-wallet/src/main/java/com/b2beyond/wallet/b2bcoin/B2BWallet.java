@@ -44,6 +44,7 @@ public class B2BWallet extends MainFrame {
 
     private static PropertiesConfiguration applicationProperties;
     private static PropertiesConfiguration walletDaemonProperties;
+    private static PropertiesConfiguration oldWalletDaemonProperties;
     private static PropertiesConfiguration coinDaemonProperties;
 
     private static SplashWindow loadWindow;
@@ -85,6 +86,8 @@ public class B2BWallet extends MainFrame {
         loadWindow.setProgress(loadingCounter++);
         walletDaemonProperties = new PropertiesLoader("coin-wallet.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
+        oldWalletDaemonProperties = new PropertiesLoader("coin-wallet-old.conf").getProperties();
+        loadWindow.setProgress(loadingCounter++);
         coinDaemonProperties = new PropertiesLoader("coin.conf").getProperties();
         loadWindow.setProgress(loadingCounter++);
 
@@ -117,11 +120,12 @@ public class B2BWallet extends MainFrame {
                 applicationProperties,
                 coinDaemonProperties,
                 walletDaemonProperties,
+                oldWalletDaemonProperties,
                 B2BUtil.getOperatingSystem());
         WalletRpcController walletRpcController = new WalletRpcController(applicationProperties.getString("wallet-daemon-base-url"));
         CoinRpcController coinRpcController = new CoinRpcController(applicationProperties.getString("coin-daemon-base-url"));
         CoinHttpController coinHttpController = new CoinHttpController(applicationProperties.getString("wallet-height-url"));
-        actionController = new ActionController(coinDaemon, coinHttpController, walletRpcController, coinRpcController);
+        actionController = new ActionController(coinDaemon, coinHttpController, walletRpcController, coinRpcController, applicationProperties);
         loadWindow.setProgress(loadingCounter++);
 
         new B2BWallet(applicationProperties, actionController);

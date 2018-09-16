@@ -45,7 +45,7 @@ public class DaemonPortChecker implements Runnable {
                 if (B2BUtil.availableForConnection(daemonPort) && B2BUtil.availableForConnection(daemonRpcPort)) {
                     actionController.restartCoinDaemon();
                     try {
-                        Thread.sleep(60000 * 2);
+                        Thread.sleep(60000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

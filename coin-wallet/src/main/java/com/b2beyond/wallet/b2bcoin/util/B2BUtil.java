@@ -90,14 +90,18 @@ public final class B2BUtil {
             new File(getConfigRoot()).mkdirs();
 
             LOGGER.trace("Exporting the coin daemon config");
-            if (!Paths.get(getConfigRoot() + "application.properties").toFile().exists()) {
-                FileResourceExtractor.extractFromJar(
-                        "configs/application.properties",
-                        getConfigRoot() + "application.properties");
-            }
+            FileResourceExtractor.extractFromJar(
+                    "configs/application.properties",
+                    getConfigRoot() + "application.properties");
 
             if (Paths.get(getUserHome() + "coin.conf").toFile().exists()) {
                 if (!Paths.get(getUserHome() + "coin.conf").toFile().delete()) {
+                    LOGGER.warn("File coin.conf could not be deleted");
+                }
+            }
+
+            if (Paths.get(getUserHome() + "coin-old.conf").toFile().exists()) {
+                if (!Paths.get(getUserHome() + "coin-old.conf").toFile().delete()) {
                     LOGGER.warn("File coin.conf could not be deleted");
                 }
             }
@@ -110,10 +114,13 @@ public final class B2BUtil {
 //                        coinConfigUrl,
 //                        getConfigRoot() + "coin.conf");
 //            } catch (Exception e) {
-                FileResourceExtractor.extractFromJar(
-                        "configs/coin.conf",
-                        getConfigRoot() + "coin.conf");
-//            }
+            FileResourceExtractor.extractFromJar(
+                    "configs/coin.conf",
+                    getConfigRoot() + "coin.conf");
+            FileResourceExtractor.extractFromJar(
+                    "configs/coin-old.conf",
+                    getConfigRoot() + "coin-old.conf");
+            
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
@@ -139,6 +146,30 @@ public final class B2BUtil {
                 LOGGER.debug("File coin-wallet.conf should be updated with new values");
             }
 
+            if (Paths.get(getUserHome() + "coin-wallet-old.conf").toFile().exists()) {
+                LOGGER.trace("delete the previous coin wallet");
+                Paths.get(getUserHome() + "coin-wallet-old.conf").toFile().delete();
+            }
+            if (!Paths.get(getConfigRoot() + "coin-wallet-old.conf").toFile().exists()) {
+                LOGGER.trace("Exporting the coin wallet config");
+                FileResourceExtractor.extractFromJar(
+                        "configs/coin-wallet-old.conf",
+                        getConfigRoot() + "coin-wallet-old.conf");
+            } else {
+                PropertiesConfiguration currentFile = new PropertiesConfiguration(getConfigRoot() + "coin-wallet-old.conf");
+                String walletFile = currentFile.getString("container-file");
+
+                Paths.get(getConfigRoot() + "coin-wallet-old.conf").toFile().delete();
+                FileResourceExtractor.extractFromJar(
+                        "configs/coin-wallet-old.conf",
+                        getConfigRoot() + "coin-wallet-old.conf");
+
+                PropertiesConfiguration newFile = new PropertiesConfiguration(getConfigRoot() + "coin-wallet-old.conf");
+                newFile.setProperty("container-file", walletFile);
+                newFile.save();
+                LOGGER.debug("File coin-wallet-old.conf should be updated with new values");
+            }
+
         } catch (Exception e) {
             LOGGER.error("Failed to copy file", e);
         }
@@ -157,12 +188,22 @@ public final class B2BUtil {
                 FileResourceExtractor.extractFromJar(
                         "coin-" + os + "/binaries/" + daemonExecutable,
                         getBinariesRoot() + daemonExecutable);
+
+            LOGGER.trace("Exporting the old coin daemon");
+            FileResourceExtractor.extractFromJar(
+                    "coin-" + os + "/binaries/" + daemonExecutable + "-old",
+                    getBinariesRoot() + daemonExecutable + "-old");
             //}
             //if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
                 LOGGER.trace("Exporting the wallet daemon");
                 FileResourceExtractor.extractFromJar(
                         "coin-" + os + "/binaries/" + walletExecutable,
                         getBinariesRoot() + walletExecutable);
+
+            LOGGER.trace("Exporting the wallet daemon");
+            FileResourceExtractor.extractFromJar(
+                    "coin-" + os + "/binaries/" + walletExecutable + "-old",
+                    getBinariesRoot() + walletExecutable + "-old");
             //}
 
             if (getOperatingSystem().equalsIgnoreCase(LINUX) || getOperatingSystem().equalsIgnoreCase(MAC)) {
@@ -175,7 +216,11 @@ public final class B2BUtil {
 
                 Process p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable);
                 p.waitFor();
+                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable + "-old") ;
+                p.waitFor();
                 p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable);
+                p.waitFor();
+                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable + "-old");
                 p.waitFor();
                 p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + poolMinerExecutable);
                 p.waitFor();

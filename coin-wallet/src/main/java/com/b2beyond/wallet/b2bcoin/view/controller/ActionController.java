@@ -11,6 +11,7 @@ import com.b2beyond.wallet.rpc.RpcPoller;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.rpc.model.*;
 import com.b2beyond.wallet.rpc.model.coin.BlockWrapper;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -21,6 +22,8 @@ public class ActionController {
 
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
+    private PropertiesConfiguration applicationProperties;
+
     private DaemonController controller;
     private CoinRpcController coinRpcController;
     private CoinHttpController coinHttpController;
@@ -28,17 +31,22 @@ public class ActionController {
 
     private List<RpcPoller> walletRpcPollers;
 
+    private boolean oldChainIsSyncing;
+    private boolean walletReset = false;
+    private boolean isbeingReset;
     private boolean synced;
 
     public void setSynced(boolean synced) {
         this.synced = synced;
     }
 
-    public ActionController(final DaemonController controller, CoinHttpController coinHttpController, WalletRpcController walletRpcController, CoinRpcController coinRpcController) {
+    public ActionController(final DaemonController controller, CoinHttpController coinHttpController, WalletRpcController walletRpcController, CoinRpcController coinRpcController, PropertiesConfiguration applicationProperties) {
         this.controller = controller;
         this.coinHttpController = coinHttpController;
         this.coinRpcController = coinRpcController;
         this.walletRpcController = walletRpcController;
+
+        this.applicationProperties = applicationProperties;
     }
 
     public void setWalletRpcPollers(List<RpcPoller> walletRpcPollers) {
@@ -81,7 +89,7 @@ public class ActionController {
         try {
             return coinRpcController.getBlockWrapperExecutor().execute("\"params\": {\"hash\": \"" + hash + "\"}");
         } catch (KnownJsonRpcException e) {
-            restartCoinDaemon();
+//            restartCoinDaemon();
         }
         return null;
     }
@@ -102,15 +110,27 @@ public class ActionController {
         controller.stopDaemon();
     }
 
-    public void restartCoinDaemon() {
-        controller.restartDaemon();
+    private void startOldDaemon() {
+        controller.startOldDaemn();
     }
 
-//    public void startCoinDaemon() {
-//        controller.startDaemon();
-//    }
+    public void restartCoinDaemon() {
+        if (oldChainIsSyncing) {
+            controller.startOldDaemn();
+        } else {
+            controller.restartDaemon();
+        }
+    }
 
-    public void stopCoinDaemon() {
+    public void restartWalletDaemon() {
+        if (oldChainIsSyncing) {
+            controller.startOldDaemn();
+        } else {
+            controller.restartDaemon();
+        }
+    }
+
+    private void stopCoinDaemon() {
         controller.stopDaemon();
     }
 
@@ -125,21 +145,59 @@ public class ActionController {
     public void startWallet() {
         if (B2BUtil.availableForConnection(9090)) {
             controller.startWallet();
-            // Add pollers if wallet rpc port is available
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             for (RpcPoller poller : walletRpcPollers) {
                 getCoinRpcController().addPollers(poller);
             }
         }
-//        }
     }
 
-    public void stopWallet() {
-        controller.stopWallet();
+    public void startOldWallet() {
+        if (B2BUtil.availableForConnection(9080)) {
+            controller.startOldWallet();
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            for (RpcPoller poller : walletRpcPollers) {
+                getCoinRpcController().addPollers(poller);
+            }
+        }
+    }
+
+    public void stopWalletd() {
+        if (!isbeingReset) {
+            controller.stopWalletd();
+            controller.stopOldWalletd();
+        }
     }
 
     public void resetWallet() {
+        if (!isbeingReset) {
+            isbeingReset = true;
+            try {
+                walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
+            } catch (KnownJsonRpcException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void resetWalletAndBlockChain() {
         try {
-            //controller.stopDaemon();
+            isbeingReset = false;
+            stopWalletd();
+            startOldWallet();
+            resetBlockChain(true);
             walletRpcController.getResetExecutor().execute(JsonRpcExecutor.EMPTY_PARAMS);
 
             for (RpcPoller poller : walletRpcPollers) {
@@ -147,18 +205,21 @@ public class ActionController {
                     ((TransactionItemsRpcPoller) poller).reset();
                 }
             }
-
-            //controller.startDaemon();
         } catch (KnownJsonRpcException e) {
             e.printStackTrace();
         }
     }
 
-    public void resetBlockChain() {
+    public void resetBlockChain(boolean old) {
         LOGGER.info("Delete block chain");
         LOGGER.debug("Command : " + B2BUtil.getDeleteBlockChainHomeCommand());
 
+        oldChainIsSyncing = old;
+
+        // STOP THE DAEMON
         stopCoinDaemon();
+
+        // DELETE THE BLOCKCHAIN
         Process process;
         try {
             process = Runtime.getRuntime().exec(B2BUtil.getDeleteBlockChainHomeCommand());
@@ -166,7 +227,6 @@ public class ActionController {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
         try {
             LOGGER.info("Windows sleep : 5 seconds");
             Thread.sleep(5000);
@@ -174,14 +234,18 @@ public class ActionController {
             e.printStackTrace();
         }
 
-        restartCoinDaemon();
 
-        try {
-            LOGGER.info("Wait a minute before resetting the wallet ...");
-            Thread.sleep(60000);
-            resetWallet();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (old) {
+            startOldDaemon();
+        } else {
+            restartCoinDaemon();
+
+            try {
+                LOGGER.info("Wait a minute before resetting the wallet ...");
+                Thread.sleep(60000 * 2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -230,6 +294,20 @@ public class ActionController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean isOldDaemonSynced(int value) {
+        int stepOne = applicationProperties.getInt("step-one");
+        return stepOne == value;
+    }
+
+    public boolean isOldWaletSynced(int value) {
+        int stepOne = applicationProperties.getInt("step-one");
+        return stepOne == value + 1;
+    }
+
+    public void setOldBlockchainSynced() {
+        oldChainIsSyncing = false;
     }
 
 }

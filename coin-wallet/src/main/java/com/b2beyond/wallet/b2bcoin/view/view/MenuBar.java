@@ -96,7 +96,7 @@ public class MenuBar extends JMenuBar {
         resetBlockchainMenuItem.setToolTipText("Reset blockchain data");
         resetBlockchainMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                actionController.resetBlockChain();
+                actionController.resetBlockChain(false);
             }
         });
 
@@ -180,6 +180,9 @@ public class MenuBar extends JMenuBar {
                                     "Fusion transactions not possible",
                                     JOptionPane.WARNING_MESSAGE);
                         }
+
+                        actionController.getWalletRpcController().getPaymentExecutor().setReadTimeout(15000);
+                        actionController.getWalletRpcController().getFusionTransactionExecutor().setReadTimeout(15000);
                     } catch (KnownJsonRpcException e) {
                         JOptionPane.showMessageDialog(null,
                                 "Fusion failed : " + e.getError().getMessage(),
@@ -195,7 +198,7 @@ public class MenuBar extends JMenuBar {
         resetWalletMenuItem.setToolTipText("Reset wallet");
         resetWalletMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                actionController.resetWallet();
+                actionController.resetWalletAndBlockChain();
             }
         });
 

@@ -2,9 +2,7 @@ package com.b2beyond.wallet.b2bcoin.controler;
 
 import com.b2beyond.wallet.b2bcoin.controler.panel.NewWalletPanel;
 import com.b2beyond.wallet.b2bcoin.controler.panel.PasswordPanel;
-import com.b2beyond.wallet.b2bcoin.daemon.CoinDaemon;
-import com.b2beyond.wallet.b2bcoin.daemon.Daemon;
-import com.b2beyond.wallet.b2bcoin.daemon.WalletDaemon;
+import com.b2beyond.wallet.b2bcoin.daemon.*;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -29,10 +27,13 @@ public class DaemonController {
     private Logger LOGGER = Logger.getLogger(this.getClass());
 
     private Daemon coinDaemon;
+    private Daemon coinDaemonold;
     private WalletDaemon walletDaemon;
+    private WalletDaemonOld walletDaemonOld;
 
     private PropertiesConfiguration applicationProperties;
     private PropertiesConfiguration walletProperties;
+    private PropertiesConfiguration oldWalletProperties;
     private PropertiesConfiguration coinProperties;
 
     private String operatingSystem;
@@ -44,10 +45,11 @@ public class DaemonController {
     private boolean firstStartup;
 
 
-    public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration coinProperties, PropertiesConfiguration walletProperties, String operatingSystem) {
+    public DaemonController(PropertiesConfiguration applicationProperties, PropertiesConfiguration coinProperties, PropertiesConfiguration walletProperties, PropertiesConfiguration oldWalletProperties, String operatingSystem) {
         LOGGER.info("Loading Daemon controller");
         this.applicationProperties = applicationProperties;
         this.walletProperties = walletProperties;
+        this.oldWalletProperties = oldWalletProperties;
         this.coinProperties = coinProperties;
         this.operatingSystem = operatingSystem;
         firstStartup = false;
@@ -111,10 +113,24 @@ public class DaemonController {
 
             firstStartup = true;
         }
+
+
+//        walletDaemon = new WalletDaemon(applicationProperties, operatingSystem, walletProperties, oldWalletProperties, container, password, firstStartup);
+    }
+
+    public void startOldDaemn() {
+        coinDaemonold = new CoinDaemonOld(applicationProperties, operatingSystem);
     }
 
     public void restartDaemon() {
-        coinDaemon.stop();
+
+        if (coinDaemonold != null) {
+            coinDaemonold.stop();
+        }
+        if (coinDaemon != null) {
+            coinDaemon.stop();
+        }
+
         try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
@@ -145,21 +161,33 @@ public class DaemonController {
         }
     }
 
-//    public void startDaemon() {
-//        int daemonPort = getDaemonPort();
-//        int daemonRpcPort = walletProperties.getInt("rpc-bind-port");
-//
-//        if (B2BUtil.availableForConnection(daemonPort)
-//                && B2BUtil.availableForConnection(daemonRpcPort)) {
-//            coinDaemon = new CoinDaemon(applicationProperties, operatingSystem);
-//        }
-//    }
-
     public void startWallet() {
         int walletRpc = getWalletRpcPort();
 
         if (B2BUtil.availableForConnection(walletRpc) || walletDaemon == null) {
-            walletDaemon = new WalletDaemon(applicationProperties, operatingSystem, walletProperties, container, password, firstStartup);
+            walletDaemon = new WalletDaemon(applicationProperties, operatingSystem, walletProperties, oldWalletProperties, container, password, firstStartup);
+        }
+    }
+
+    public void startOldWallet() {
+        int walletRpc = getWalletRpcPort();
+
+        if (B2BUtil.availableForConnection(walletRpc) || walletDaemon == null) {
+            walletDaemonOld = new WalletDaemonOld(applicationProperties, operatingSystem, walletProperties, container, password);
+        }
+    }
+
+    public void stopWalletd() {
+        if (walletDaemon != null) {
+            walletDaemon.stop();
+            walletDaemon = null;
+        }
+    }
+
+    public void stopOldWalletd() {
+        if (walletDaemonOld != null) {
+            walletDaemonOld.stop();
+            walletDaemonOld = null;
         }
     }
 
@@ -167,7 +195,12 @@ public class DaemonController {
         if (walletDaemon != null) {
             walletDaemon.stop();
         }
-        coinDaemon.stop();
+        if (coinDaemon != null) {
+            coinDaemon.stop();
+        }
+        if (coinDaemonold != null) {
+            coinDaemonold.stop();
+        }
 
         String timestamp = new SimpleDateFormat("dd-MM-yyyy-hh-mm").format(new Date());
         LOGGER.info("Backing up for container : " + container + " : " + timestamp);
