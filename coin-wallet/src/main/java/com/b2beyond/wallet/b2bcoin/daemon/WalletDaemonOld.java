@@ -55,8 +55,6 @@ public class WalletDaemonOld extends AbstractDaemon {
             }
 
             process = pb.start();
-            processPid = B2BUtil.getPid(process, operatingSystem, true);
-            LOGGER.debug("Old Wallet Process id retrieved : " + processPid);
 
             new Thread(new Runnable() {
                 @Override

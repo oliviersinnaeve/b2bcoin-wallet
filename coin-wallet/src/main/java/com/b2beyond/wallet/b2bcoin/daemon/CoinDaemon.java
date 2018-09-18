@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 
 /**
- * It represents the properties to use when the paypal component is activated for an account.
+ * Starts the daemon
  *
  * Created by oliviersinnaeve on 09/03/17.
  */
@@ -43,8 +43,6 @@ public class CoinDaemon extends AbstractDaemon {
                     "--log-file", logLocation + daemonProperties.getString("log-file-coin"));
 
             process = pb.start();
-            processPid = B2BUtil.getPid(process, operatingSystem, false);
-            LOGGER.debug("Coin Process id retrieved : " + processPid);
 
             Thread outputThread = new Thread(new Runnable() {
                 @Override

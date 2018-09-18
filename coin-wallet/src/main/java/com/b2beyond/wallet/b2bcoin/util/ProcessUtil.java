@@ -1,38 +1,23 @@
 package com.b2beyond.wallet.b2bcoin.util;
 
-import java.io.IOException;
-
 public class ProcessUtil {
 
-    public static void stop(String operatingSystem, int processPid, Process process, int port) {
+    public static void stop(String operatingSystem, Process process, int port) {
+        try {
+            process.destroy();
+            process.waitFor();
 
-        process.destroy();
+            ProcessBuilder pb = null;
+            if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
+                pb = new ProcessBuilder("kill", "-9", "$(lsof -t -i :" + port + ")");
+            }
 
-        ProcessBuilder pb = null;
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
-            pb = new ProcessBuilder("kill", "-9", "$(lsof -t -i :" + port + ")");
-        }
-
-        if (pb != null) {
-            try {
+            if (pb != null) {
                 Process newProcess = pb.start();
                 newProcess.waitFor();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
-
-        if (operatingSystem.equalsIgnoreCase(B2BUtil.MAC)) {
-            pb = new ProcessBuilder("kill", "-9", "" + processPid);
-        }
-
-        if (pb != null) {
-            try {
-                Process newProcess = pb.start();
-                newProcess.waitFor();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -28,14 +28,10 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +50,9 @@ public class MainFrame extends JFrame implements Observer {
 
     private List<JButton> menus;
 
-    private boolean firstUpdate = true;
-    private long blockChucksFetched = 0;
-    private boolean restarting;
-
-    private boolean canStopWalletIfNotSyncedYet = false;
 
     protected List<RpcPoller> walletRpcPollers = new ArrayList<>();
+
 
     /**
      * Create the frame
@@ -197,28 +189,12 @@ public class MainFrame extends JFrame implements Observer {
     }
 
     public void update(Observable rpcPoller, Object data) {
-        if (data instanceof Status) {
-            canStopWalletIfNotSyncedYet = true;
-        }
         if (data instanceof BlockCount) {
             BlockCount blockCount = (BlockCount) data;
             setProgress((int)blockCount.getCount());
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
-            if ((progressBar.getValue() == progressBar.getMaximum()
-                    && progressBar.getMaximum() != 0
-                    && progressBar.getMaximum() != 100) || actionController.isOldDaemonSynced(progressBar.getValue())) {
-                if (actionController.isOldDaemonSynced(progressBar.getValue())) {
-                    try {
-                        actionController.stopWalletd();
-                        actionController.startOldWallet();
-                        Thread.sleep(30000);
-                        actionController.resetWallet();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    actionController.startWallet();
-                }
+            if (progressBar.getValue() == progressBar.getMaximum()) {
+                actionController.startWallet();
             }
         }
         if (data instanceof com.b2beyond.wallet.rpc.model.Error) {
@@ -238,13 +214,6 @@ public class MainFrame extends JFrame implements Observer {
         if (data instanceof BlockHeaderWrapper) {
             dataSynchronizingBlocks.setText("" + progressBar.getValue() + " / " + progressBar.getMaximum());
         }
-        if (data instanceof Error) {
-//            if (canStopWalletIfNotSyncedYet) {
-//                actionController.stopWalletd();
-//                canStopWalletIfNotSyncedYet = false;
-//            }
-        }
-
         if (data instanceof String) {
             setProgressMax(Integer.parseInt((String)data));
         }

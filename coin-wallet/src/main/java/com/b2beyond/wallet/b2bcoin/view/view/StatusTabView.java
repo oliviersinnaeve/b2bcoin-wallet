@@ -70,26 +70,17 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
     public void update(Observable rpcPoller, Object data) {
         if (data instanceof Status) {
             Status viewData = (Status) data;
-            //if (!viewData.getLastBlockHash().equals(lastBlockHash)) {
-                lastBlockHash = viewData.getLastBlockHash();
-                BlockWrapper blockWrapper = actionController.getBlockWrapper(lastBlockHash);
+            lastBlockHash = viewData.getLastBlockHash();
+            BlockWrapper blockWrapper = actionController.getBlockWrapper(lastBlockHash);
 
-                serverPanel.getPeers().setText("" + viewData.getPeerCount());
-                serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
-                if (blockWrapper != null &&  blockWrapper.getBlock() != null) {
-                    serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
-                    serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getAlreadyGeneratedCoins().floatValue()));
-                    serverPanel.getBaseReward().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getBaseReward()));
-                    serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
-
-                    if (actionController.isOldWaletSynced(new Integer("" + (blockWrapper.getBlock().getHeight())))) {
-                        actionController.stopWalletd();
-                        actionController.startWallet();
-                        actionController.setOldBlockchainSynced();
-                        actionController.restartCoinDaemon();
-                    }
-                }
-            //}
+            serverPanel.getPeers().setText("" + viewData.getPeerCount());
+            serverPanel.getLastBlockHash().setText(viewData.getLastBlockHash());
+            if (blockWrapper != null && blockWrapper.getBlock() != null) {
+                serverPanel.getBlockHeight().setText("" + blockWrapper.getBlock().getHeight());
+                serverPanel.getCoinsInNetwork().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getAlreadyGeneratedCoins().floatValue()));
+                serverPanel.getBaseReward().setText(CoinUtil.getTextForNumber(blockWrapper.getBlock().getBaseReward()));
+                serverPanel.getDifficulty().setText("" + blockWrapper.getBlock().getDifficulty());
+            }
         }
         if (data instanceof Addresses) {
             Addresses addresses = (Addresses) data;
@@ -97,7 +88,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
             long fullAmount = 0;
             long fullLockedAmount = 0;
 
-            for (String address: addresses.getAddresses()) {
+            for (String address : addresses.getAddresses()) {
                 AddressBalance addressBalance = actionController.getBalance(address);
 
                 if (addressBalance != null) {
@@ -137,7 +128,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
         }
 
         long fullPayedUnconfirmedAmount = 0;
-        for (TransactionItem item: transactions.getItems()) {
+        for (TransactionItem item : transactions.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 for (Transfer transfer : transaction.getTransfers()) {
                     if (StringUtils.isNotBlank(transfer.getAddress())) {
@@ -156,7 +147,7 @@ public class StatusTabView extends AbstractWhitePanel implements Observer {
     }
 
     private void updateBalances(TransactionItems transactionItems) {
-        for (TransactionItem item: transactionItems.getItems()) {
+        for (TransactionItem item : transactionItems.getItems()) {
             for (Transaction transaction : item.getTransactions()) {
                 long amount = transaction.getAmount();
                 long unlockBlocks = transaction.getUnlockTime();

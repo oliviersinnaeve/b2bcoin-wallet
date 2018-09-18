@@ -43,8 +43,6 @@ public class CoinDaemonOld extends AbstractDaemon {
                     "--log-file", logLocation + daemonProperties.getString("log-file-coin-old"));
 
             process = pb.start();
-            processPid = B2BUtil.getPid(process, operatingSystem, false);
-            LOGGER.debug("Coin Process id retrieved : " + processPid);
 
             Thread outputThread = new Thread(new Runnable() {
                 @Override

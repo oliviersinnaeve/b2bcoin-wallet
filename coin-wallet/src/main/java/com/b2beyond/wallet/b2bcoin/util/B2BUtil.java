@@ -2,13 +2,14 @@ package com.b2beyond.wallet.b2bcoin.util;
 
 /**
  * helper class to check the operating system this Java VM runs in
- *
+ * <p>
  * please keep the notes below as a pseudo-license
- *
+ * <p>
  * http://stackoverflow.com/questions/228477/how-do-i-programmatically-determine-operating-system-in-java
  * compare to http://svn.terracotta.org/svn/tc/dso/tags/2.6.4/code/base/common/src/com/tc/util/runtime/Os.java
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
+
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
@@ -49,9 +50,9 @@ public final class B2BUtil {
     public static Color selectedColor = new Color(135, 220, 248);
     public static Color textColor = new Color(8, 103, 136);
 
-//    public static final DateFormat readFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aa");
+    //    public static final DateFormat readFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aa");
 //    public static final DateFormat alternativeReadFormat = new SimpleDateFormat("dd MMM. yyyy hh:mm:ss");
-    public static final DateFormat writeFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat writeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static final DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
@@ -120,7 +121,7 @@ public final class B2BUtil {
             FileResourceExtractor.extractFromJar(
                     "configs/coin-old.conf",
                     getConfigRoot() + "coin-old.conf");
-            
+
 
             if (Paths.get(getUserHome() + "coin-wallet.conf").toFile().exists()) {
                 LOGGER.trace("delete the previous coin wallet");
@@ -175,7 +176,7 @@ public final class B2BUtil {
         }
     }
 
-    public static void copyDaemonsOnRun(String daemonExecutable, String walletExecutable, String poolMinerExecutable) {
+    public static void copyDaemonsOnRun(String daemonExecutable, String oldDaemonExecutable, String walletExecutable, String poolMinerExecutable) {
         try {
             new File(getBinariesRoot()).mkdirs();
 
@@ -183,44 +184,30 @@ public final class B2BUtil {
 
             LOGGER.debug("Exporting binaries for os : " + os);
 
-            //if (!Paths.get(getBinariesRoot() + daemonExecutable).toFile().exists()) {
-                LOGGER.trace("Exporting the coin daemon");
-                FileResourceExtractor.extractFromJar(
-                        "coin-" + os + "/binaries/" + daemonExecutable,
-                        getBinariesRoot() + daemonExecutable);
+            LOGGER.trace("Exporting the coin daemon");
+            FileResourceExtractor.extractFromJar(
+                    "coin-" + os + "/binaries/" + daemonExecutable,
+                    getBinariesRoot() + daemonExecutable);
 
             LOGGER.trace("Exporting the old coin daemon");
             FileResourceExtractor.extractFromJar(
-                    "coin-" + os + "/binaries/" + daemonExecutable + "-old",
-                    getBinariesRoot() + daemonExecutable + "-old");
-            //}
-            //if (!Paths.get(getBinariesRoot() + walletExecutable).toFile().exists()) {
-                LOGGER.trace("Exporting the wallet daemon");
-                FileResourceExtractor.extractFromJar(
-                        "coin-" + os + "/binaries/" + walletExecutable,
-                        getBinariesRoot() + walletExecutable);
+                    "coin-" + os + "/binaries/" + oldDaemonExecutable,
+                    getBinariesRoot() + oldDaemonExecutable);
 
             LOGGER.trace("Exporting the wallet daemon");
             FileResourceExtractor.extractFromJar(
-                    "coin-" + os + "/binaries/" + walletExecutable + "-old",
-                    getBinariesRoot() + walletExecutable + "-old");
-            //}
+                    "coin-" + os + "/binaries/" + walletExecutable,
+                    getBinariesRoot() + walletExecutable);
+
 
             if (getOperatingSystem().equalsIgnoreCase(LINUX) || getOperatingSystem().equalsIgnoreCase(MAC)) {
-                //if (!Paths.get(getBinariesRoot() + poolMinerExecutable).toFile().exists()) {
-                    LOGGER.trace("Exporting the wallet daemon");
-//                    FileResourceExtractor.extractFromJar(
-//                            "coin-" + os + "/binaries/" + poolMinerExecutable,
-//                            getBinariesRoot() + poolMinerExecutable);
-                //}
+                LOGGER.trace("Exporting the wallet daemon");
 
                 Process p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable);
                 p.waitFor();
-                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + daemonExecutable + "-old") ;
+                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + oldDaemonExecutable);
                 p.waitFor();
                 p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable);
-                p.waitFor();
-                p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + walletExecutable + "-old");
                 p.waitFor();
                 p = Runtime.getRuntime().exec("chmod 755 " + getBinariesRoot() + poolMinerExecutable);
                 p.waitFor();

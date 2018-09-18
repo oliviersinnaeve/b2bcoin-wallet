@@ -112,9 +112,10 @@ public class B2BWallet extends MainFrame {
 
         LOGGER.info("Properties loaded, wallet can get started");
         String daemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
+        String oldDaemonExecutable = applicationProperties.getString("coin-daemon-" + B2BUtil.getOperatingSystem());
         String walletExecutable = applicationProperties.getString("wallet-daemon-" + B2BUtil.getOperatingSystem());
         String poolMinerExecutable = applicationProperties.getString("pool-miner-daemon-" + B2BUtil.getOperatingSystem());
-        B2BUtil.copyDaemonsOnRun(daemonExecutable, walletExecutable, poolMinerExecutable);
+        B2BUtil.copyDaemonsOnRun(daemonExecutable, oldDaemonExecutable, walletExecutable, poolMinerExecutable);
 
         DaemonController coinDaemon = new DaemonController(
                 applicationProperties,

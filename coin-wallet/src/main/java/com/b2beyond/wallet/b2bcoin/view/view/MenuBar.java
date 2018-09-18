@@ -3,10 +3,7 @@ package com.b2beyond.wallet.b2bcoin.view.view;
 import com.b2beyond.wallet.b2bcoin.util.B2BUtil;
 import com.b2beyond.wallet.b2bcoin.view.controller.ActionController;
 import com.b2beyond.wallet.b2bcoin.view.model.ChangeSize;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.AboutPanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.ChangeViewSizePanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.ChooseAddressPanel;
-import com.b2beyond.wallet.b2bcoin.view.view.panel.PanelObservable;
+import com.b2beyond.wallet.b2bcoin.view.view.panel.*;
 import com.b2beyond.wallet.rpc.JsonRpcExecutor;
 import com.b2beyond.wallet.rpc.exception.KnownJsonRpcException;
 import com.b2beyond.wallet.rpc.model.*;
@@ -93,10 +90,10 @@ public class MenuBar extends JMenuBar {
 
         // Reset blockchain sub menu
         JMenuItem resetBlockchainMenuItem = new JMenuItem("Reset blockchain", icon);
-        resetBlockchainMenuItem.setToolTipText("Reset blockchain data");
+        resetBlockchainMenuItem.setToolTipText("Reset full blockchain data");
         resetBlockchainMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                actionController.resetBlockChain(false);
+                actionController.resetBlockChain();
             }
         });
 
@@ -114,30 +111,30 @@ public class MenuBar extends JMenuBar {
         });
 
         // Import address sub menu
-//        JMenuItem importAddressMenuItem = new JMenuItem("Import address", icon);
-//        importAddressMenuItem.setToolTipText("Import address");
-//        importAddressMenuItem.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent ev) {
-//                CreateAddressPanel createAddressPanel = new CreateAddressPanel();
-//                int response = JOptionPane.showConfirmDialog(null,
-//                        createAddressPanel,
-//                        "Import address",
-//                        JOptionPane.OK_CANCEL_OPTION,
-//                        JOptionPane.QUESTION_MESSAGE,
-//                        B2BUtil.getIcon());
-//
-//                if (response == 0) {
-//                    AddressInput addressInput = new AddressInput();
-//                    addressInput.setPublicSpendKey(createAddressPanel.getPublicKey().getText());
-//                    addressInput.setSecretSpendKey(createAddressPanel.getSecretKey().getText());
-//                    Address address = actionController.importAddress(addressInput);
-//                    JOptionPane.showMessageDialog(null,
-//                        address.getAddress(),
-//                        "Address imported - check address view",
-//                        JOptionPane.INFORMATION_MESSAGE);
-//                }
-//            }
-//        });
+        JMenuItem importAddressMenuItem = new JMenuItem("Import address", icon);
+        importAddressMenuItem.setToolTipText("Import address");
+        importAddressMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                CreateAddressPanel createAddressPanel = new CreateAddressPanel();
+                int response = JOptionPane.showConfirmDialog(null,
+                        createAddressPanel,
+                        "Import address",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        B2BUtil.getIcon());
+
+                if (response == 0) {
+                    AddressInput addressInput = new AddressInput();
+                    addressInput.setPublicSpendKey(createAddressPanel.getPublicKey().getText());
+                    addressInput.setSecretSpendKey(createAddressPanel.getSecretKey().getText());
+                    Address address = actionController.importAddress(addressInput);
+                    JOptionPane.showMessageDialog(null,
+                        address.getAddress(),
+                        "Address imported - check address view",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
 
         // Import address sub menu
         JMenuItem createFusionTransactionsMenuItem = new JMenuItem("Fusion address", icon);
@@ -154,7 +151,7 @@ public class MenuBar extends JMenuBar {
 
                 if (response == 0) {
                     FusionEstimateInput input = new FusionEstimateInput();
-                    input.setThreshold(1000000000000l);
+                    input.setThreshold(1000000000000L);
                     input.setAddress(chooseAddressPanel.getAddress());
 
                     try {
@@ -164,7 +161,7 @@ public class MenuBar extends JMenuBar {
                         if (estimate.getFusionReadyCount() > 0) {
                             FusionTransactionInput transactionInput = new FusionTransactionInput();
                             transactionInput.setAddress(chooseAddressPanel.getAddress());
-                            transactionInput.setThreshold(1000000000000l);
+                            transactionInput.setThreshold(1000000000000L);
                             transactionInput.setAnonymity(0);
 
                             actionController.getWalletRpcController().getFusionTransactionExecutor().setReadTimeout(300000);
@@ -193,12 +190,21 @@ public class MenuBar extends JMenuBar {
             }
         });
 
-        // Reset wallet sub menu
-        JMenuItem resetWalletMenuItem = new JMenuItem("Reset wallet", icon);
-        resetWalletMenuItem.setToolTipText("Reset wallet");
-        resetWalletMenuItem.addActionListener(new ActionListener() {
+//        // Reset wallet sub menu
+//        JMenuItem resetWalletMenuItem = new JMenuItem("Reset wallet - Full", icon);
+//        resetWalletMenuItem.setToolTipText("Reset wallet data full");
+//        resetWalletMenuItem.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent ev) {
+//                actionController.resetWalletAndBlockChain();
+//            }
+//        });
+
+        // Reset blockchain sub menu
+        JMenuItem resetBlockchainSimpleMenuItem = new JMenuItem("Reset wallet", icon);
+        resetBlockchainSimpleMenuItem.setToolTipText("Reset wallet data");
+        resetBlockchainSimpleMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                actionController.resetWalletAndBlockChain();
+                actionController.resetWallet();
             }
         });
 
@@ -281,9 +287,10 @@ public class MenuBar extends JMenuBar {
 
         wallet.add(backupWalletMenuItem);
         wallet.add(spendKeysMenuItem);
-        wallet.add(resetWalletMenuItem);
+//        wallet.add(resetWalletMenuItem);
+        wallet.add(resetBlockchainSimpleMenuItem);
         wallet.add(createNewAddressMenuItem);
-        //wallet.add(importAddressMenuItem);
+        wallet.add(importAddressMenuItem);
         wallet.add(createFusionTransactionsMenuItem);
 
 

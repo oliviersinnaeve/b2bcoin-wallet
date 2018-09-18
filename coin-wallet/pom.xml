@@ -255,7 +255,7 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.5.1</version>
+                        <version>1.7.23</version>
                         <executions>
                             <execution>
                                 <id>l4j-clui</id>
@@ -266,9 +266,9 @@
                                 <configuration>
                                     <headerType>gui</headerType>
                                     <stayAlive>true</stayAlive>
-                                    <intialHeapSize>1024</intialHeapSize>
-                                    <runtimeBits>64</runtimeBits>
-                                    <bundleJre64Bit>true</bundleJre64Bit>
+                                    <!--<intialHeapSize>1024</intialHeapSize>-->
+                                    <!--<runtimeBits>64</runtimeBits>-->
+                                    <!--<bundleJre64Bit>true</bundleJre64Bit>-->
                                     <jar>
                                         ${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar
                                     </jar>

@@ -61,7 +61,6 @@ public class WalletDaemon extends AbstractDaemon {
 
                 LOGGER.info("First wallet startup - start process");
                 Process process = pb.start();
-                processPid = B2BUtil.getPid(process, operatingSystem, false);
 
                 InputStream processOut = process.getInputStream();
                 BufferedReader processOutBuffer = new BufferedReader(new InputStreamReader(processOut));
@@ -102,8 +101,6 @@ public class WalletDaemon extends AbstractDaemon {
             }
 
             process = pb.start();
-            processPid = B2BUtil.getPid(process, operatingSystem, true);
-            LOGGER.debug("Wallet Process id retrieved : " + processPid);
 
             Thread outputThread = new Thread(new Runnable() {
                 @Override
