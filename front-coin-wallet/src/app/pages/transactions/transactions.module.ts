@@ -5,7 +5,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { ModalModule } from 'ngx-bootstrap';
 import { MarkdownModule } from 'angular2-markdown';
 
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { routing }       from './transactions.routing';
 import { Transactions } from './transactions.component';

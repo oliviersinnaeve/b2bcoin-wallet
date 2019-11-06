@@ -4,22 +4,23 @@ import { Router } from "@angular/router";
 
 import { UserState } from '../user.state';
 
-import * as b2bcoinModels from '../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
-
-import { websiteId } from '../environment';
+import {
+    Address, AddressBalance, BlockWrapper,
+    FaucetAddressPayment, FaucetResourceService, UserAddress, WalletCoin,
+    WalletResourceService
+} from "../services/com.b2beyond.api.webwallet-service-b2bcoin";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class WalletService {
 
-    public addresses: Array<b2bcoinModels.UserAddress> = [];
-    public coins: Array<b2bcoinModels.WalletCoin> = [];
-    public primaryCoin: b2bcoinModels.WalletCoin = {name: ""} ;
-    public selectedCoin: b2bcoinModels.WalletCoin = {name: ""} ;
+    public addresses: Array<UserAddress> = [];
+    public coins: Array<WalletCoin> = [];
+    public primaryCoin: WalletCoin = {name: ""} ;
+    public selectedCoin: WalletCoin = {name: ""} ;
 
-    public faucetAddress: b2bcoinModels.UserAddress = {};
-    public faucetAddressPayments: Array<b2bcoinModels.FaucetAddressPayment> = [];
+    public faucetAddress: UserAddress = {};
+    public faucetAddressPayments: Array<FaucetAddressPayment> = [];
     public hasFaucetAddress: boolean = false;
 
     public serverInfos = {};
@@ -31,24 +32,24 @@ export class WalletService {
     public addressPayments = {};
 
     @Output()
-    public addressFetchedEmitter = new EventEmitter<b2bcoinModels.UserAddress>();
+    public addressFetchedEmitter = new EventEmitter<UserAddress>();
 
     @Output()
-    public faucetAddressUpdateEmitter = new EventEmitter<b2bcoinModels.UserAddress>();
+    public faucetAddressUpdateEmitter = new EventEmitter<UserAddress>();
 
     @Output()
-    public faucetAddressPaymentsFetchedEmitter = new EventEmitter<Array<b2bcoinModels.FaucetAddressPayment>>();
+    public faucetAddressPaymentsFetchedEmitter = new EventEmitter<Array<FaucetAddressPayment>>();
 
     @Output()
-    public transactionsFetchedEmitter = new EventEmitter<b2bcoinModels.WalletCoin>();
+    public transactionsFetchedEmitter = new EventEmitter<WalletCoin>();
 
     @Output()
-    public paymentsFetchedEmitter = new EventEmitter<b2bcoinModels.WalletCoin>();
+    public paymentsFetchedEmitter = new EventEmitter<WalletCoin>();
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
+                 private walletApi: WalletResourceService,
+                 private faucetApi: FaucetResourceService,
                  private router: Router) {
 
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
@@ -64,7 +65,7 @@ export class WalletService {
 
     public getCoinTypes () {
         if (this.coins == undefined || this.coins.length == 0) {
-            this.walletApi.getCoinTypes().subscribe(result => {
+            this.walletApi.getCoinTypesUsingGET().subscribe(result => {
                     this.coins = result;
 
                     this.getAddresses(true);
@@ -113,7 +114,7 @@ export class WalletService {
 
     public getAddresses (force) {
         if (this.addresses.length == 0 || force) {
-            this.walletApi.getAddresses().subscribe(result => {
+            this.walletApi.getAddressesUsingGET().subscribe(result => {
                 this.addresses = result;
                 if (!this.balancesBusy) {
                     this.balancesBusy = true;
@@ -140,7 +141,7 @@ export class WalletService {
         return this.getNumberOfAddresses(coin) > 0;
     }
 
-    public getNumberOfAddresses (coinType : b2bcoinModels.WalletCoin) {
+    public getNumberOfAddresses (coinType : WalletCoin) {
         let numberOfAddresses = 0;
         for (let i = 0; i < this.addresses.length; i++) {
             if (this.addresses[i].currency.name == coinType.name) {
@@ -150,7 +151,7 @@ export class WalletService {
         return numberOfAddresses;
     }
 
-    public getAddressesForCoin(coinType : b2bcoinModels.WalletCoin) {
+    public getAddressesForCoin(coinType : WalletCoin) {
         let addressesForCoin = [];
         for (let i = 0; i < this.addresses.length; i++) {
             if (this.addresses[i].currency.name == coinType.name) {
@@ -219,7 +220,7 @@ export class WalletService {
         }
 
         for (var i = 0; i < this.addresses.length; i++) {
-            this.walletApi.getTransactionsForAddress(this.addresses[i].currency.name, this.addresses[i]).subscribe(result => {
+            this.walletApi.getTransactionsForAddressUsingPOST(this.addresses[i].currency.name, this.addresses[i]).subscribe(result => {
                     console.log("Transactions result", result);
 
                     result.transactionResponses.forEach(function(element) {
@@ -281,10 +282,10 @@ export class WalletService {
     }
 
     public getSpendKeysObservable(coin, address: string) {
-        let userAddress : b2bcoinModels.UserAddress = {};
+        let userAddress : UserAddress = {};
         userAddress.address = address;
         userAddress.currency = coin;
-        return this.walletApi.getSpendKeys(userAddress);
+        return this.walletApi.getSpendKeysUsingPOST(userAddress);
     }
 
     public getLockedBalance (coin): string {
@@ -330,37 +331,27 @@ export class WalletService {
         }
     }
 
-    public getAddressesObservable (): Observable<Array<b2bcoinModels.Address>> {
-        return this.walletApi.getAddresses();
+    public getAddressesObservable (): Observable<Array<Address>> {
+        return this.walletApi.getAddressesUsingGET();
     }
 
-    public getBalanceObservable (userAddress: b2bcoinModels.UserAddress): Observable<b2bcoinModels.AddressBalance> {
-        return this.walletApi.getBalance(userAddress);
+    public getBalanceObservable (userAddress: UserAddress): Observable<AddressBalance> {
+        return this.walletApi.getBalanceUsingPOST1(userAddress);
     }
 
-    public getLastBlockObservable (coinType: string): Observable<b2bcoinModels.BlockWrapper> {
+    public getLastBlockObservable (coinType: string): Observable<BlockWrapper> {
         //console.log("Getting last block for coin", coinType);
-        return this.walletApi.getLastBlock(coinType);
+        return this.walletApi.getLastBlockUsingGET(coinType);
     }
-
-    //public getAmount (amount: number, coinType): string {
-    //    if (amount !== undefined) {
-    //        if (coinType && coinType.toUpperCase() == "BTC") {
-    //            return (amount).toFixed(8) + " " + coinType.toUpperCase();
-    //        } else if (coinType) {
-    //            return (amount).toFixed(12) + " " + coinType.toUpperCase();
-    //        }
-    //    }
-    //}
 
     public getFaucetAddress() {
         console.log("Fetching faucet");
         let faucetAddressRequest = {
-            websiteId: websiteId,
+            websiteId: environment.websiteId,
             coin: this.primaryCoin
         };
 
-        return this.faucetApi.getFaucetAddress(false, faucetAddressRequest).subscribe(
+        return this.faucetApi.getFaucetAddressUsingPOST(false, faucetAddressRequest).subscribe(
             (result) => {
                 console.log("Faucet address received", result);
                 if (result) {
@@ -381,7 +372,7 @@ export class WalletService {
     public updateFaucetAddress() {
         console.log("Update faucet");
 
-        return this.faucetApi.updateFaucetAddress(this.faucetAddress).subscribe(
+        return this.faucetApi.updateFaucetAddressUsingPOST(this.faucetAddress).subscribe(
             (result) => {
                 console.log("Faucet address updated", result);
                 if (result) {
@@ -397,7 +388,7 @@ export class WalletService {
     }
 
     public getFaucetAddressPayments(address) {
-        return this.faucetApi.getFaucetPayments(address).subscribe(
+        return this.faucetApi.getFaucetPaymentsUsingPOST(address).subscribe(
             (result) => {
                 console.log("Faucet address payments received", result);
                 if (result) {
@@ -413,7 +404,7 @@ export class WalletService {
         );
     }
 
-    private getCoinForName(coinName): b2bcoinModels.WalletCoin {
+    private getCoinForName(coinName): WalletCoin {
         for (let i = 0; i < this.coins.length; i++) {
             if (this.coins[i].name == coinName) {
                 return this.coins[i];

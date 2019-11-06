@@ -1,0 +1,61 @@
+//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.label-250 {
+  width: 250px;
+}
+
+.hidden {
+  display: none;
+}
+
+.float-right {
+  float: right;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.submit-button{
+  cursor: pointer;
+  line-height:30px;
+  color:#a7bfc4;
+  background-color:#0db04b5e;
+  height: 35px;
+  float: right;
+}
+
+.submit-button:hover{
+  background-color:#129a46;
+  color:white;
+}
+
+.alt-color {
+  background: rgba(40, 148, 187, 0.30);
+}
+
+// Table column div style
+.info-style {
+  font-size: 13px;
+  padding: 1px;
+  color: #027;
+  display: flex;
+  margin-left: 10px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.info-style-alt {
+  margin:0 calc(50% - 2em );
+}
+
+// TITLE TEXT
+.title-text {
+  font-size: 40px;
+  color: #a7bfc4;
+  text-align: center;
+}

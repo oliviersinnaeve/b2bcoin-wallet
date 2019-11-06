@@ -13,7 +13,7 @@ import { Dashboard } from './dashboard.component';
 import { routing } from './dashboard.routing';
 
 import { TooltipModule } from 'ngx-bootstrap';
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 import { WalletInfo } from './walletInfo';

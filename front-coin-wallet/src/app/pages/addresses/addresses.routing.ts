@@ -1,7 +1,6 @@
 import { Routes, RouterModule }  from '@angular/router';
 
 import { Addresses } from './addresses.component';
-import { Overview } from './components/overview/overview.component';
 
 // noinspection TypeScriptValidateTypes
 const routes: Routes = [

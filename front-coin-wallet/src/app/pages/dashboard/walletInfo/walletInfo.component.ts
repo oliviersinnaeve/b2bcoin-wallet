@@ -6,21 +6,18 @@ import { UserState } from '../../../user.state';
 import { WalletService } from '../../walletService.service';
 import { TransactionsService } from '../../transactions/transactions.service';
 
-import * as Chart from 'chart.js';
-
-import 'style-loader!./walletInfo.scss';
-
-import * as b2bcoinModels from '../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import * as b2bcoinModels from '../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
+import {WalletResourceService} from "../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
 
 
 @Component({
     selector: 'wallet-info',
-    templateUrl: './walletInfo.html'
+    templateUrl: './walletInfo.html',
+    styleUrls:['./walletInfo.scss']
 })
 export class WalletInfo implements OnInit {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
     @Input('coin')
     public coin : b2bcoinModels.WalletCoin;
@@ -40,7 +37,7 @@ export class WalletInfo implements OnInit {
     public currentBlockHeight: number = 0;
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private walletApi: WalletResourceService,
                  private walletService: WalletService,
                  private transactionsService: TransactionsService,
                  private router: Router) {
@@ -74,7 +71,7 @@ export class WalletInfo implements OnInit {
     public createNewAddress () {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
-            this.walletApi.createAddress(this.coin.name).subscribe(
+            this.walletApi.createAddressUsingGET(this.coin.name).subscribe(
                     result => {
                         this.creatingWallet = false;
                         this.createAddressModal.show();

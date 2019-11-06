@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { NgaModule } from '../../theme/nga.module';
 import { MarkdownModule } from 'angular2-markdown';
 import { AdsenseModule } from 'ng2-adsense';
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ModalModule } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap';
 
 import { routing }       from './coins.routing';
 import { Coins }       from './coins.component';
-import { CoinOverview } from './components/overview/overview.component';
+import { CoinOverview } from './components/overview';
 
 @NgModule({
     imports: [

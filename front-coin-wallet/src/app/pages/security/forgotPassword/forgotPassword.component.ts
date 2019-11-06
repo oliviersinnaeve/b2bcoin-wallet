@@ -1,22 +1,19 @@
-import { Component } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator } from '../../../theme/validators';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmailValidator} from '../../../theme/validators';
 
-import { TranslateService } from 'ng2-translate';
+import {TranslateService} from '@ngx-translate/core';
 
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import {UserState} from '../../../user.state';
 
-import { UserState } from '../../../user.state';
-
-import { websiteId } from '../../../environment';
-
-import 'style-loader!./forgotPassword.scss';
+import {UserResourceService} from "../../../services/com.b2beyond.api.webwallet-service-user";
+import {environment} from "../../../../environments/environment";
 
 @Component({
     selector: 'forgotPassword',
     templateUrl: './forgotPassword.html',
+    styleUrls:['./forgotPassword.scss']
 })
 export class ForgotPassword {
 
@@ -30,7 +27,7 @@ export class ForgotPassword {
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private router: Router,
                  private translate: TranslateService) {
         this.form = fb.group({
@@ -52,11 +49,11 @@ export class ForgotPassword {
         this.messages = [];
         this.errors = [];
 
-        values.websiteId = websiteId;
+        values.websiteId = environment.websiteId;
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.forgotPassword(values).subscribe(result => {
+            this.userApi.forgotPasswordUsingPOST(values).subscribe(result => {
                     this.success = true;
                     this.messages.push("Reset password mail was send");
                     this.submitted = false;

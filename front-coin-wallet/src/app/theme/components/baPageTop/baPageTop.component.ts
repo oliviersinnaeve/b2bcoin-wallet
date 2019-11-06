@@ -4,13 +4,13 @@ import { GlobalState } from '../../../global.state';
 import { UserState } from '../../../user.state';
 
 import { TransactionsService } from '../../../pages/transactions/transactions.service';
-import { WalletService } from '../../../pages/walletService.service';
+import { WalletService } from '../../../pages';
 
-import 'style-loader!./baPageTop.scss';
 
 @Component({
     selector: 'ba-page-top',
     templateUrl: './baPageTop.html',
+    styleUrls:['./baPageTop.scss']
 })
 export class BaPageTop {
 

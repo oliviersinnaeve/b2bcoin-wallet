@@ -1,14 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ModalDirective } from 'ngx-bootstrap';
-import { Router } from "@angular/router";
-import { UserState } from '../../../../user.state';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {UserState} from '../../../../user.state';
 
 
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import * as b2bcoinModels from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
+import {WalletResourceService} from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin/';
 
-import { TransactionsService } from '../../../transactions/transactions.service';
-import { WalletService } from '../../../walletService.service';
+import {TransactionsService} from '../../../transactions/transactions.service';
+import {WalletService} from '../../../walletService.service';
 
 
 @Component({
@@ -19,16 +18,16 @@ import { WalletService } from '../../../walletService.service';
 
 export class ExplorerResult implements OnInit {
 
-    public result : b2bcoinModels.BlockOrTransactionResponse = null;
+    public result: b2bcoinModels.BlockOrTransactionResponse = null;
 
     public searching: boolean = false;
 
 
-    constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private transactionService: TransactionsService,
-                 private walletService: WalletService,
-                 private router: Router) {
+    constructor(private userState: UserState,
+                private walletApi: WalletResourceService,
+                private transactionService: TransactionsService,
+                private walletService: WalletService,
+                private router: Router) {
 
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
 
@@ -60,7 +59,7 @@ export class ExplorerResult implements OnInit {
         if (this.transactionService.coin != undefined) {
             //console.log("In transaction service init with searchString", this.transactionService.searchString);
             //console.log("In transaction service init with coin", this.transactionService.coin);
-            this.walletApi.getBlockOrTransaction(this.transactionService.coin.name, {"hash": this.transactionService.searchString}).subscribe(result => {
+            this.walletApi.getBlockOrTransactionUsingPOST(this.transactionService.coin.name, {"hash": this.transactionService.searchString}).subscribe(result => {
                     console.log("Setting result", result);
                     this.result = result;
                     if (this.result.blockWrapper == undefined) {
@@ -72,7 +71,7 @@ export class ExplorerResult implements OnInit {
                     }
                     this.searching = false;
                 },
-                    error => {
+                error => {
                     if (error.status === 401) {
                         this.userState.handleError(error, this.ngOnInit, this);
                     }
@@ -113,7 +112,7 @@ export class ExplorerResult implements OnInit {
         }
     }
 
-    public getDate(timestamp : number): string {
+    public getDate(timestamp: number): string {
         //console.log("time to parse", timestamp);
         if (timestamp != undefined && timestamp != null) {
             return new Date(timestamp * 1000).toDateString();

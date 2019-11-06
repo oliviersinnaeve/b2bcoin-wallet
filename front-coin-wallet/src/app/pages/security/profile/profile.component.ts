@@ -1,33 +1,27 @@
 import {Component} from '@angular/core';
-import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {EmailValidator, EqualPasswordsValidator} from '../../../theme/validators';
+import {FormBuilder} from '@angular/forms';
+import {UserState} from '../../../user.state';
 
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
-
-import { websiteId } from '../../../environment';
-
-import { UserState } from '../../../user.state';
-
-import 'style-loader!./profile.scss';
+import {User, UserResourceService} from "../../../services/com.b2beyond.api.webwallet-service-user";
 
 
 @Component({
     selector: 'profile',
     templateUrl: './profile.html',
+    styleUrls: ['./profile.scss']
 })
 export class Profile {
 
     public messages: Array<string> = [];
     public errors: Array<string> = [];
 
-    public user: userModels.User;
+    public user: User;
     public userImage: any = "//placehold.it/100";
 
     public submitted: boolean = false;
 
     constructor (private fb: FormBuilder,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private userState: UserState) {
 
         this.initialize();

@@ -19,7 +19,7 @@ export class JsonSchemaFormComponent implements OnInit, OnChanges, AfterViewInit
 
     static loaded = false;
 
-    @ViewChild('jsonSchemaForm') editorContent: ElementRef;
+    @ViewChild('jsonSchemaForm', {static: false}) editorContent: ElementRef;
 
     @Input() schema: {title: "", properties: {}};
     @Input() form: Array<any> = [];

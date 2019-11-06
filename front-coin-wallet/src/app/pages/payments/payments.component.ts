@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
-import 'style-loader!./payments.scss';
 
 @Component({
     selector: 'payments',
-    template: `<router-outlet></router-outlet>`
+    template: `<router-outlet></router-outlet>`,
+    styleUrls: ['./payments.scss']
 })
 export class Payments {
 

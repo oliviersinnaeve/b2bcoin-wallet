@@ -5,26 +5,24 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { UserState } from '../../../user.state';
 import { WalletService } from '../../walletService.service';
 
-import 'style-loader!./walletInfoFull.scss';
-
-import * as b2bcoinModels from '../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import {WalletResourceService} from "../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
 
 
 @Component({
     selector: 'wallet-info-full',
-    templateUrl: './walletInfoFull.html'
+    templateUrl: './walletInfoFull.html',
+    styleUrls:['./walletInfoFull.scss']
 })
 export class WalletInfoFull {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
 
     public creatingWallet = false;
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private walletApi: WalletResourceService,
                  private walletService: WalletService,
                  private router: Router) {
         this.walletApi.defaultHeaders = userState.getExtraHeaders();
@@ -33,7 +31,7 @@ export class WalletInfoFull {
     public createNewAddress () {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
-            this.walletApi.createAddress(this.walletService.primaryCoin.name).subscribe(
+            this.walletApi.createAddressUsingGET(this.walletService.primaryCoin.name).subscribe(
                     result => {
                         this.walletService.addresses = [];
                         this.walletService.addressBalances = {};

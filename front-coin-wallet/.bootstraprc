@@ -22,7 +22,8 @@ styleLoaders:
 #   entry: 'bootstrap-loader/extractStyles'
 extractStyles: false
 # env:
-#   development:
+#   development:nvm list
+
 #     extractStyles: false
 #   production:
 #     extractStyles: true

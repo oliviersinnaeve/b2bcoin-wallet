@@ -8,15 +8,12 @@ import { LocalDataSource } from 'ng2-smart-table';
 
 import { WalletService } from '../../../walletService.service';
 
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
-
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
+import * as b2bcoinModels from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
 
 
 import 'rxjs/Rx';
+import {FaucetResourceService, WalletResourceService} from "../../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
     selector: 'faucet-owner',
@@ -26,7 +23,7 @@ import 'rxjs/Rx';
 
 export class FaucetOwner implements OnInit {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
     public creatingWallet = false;
 
@@ -59,8 +56,8 @@ export class FaucetOwner implements OnInit {
     };
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
+                 private walletApi: WalletResourceService,
+                 private faucetApi: FaucetResourceService,
                  private walletService: WalletService,
                  private notificationsService: NotificationsService,
                  private router: Router) {
@@ -101,13 +98,13 @@ export class FaucetOwner implements OnInit {
             userAddress.currency = this.walletService.primaryCoin;
 
             let request: b2bcoinModels.CreateFaucetAddressRequest = {
-                websiteId: websiteId,
-                endpointRoot: baseUrl + "/b2bcoin/api/faucet",
+                websiteId: environment.websiteId,
+                endpointRoot: environment.wallet_BASE_URL + "/api/faucet",
                 userAddress: userAddress,
                 faucetUser: faucetUser
             };
 
-            this.faucetApi.createFaucetAddress(request).subscribe(
+            this.faucetApi.createFaucetAddressUsingPOST(request).subscribe(
                     result => {
                         this.creatingWallet = false;
                         //if (faucetUser) {

@@ -2,6 +2,11 @@
 @import "dropdown";
 @import "tabs";
 
+
+*::after {
+  box-sizing: unset;
+}
+
 .btn-secondary {
   color: #086788;
   background-color: #c8e2e7;

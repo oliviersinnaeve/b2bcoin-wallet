@@ -1,19 +1,20 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { Router } from "@angular/router";
-import { UserState } from '../../../../user.state';
-import { ModalDirective } from 'ngx-bootstrap';
-import { NotificationsService } from 'angular2-notifications';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from "@angular/router";
+import {UserState} from '../../../../user.state';
+import {ModalDirective} from 'ngx-bootstrap';
+import {NotificationsService} from 'angular2-notifications';
 
-import { WalletService } from '../../../walletService.service';
-
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
-
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
+import {WalletService} from '../../../walletService.service';
 
 import 'rxjs/Rx';
+import {
+    CreateFaucetAddressRequest,
+    FaucetAddressRequest,
+    FaucetResourceService,
+    UserAddress,
+    WalletResourceService
+} from "../../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
+import {environment} from "../../../../../environments/environment";
 
 @Component({
     selector: 'faucet-user',
@@ -23,19 +24,19 @@ import 'rxjs/Rx';
 
 export class FaucetUserOverview implements OnInit {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
     public creatingWallet = false;
     public creatingPayment = false;
 
     public selectedCoin = {};
 
-    public faucetUserAddress: b2bcoinModels.UserAddress = {};
+    public faucetUserAddress: UserAddress = {};
     public hasFaucetUserAddress: boolean = false;
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
+                 private walletApi: WalletResourceService,
+                 private faucetApi: FaucetResourceService,
                  private walletService: WalletService,
                  private notificationsService: NotificationsService,
                  private router: Router) {
@@ -57,11 +58,11 @@ export class FaucetUserOverview implements OnInit {
 
     private initialize(coin): void {
         console.log("Initialize faucetUserAddress !!!", coin);
-        let request: b2bcoinModels.FaucetAddressRequest = {};
+        let request: FaucetAddressRequest = {};
         request.faucetUser = true;
         request.coin = coin;
 
-        this.faucetApi.getFaucetAddress(true, request).subscribe(
+        this.faucetApi.getFaucetAddressUsingPOST(true, request).subscribe(
             result => {
                 console.log("faucet user address", result);
                 if (result && result.address) {
@@ -94,17 +95,17 @@ export class FaucetUserOverview implements OnInit {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
 
-            let userAddress: b2bcoinModels.UserAddress = {};
+            let userAddress: UserAddress = {};
             userAddress.currency = this.walletService.primaryCoin;
 
-            let request: b2bcoinModels.CreateFaucetAddressRequest = {
-                websiteId: websiteId,
-                endpointRoot: baseUrl + "/b2bcoin/api/faucet",
+            let request: CreateFaucetAddressRequest = {
+                websiteId: environment.websiteId,
+                endpointRoot: environment.wallet_BASE_URL + "/api/faucet",
                 userAddress: userAddress,
                 faucetUser: faucetUser
             };
 
-            this.faucetApi.createFaucetAddress(request).subscribe(
+            this.faucetApi.createFaucetAddressUsingPOST(request).subscribe(
                     result => {
                         this.creatingWallet = false;
                         if (faucetUser) {
@@ -125,9 +126,9 @@ export class FaucetUserOverview implements OnInit {
         }
     }
 
-    public payout(address: b2bcoinModels.UserAddress) {
+    public payout(address: UserAddress) {
         this.creatingPayment = true;
-        this.faucetApi.payout(address).subscribe(
+        this.faucetApi.payoutUsingPOST(address).subscribe(
             result => {
                 if (result.ok) {
                     this.initialize(this.walletService.primaryCoin);

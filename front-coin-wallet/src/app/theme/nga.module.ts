@@ -2,9 +2,9 @@ import { NgModule, ModuleWithProviders }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgUploaderModule } from 'ngx-uploader';
+import { NgxUploaderModule } from 'ngx-uploader';
 
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   BaThemeConfig
@@ -15,30 +15,24 @@ import {
 } from './theme.configProvider';
 
 import {
-    BaAmChart,
     BaBackTop,
     BaCard,
-    BaChartistChart,
     BaCheckbox,
     BaContentTop,
-    BaFullCalendar,
     BaMenuItem,
     BaMenu,
     BaMsgCenter,
     BaMultiCheckbox,
     BaPageTop,
-    BaPictureUploader,
     BaSidebar,
     MonacoEditorComponent,
-    JsonSchemaFormComponent,
-    JsonEditorComponent
+    JsonSchemaFormComponent
 } from './components';
 
 import { BaCardBlur } from './components/baCard/baCardBlur.directive';
 
 import {
     BaScrollPosition,
-    BaSlimScroll,
     BaThemeRun,
     B2BCurrencyFormatterDirective,
     BTCCurrencyFormatterDirective,
@@ -65,28 +59,22 @@ import {
 } from './validators';
 
 const NGA_COMPONENTS = [
-    BaAmChart,
     BaBackTop,
     BaCard,
-    BaChartistChart,
     BaCheckbox,
     BaContentTop,
-    BaFullCalendar,
     BaMenuItem,
     BaMenu,
     BaMsgCenter,
     BaMultiCheckbox,
     BaPageTop,
-    BaPictureUploader,
     BaSidebar,
     MonacoEditorComponent,
-    JsonSchemaFormComponent,
-    JsonEditorComponent
+    JsonSchemaFormComponent
 ];
 
 const NGA_DIRECTIVES = [
     BaScrollPosition,
-    BaSlimScroll,
     BaThemeRun,
     BaCardBlur,
     B2BCurrencyFormatterDirective,
@@ -124,7 +112,7 @@ const NGA_VALIDATORS = [
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        NgUploaderModule,
+        NgxUploaderModule,
         TranslateModule.forRoot()
     ],
     exports: [

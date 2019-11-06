@@ -3,13 +3,11 @@ import { Component, ViewContainerRef } from '@angular/core';
 
 import { GlobalState } from './global.state';
 import { BaImageLoaderService, BaThemePreloader, BaThemeSpinner } from './theme/services';
-import { BaThemeConfig } from './theme/theme.config';
-import { layoutPaths } from './theme/theme.constants';
+import { BaThemeConfig } from './theme';
+import { layoutPaths } from './theme';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
-import 'style-loader!./app.scss';
-import 'style-loader!./theme/initial.scss';
 
 /*
  * App Component
@@ -17,6 +15,7 @@ import 'style-loader!./theme/initial.scss';
  */
 @Component({
     selector: 'app',
+    styleUrls: ['./app.scss', './theme/initial.scss'],
     template: `
     <main [ngClass]="{'menu-collapsed': isMenuCollapsed}" baThemeRun>
       <div class="additional-bg"></div>
@@ -41,7 +40,7 @@ export class App {
         translate.setDefaultLang('en');
 
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        let language = navigator.languages && navigator.languages[0].split("-")[0];
         translate.use(language);
 
         this._loadImages();

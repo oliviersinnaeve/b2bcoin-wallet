@@ -2,21 +2,16 @@ import {Component} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {EmailValidator, EqualPasswordsValidator} from '../../../theme/validators';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
-
-import { websiteId } from '../../../environment';
-
-import 'style-loader!./register.scss';
-
-var CryptoJS = require('crypto-js');
+import {User, UserResourceService} from "../../../services/com.b2beyond.api.webwallet-service-user";
+import {environment} from "../../../../environments/environment";
 
 
 @Component({
     selector: 'register',
     templateUrl: './register.html',
+    styleUrls:['./register.scss']
 })
 export class Register {
 
@@ -33,7 +28,7 @@ export class Register {
     public submitted: boolean = false;
 
     constructor (private fb: FormBuilder,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private translate: TranslateService) {
 
         this.form = fb.group({
@@ -54,7 +49,7 @@ export class Register {
         // this language will be used as a fallback when a translation isn't found in the current language
         translate.setDefaultLang('en');
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        let language = navigator.languages && navigator.languages[0].split("-")[0];
         console.log("Using language", language);
         translate.use(language);
     }
@@ -62,17 +57,16 @@ export class Register {
     public onSubmit (values: {name: "", email: "", passwords: {password}}): void {
         this.messages = [];
         this.errors = [];
-        let user: userModels.User = {};
-        user.websiteId = websiteId;
-        user.userDetails = {websiteId: websiteId, userId: values.email, name: values.name, email: values.email};
+        let user: User = {};
+        user.websiteId = environment.websiteId;
+        user.userDetails = {websiteId: user.websiteId, userId: values.email, name: values.name, email: values.email};
         user.userId = values.email;
         user.password = values.passwords.password;
-        //user.password = CryptoJS.AES.encrypt(values.passwords.password, values.email).toString();
 
-        //console.log(user);
+
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.register(user).subscribe(result => {
+            this.userApi.registerUsingPOST(user).subscribe(result => {
                     //console.log(result);
                     this.messages.push("You have successfully registered, please check your mail and click the activation link");
                 },

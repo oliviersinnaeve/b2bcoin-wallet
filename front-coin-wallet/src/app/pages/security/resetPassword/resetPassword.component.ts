@@ -1,20 +1,18 @@
-import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator, EqualPasswordsValidator } from '../../../theme/validators';
+import {Component} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EqualPasswordsValidator} from '../../../theme/validators';
 
-import { TranslateService } from 'ng2-translate';
+import {TranslateService} from '@ngx-translate/core';
 
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
+import {UserState} from '../../../user.state';
 
-import { UserState } from '../../../user.state';
-
-import 'style-loader!./resetPassword.scss';
+import {User, UserResourceService} from "../../../services/com.b2beyond.api.webwallet-service-user";
 
 @Component({
     selector: 'resetPassword',
     templateUrl: './resetPassword.html',
+    styleUrls:['./resetPassword.scss']
 })
 export class ResetPassword {
 
@@ -32,7 +30,7 @@ export class ResetPassword {
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private router: Router,
                  private route: ActivatedRoute,
                  private translate: TranslateService) {
@@ -66,12 +64,12 @@ export class ResetPassword {
     public onSubmit (values: {passwords: { password}}): void {
         //console.log("Submitting password forgot email", values);
         // this.messages = [];
-        let user: userModels.User = {};
+        let user: User = {};
         user.password = values.passwords.password;
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.resetPassword(this.websiteId, this.resetToken, user).subscribe(result => {
+            this.userApi.resetPasswordUsingPOST(this.websiteId, this.resetToken, user).subscribe(result => {
                     this.success = true;
                 },
                     error => {

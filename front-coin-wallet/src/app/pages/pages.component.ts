@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 import { BaMenuService } from '../theme';
 import { PAGES_MENU } from './pages.menu';

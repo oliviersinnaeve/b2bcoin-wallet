@@ -3,14 +3,15 @@ import { Router } from "@angular/router";
 import { UserState } from '../../../../user.state';
 import { ModalDirective } from 'ngx-bootstrap';
 
-import { TranslateService } from 'ng2-translate';
+
 import { WalletService } from '../../../walletService.service';
 
 import { NotificationsService } from 'angular2-notifications';
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import {WalletKeys, WalletResourceService} from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin';
 
 import 'rxjs/Rx';
+import {AddressBalance, WalletCoin} from "../../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'address-overview',
@@ -21,28 +22,28 @@ import 'rxjs/Rx';
 export class Overview {
 
     @Input('coin')
-    public coin: b2bcoinModels.WalletCoin;
+    public coin: WalletCoin;
 
     @Input('showCoinLogo')
     public showCoinLogo: boolean = true;
 
-    @ViewChild('confirmDeleteAddressModal') confirmDeleteAddressModal: ModalDirective;
-    @ViewChild('deleteAddressModal') deleteAddressModal: ModalDirective;
-    @ViewChild('viewKeysModal') viewKeysModal: ModalDirective;
+    @ViewChild('confirmDeleteAddressModal', {static: false}) confirmDeleteAddressModal: ModalDirective;
+    @ViewChild('deleteAddressModal', {static: false}) deleteAddressModal: ModalDirective;
+    @ViewChild('viewKeysModal', {static: false}) viewKeysModal: ModalDirective;
 
-    public keys: b2bcoinModels.SpendKeys = {};
+    public keys: WalletKeys = {};
 
     //public addresses: Array<b2bcoinModels.AddressBalance> = [];
-    private addressToDelete : b2bcoinModels.AddressBalance;
+    private addressToDelete : AddressBalance;
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private walletResourceService: WalletResourceService,
                  private walletService: WalletService,
                  private notificationsService: NotificationsService,
                  private translate: TranslateService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
+        this.walletResourceService.defaultHeaders = userState.getExtraHeaders();
 
         //this.walletService.getAddresses(false);
     }
@@ -50,7 +51,7 @@ export class Overview {
     public deleteAddress () {
         this.confirmDeleteAddressModal.hide();
 
-        this.walletApi.deleteAddress(this.coin.name, { address: this.addressToDelete.address }).subscribe(
+        this.walletResourceService.deleteAddressUsingPOST(this.coin.name, { address: this.addressToDelete.address }).subscribe(
             result => {
 
                 this.addressToDelete = undefined;
@@ -81,8 +82,9 @@ export class Overview {
 
     public showViewKeys(item) {
         this.keys = {
-            spendPublicKey: "Loading ...",
-            spendSecretKey: "Loading ..."
+            publicViewKey: "Loading ...",
+            privateSpendKey: "Loading ...",
+            privateViewKey: "Loading ..."
         };
         this.walletService.getSpendKeysObservable(this.coin, item.address).subscribe(
             (success) => {

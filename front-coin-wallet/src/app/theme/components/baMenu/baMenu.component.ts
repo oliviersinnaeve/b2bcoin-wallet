@@ -2,16 +2,16 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 import { BaMenuService } from '../../services';
 import { GlobalState } from '../../../global.state';
 
-import 'style-loader!./baMenu.scss';
 
 @Component({
     selector: 'ba-menu',
-    templateUrl: './baMenu.html'
+    templateUrl: './baMenu.html',
+    styleUrls: ['./baMenu.scss']
 })
 export class BaMenu {
 

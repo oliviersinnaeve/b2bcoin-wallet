@@ -1,22 +1,16 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { Router } from "@angular/router";
-import { Http, Headers, RequestOptionsArgs, Response, URLSearchParams } from '@angular/http';
-import { ModalDirective } from 'ngx-bootstrap';
-import { NotificationsService } from 'angular2-notifications';
+import {Component, Input, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 
-import { LocalDataSource } from 'ng2-smart-table';
+import {NotificationsService} from 'angular2-notifications';
 
-import { UserState } from '../../../../user.state';
+import {UserState} from '../../../../user.state';
 
-import { WalletService } from '../../../walletService.service';
-import { TransactionsService } from '../../../transactions/transactions.service';
+import {WalletService} from '../../../walletService.service';
+import {TransactionsService} from '../../transactions.service';
 
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import * as b2bcoinModels from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
 
-import { websiteId } from '../../../../environment';
-
-import { PagerService } from '../../../../services/pager.service'
+import {PagerService} from '../../../../services/pager.service'
 
 @Component({
     selector: 'transaction-overview',
@@ -42,13 +36,10 @@ export class TransactionOverview implements OnInit {
 
     constructor (private notificationsService: NotificationsService,
                  private userState: UserState,
-                 private walletApi: WalletApi,
                  private walletService: WalletService,
                  private pagerService: PagerService,
                  private transactionsService: TransactionsService,
-                 private http: Http,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
     }
 
 

@@ -6,7 +6,7 @@ import { MarkdownModule } from 'angular2-markdown';
 import { AdsenseModule } from 'ng2-adsense';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { ModalModule } from 'ngx-bootstrap';

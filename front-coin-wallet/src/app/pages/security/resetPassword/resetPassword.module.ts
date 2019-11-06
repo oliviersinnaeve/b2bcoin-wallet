@@ -3,7 +3,7 @@ import { CommonModule }  from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgaModule } from '../../../theme/nga.module';
 
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ResetPassword } from './resetPassword.component';
 import { routing }       from './resetPassword.routing';

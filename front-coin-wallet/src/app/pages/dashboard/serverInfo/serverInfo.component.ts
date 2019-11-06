@@ -1,20 +1,17 @@
-import { Component, ViewChild, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap';
+import {Component, Input} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { UserState } from '../../../user.state';
-import { WalletService } from '../../walletService.service';
-import { TransactionsService } from '../../transactions/transactions.service';
+import {UserState} from '../../../user.state';
+import {WalletService} from '../../walletService.service';
+import {TransactionsService} from '../../transactions/transactions.service';
 
-import 'style-loader!./serverInfo.scss';
-
-import * as b2bcoinModels from '../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import * as b2bcoinModels from '../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
 
 
 @Component({
     selector: 'server-info',
-    templateUrl: './serverInfo.html'
+    templateUrl: './serverInfo.html',
+    styleUrls:['./serverInfo.scss']
 })
 export class ServerInfo {
 
@@ -22,11 +19,9 @@ export class ServerInfo {
     public coin : b2bcoinModels.WalletCoin;
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
                  private walletService: WalletService,
                  private transactionsService: TransactionsService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
     }
 
     public getNumberOfCoinsInNetwork(): string {

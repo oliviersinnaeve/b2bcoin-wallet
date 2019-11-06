@@ -1,13 +1,12 @@
 import {Component} from '@angular/core';
 
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
     selector: 'dashboard',
     styleUrls: ['./dashboard.scss'],
     template: '<router-outlet></router-outlet><simple-notifications [options]="options"></simple-notifications>'
-    //templateUrl: './dashboard.html'
 })
 export class Dashboard {
 

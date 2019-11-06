@@ -4,9 +4,7 @@ import { UserState } from '../../../../user.state';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { WalletService } from '../../../walletService.service';
-
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import { WalletResourceService } from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin';
 
 import 'rxjs/Rx';
 
@@ -18,17 +16,17 @@ import 'rxjs/Rx';
 
 export class CoinOverview {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
     public creatingWallet = false;
 
     public selectedCoin = {};
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private walletResourceService: WalletResourceService,
                  private walletService: WalletService,
                  private router: Router) {
-        this.walletApi.defaultHeaders = userState.getExtraHeaders();
+        this.walletResourceService.defaultHeaders = userState.getExtraHeaders();
 
         //this.walletService.getAddresses(false);
     }
@@ -37,7 +35,7 @@ export class CoinOverview {
         if (!this.creatingWallet) {
             this.creatingWallet = true;
             this.selectedCoin = coin;
-            this.walletApi.createAddress(coin.name).subscribe(
+            this.walletResourceService.createAddressUsingGET(coin.name).subscribe(
                     result => {
                         this.creatingWallet = false;
                         this.walletService.addresses = [];

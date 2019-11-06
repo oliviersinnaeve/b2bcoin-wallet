@@ -21,7 +21,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
     static loaded = false;
 
-    @ViewChild('editor') editorContent: ElementRef;
+    @ViewChild('editor', {static: false}) editorContent: ElementRef;
     @Input() language: string;
     @Input() language_defaults: any = null;
     @Input() options: any = {};

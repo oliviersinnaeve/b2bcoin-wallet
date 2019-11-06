@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'angular2-cookie/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { Headers } from '@angular/http';
 
-import { UserApi } from './services/com.b2beyond.api.user/api/UserApi';
-import * as userModels from './services/com.b2beyond.api.user/model/models';
+import {HttpHeaders} from "@angular/common/http";
+import {User, UserResourceService} from "./services/com.b2beyond.api.webwallet-service-user";
+import {CookieService} from "angular2-cookie/core";
 
 
 @Injectable()
 export class UserState {
 
-    private user: userModels.User = {};
+    private user: User = {};
 
     private handlingError: boolean = false;
 
-    private defaultHeaders: Headers = new Headers();
+    private defaultHeaders: HttpHeaders = new HttpHeaders();
 
     constructor (private cookieService: CookieService,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private router: Router,
                  private route: ActivatedRoute) {
     }
@@ -43,11 +42,11 @@ export class UserState {
         if (!this.handlingError) {
             this.handlingError = true;
             this.user = null;
-            let tmpUser: userModels.User = JSON.parse(this.cookieService.get("xyz"));
+            let tmpUser: User = JSON.parse(this.cookieService.get("xyz"));
             this.defaultHeaders.delete("Authorization");
             this.defaultHeaders.append("Authorization", tmpUser.authenticationRefreshToken);
 
-            this.userApi.refresh(tmpUser).subscribe(
+            this.userApi.refreshUsingPOST(tmpUser).subscribe(
                 (result) => {
                     this.setUser(result);
                     callback.call(context);
@@ -58,25 +57,25 @@ export class UserState {
             )
         } else {
             //if (this.user !== null) {
-                console.log("Recalling function")
+                console.log("Recalling function");
                 callback.call(context);
                 this.handlingError = false;
             //}
         }
     }
 
-    public setUser (user: userModels.User) {
+    public setUser (user: User) {
         this.cookieService.put("xyz", JSON.stringify(user));
         this.user = user;
         this.defaultHeaders.delete("Authorization");
         this.defaultHeaders.append("Authorization", user.authenticationToken);
     }
 
-    public getUser (): userModels.User {
+    public getUser (): User {
         return this.user;
     }
 
-    public getExtraHeaders (): Headers {
+    public getExtraHeaders (): HttpHeaders {
         return this.defaultHeaders;
     }
 

@@ -6,11 +6,10 @@ import { UserState } from '../../../../user.state';
 import { WalletService } from '../../../walletService.service';
 import { TransactionsService } from '../../../transactions/transactions.service';
 
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
+import * as b2bcoinModels from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin/model/models';
+import { WalletResourceService } from '../../../../services/com.b2beyond.api.webwallet-service-b2bcoin';
 
 
-//import { B2BCurrencyFormatterDirective } from "../../../../theme/directives/formatter/b2bCurrencyFormatter.directive";
 
 @Component({
     selector: 'create',
@@ -20,8 +19,8 @@ import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/Wal
 
 export class CreatePayment implements OnInit {
 
-    @ViewChild('createTransferModal') createTransferModal: ModalDirective;
-    @ViewChild('messageModal') messageModal: ModalDirective;
+    @ViewChild('createTransferModal', {static: false}) createTransferModal: ModalDirective;
+    @ViewChild('messageModal', {static: false}) messageModal: ModalDirective;
 
     public selectedAddress: b2bcoinModels.AddressBalance = {};
     public fee: number = 0.000001;
@@ -49,7 +48,7 @@ export class CreatePayment implements OnInit {
     };
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
+                 private walletApi: WalletResourceService,
                  private walletService: WalletService,
                  private transactionsService: TransactionsService,
                  private router: Router) {
@@ -91,7 +90,7 @@ export class CreatePayment implements OnInit {
         this.payment.addresses.push(address);
         this.payment.address = this.selectedAddress.address;
 
-        this.walletApi.createPayment(this.walletService.selectedCoin.name, this.payment).subscribe(result => {
+        this.walletApi.createPaymentUsingPOST(this.walletService.selectedCoin.name, this.payment).subscribe(result => {
                 this.transactionHash = result.transactionHash;
 
                 this.payment = {

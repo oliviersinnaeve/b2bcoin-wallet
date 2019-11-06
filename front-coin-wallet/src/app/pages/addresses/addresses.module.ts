@@ -9,7 +9,7 @@ import { ModalModule } from 'ngx-bootstrap';
 
 import { routing }       from './addresses.routing';
 import { Addresses } from './addresses.component';
-import { Overview } from './components/overview/overview.component';
+import { Overview } from './components/overview';
 
 @NgModule({
     imports: [

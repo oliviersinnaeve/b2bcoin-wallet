@@ -1,28 +1,24 @@
+import {UserResourceService} from "../../../services/com.b2beyond.api.webwallet-service-user";
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmailValidator} from '../../../theme/validators';
+
+import {TranslateService} from '@ngx-translate/core';
+
+import {FacebookService, LoginResponse} from 'ngx-facebook';
+
+import {UserState} from '../../../user.state';
+
+import {environment} from "../../../../environments/environment";
+
 declare var FB;
 
-var CryptoJS = require('crypto-js');
-
-import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { EmailValidator } from '../../../theme/validators';
-
-import { TranslateService } from 'ng2-translate';
-
-import { FacebookService, InitParams, LoginResponse } from 'ngx-facebook';
-
-import * as userModels from '../../../services/com.b2beyond.api.user/model/models';
-import { UserApi } from '../../../services/com.b2beyond.api.user/api/UserApi'
-
-import { UserState } from '../../../user.state';
-
-import { websiteId } from '../../../environment';
-
-import 'style-loader!./login.scss';
 
 @Component({
     selector: 'login',
     templateUrl: './login.html',
+    styleUrls:['./login.scss']
 })
 export class Login implements OnInit {
 
@@ -38,7 +34,7 @@ export class Login implements OnInit {
 
     constructor (private fb: FormBuilder,
                  private userState: UserState,
-                 private userApi: UserApi,
+                 private userApi: UserResourceService,
                  private router: Router,
                  private facebookService: FacebookService,
                  private translate: TranslateService) {
@@ -55,7 +51,7 @@ export class Login implements OnInit {
         // this language will be used as a fallback when a translation isn't found in the current language
         translate.setDefaultLang('en');
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        var language = navigator.languages && navigator.languages[0].split("-")[0];
+        let language = navigator.languages && navigator.languages[0].split("-")[0];
         console.log("Using language", language);
         translate.use(language);
     }
@@ -73,12 +69,11 @@ export class Login implements OnInit {
     public onSubmit (values: any): void {
         this.messages = [];
 
-        values.websiteId = websiteId;
-        //values.password = CryptoJS.AES.encrypt(values.password, values.userId).toString();
+        values.websiteId = environment.websiteId;
 
         this.submitted = true;
         if (this.form.valid) {
-            this.userApi.login(values).subscribe(result => {
+            this.userApi.loginUsingPOST(values).subscribe(result => {
                     //console.log("Logged in redirecting to dashboard");
                     this.userState.setUser(result);
                     if (this.userState.getUser().enabled2FA && !this.userState.getUser().valid) {

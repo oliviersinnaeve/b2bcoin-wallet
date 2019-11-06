@@ -5,7 +5,7 @@ import { NgaModule } from '../../theme/nga.module';
 import { MarkdownModule } from 'angular2-markdown';
 import { AdsenseModule } from 'ng2-adsense';
 
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ModalModule } from 'ngx-bootstrap';
 import { TooltipModule } from 'ngx-bootstrap';

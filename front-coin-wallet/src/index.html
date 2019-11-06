@@ -2,62 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>B2BCoin Web Wallet - Offered by B2Beyond</title>
+    <base href="/">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><%= htmlWebpackPlugin.options.title %></title>
 
-    <meta name="description" content="<%= htmlWebpackPlugin.options.metadata.description %>">
-
-    <!-- Facebook SDK -->
-    <script type="text/javascript"
-            src="https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v2.10&appId=B2B Coin Wallet"></script>
-
-    <% if (webpackConfig.htmlElements.headTags) { %>
-    <!-- Configured Head Tags  -->
-    <%= webpackConfig.htmlElements.headTags %>
-    <% } %>
-
-    <!-- base url -->
-    <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
-
-    <style>
-        .centered {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            /* bring your own prefixes */
-            transform: translate(-50%, -50%);
-        }
-    </style>
+    <meta name="description" content="B2BCoin Web Wallet - Offered by B2Beyond">
 </head>
 
 <body>
-<script>
-    window.fbAsyncInit = function () {
-        FB.init({
-            appId: '1635926646452710',
-            cookie: true,
-            xfbml: true,
-            version: 'v2.10'
-        });
-        FB.AppEvents.logPageView();
-    };
-</script>
 
-<app>
-</app>
+<app></app>
 
 <div id="preloader">
     <div>
         <img class="centered" src="assets/img/loader.gif" />
     </div>
 </div>
-
-<% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
-<!-- Webpack Dev Server reload -->
-<script src="/webpack-dev-server.js"></script>
-<% } %>
 
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic'
       rel='stylesheet' type='text/css'/>

@@ -6,14 +6,9 @@ import { NotificationsService } from 'angular2-notifications';
 
 import { WalletService } from '../../../walletService.service';
 
-import * as b2bcoinModels from '../../../../services/com.b2beyond.api.b2bcoin/model/models';
-import { WalletApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/WalletApi';
-import { FaucetApi } from '../../../../services/com.b2beyond.api.b2bcoin/api/FaucetApi';
-
-import { websiteId } from '../../../../environment';
-import { baseUrl } from '../../../../environment';
 
 import 'rxjs/Rx';
+import {FaucetResourceService, WalletResourceService} from "../../../../services/com.b2beyond.api.webwallet-service-b2bcoin";
 
 @Component({
     selector: 'faucet-overview',
@@ -23,15 +18,15 @@ import 'rxjs/Rx';
 
 export class FaucetOverview implements OnInit {
 
-    @ViewChild('createAddressModal') createAddressModal: ModalDirective;
+    @ViewChild('createAddressModal', {static: false}) createAddressModal: ModalDirective;
 
     public faucets = [];
     public selectedCoin = {};
 
 
     constructor (private userState: UserState,
-                 private walletApi: WalletApi,
-                 private faucetApi: FaucetApi,
+                 private walletApi: WalletResourceService,
+                 private faucetApi: FaucetResourceService,
                  private walletService: WalletService,
                  private notificationsService: NotificationsService,
                  private router: Router) {
@@ -54,7 +49,7 @@ export class FaucetOverview implements OnInit {
     private initialize(coin): void {
         console.log("Initialize faucetUserAddress !!!", coin);
 
-        this.faucetApi.getFaucetList().subscribe(
+        this.faucetApi.getFaucetListUsingGET().subscribe(
             result => {
                 console.log("faucet list", result);
                 this.faucets = result.filter(value => value.balance.availableBalance > 0);

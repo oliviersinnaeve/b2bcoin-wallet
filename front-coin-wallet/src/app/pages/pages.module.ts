@@ -7,7 +7,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { routing } from './pages.routing';
 import { NgaModule } from '../theme/nga.module';
 
-import { TranslateModule } from 'ng2-translate';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Pages } from './pages.component';
 
